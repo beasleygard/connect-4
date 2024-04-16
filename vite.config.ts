@@ -14,6 +14,6 @@ export default defineConfig({
     ],
   },
   test: {
-    setupFiles: ['./src/toBeUuid.ts'],
+    setupFiles: ['./src/vitest-custom.ts'],
   },
 })

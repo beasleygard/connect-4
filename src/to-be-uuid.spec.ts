@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import toBeUuid from './toBeUuid'
+import toBeUuid from './to-be-uuid'
 
 describe('toBeUuid', () => {
   describe('given a valid v4 UUID string', () => {

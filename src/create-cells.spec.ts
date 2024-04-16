@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import createCells from '@/createCells'
+import createCells from '@/create-cells'
 
 describe('createCells', () => {
   const matchDefaultCell = expect.objectContaining({

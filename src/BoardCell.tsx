@@ -4,7 +4,7 @@ type TokenProps = {
   $player?: 1 | 2
 }
 
-type BoardCellProps = {
+export type BoardCellProps = {
   player?: 1 | 2
 }
 

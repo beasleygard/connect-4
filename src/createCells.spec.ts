@@ -26,4 +26,8 @@ describe('createCells', () => {
       [defaultPlayer, defaultPlayer, defaultPlayer, defaultPlayer],
     ])
   })
+  it('returns a 2d matrix of length m given n is 1', () => {
+    const column = createCells(4, 1)
+    expect(column).toEqual([defaultPlayer, defaultPlayer, defaultPlayer, defaultPlayer])
+  })
 })

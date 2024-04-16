@@ -1,22 +1,24 @@
-import { BoardCellProps } from './BoardCell'
+import { BoardCell, BoardCellProps } from './BoardCell'
 
-const createEmptyMatrix = (rows?: number, columns?: number): Array<Array<BoardCellProps>> => {
-  if (rows === undefined) {
+const createCells = (
+  rowCount?: number,
+  columnCount?: number,
+): Array<Array<BoardCellProps> | BoardCellProps> => {
+  let mapper: () => BoardCellProps | Array<BoardCellProps>
+  if (rowCount === undefined) {
     return []
-  } else if (columns === undefined) {
-    columns = rows
+  } else if (columnCount === undefined) {
+    columnCount = rowCount
   }
 
-  return [...Array(rows)].map(
-    (): Array<BoardCellProps> =>
-      Array(columns)
-        .fill(undefined)
-        .map((): BoardCellProps => {
-          return {
-            player: undefined,
-          }
-        }),
-  )
+  if (columnCount === 1) {
+    mapper = (): BoardCellProps => ({ player: undefined })
+  } else {
+    mapper = (): Array<BoardCellProps> =>
+      [...Array(columnCount)].map((): BoardCellProps => ({ player: undefined }))
+  }
+
+  return [...Array(rowCount)].map(mapper)
 }
 
-export default createEmptyMatrix
+export default createCells

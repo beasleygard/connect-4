@@ -12,10 +12,12 @@ const createCells = (
   }
 
   if (columnCount === 1) {
-    mapper = (): BoardCellProps => ({ player: undefined })
+    mapper = (): BoardCellProps => ({ player: undefined, uuid: crypto.randomUUID() })
   } else {
     mapper = (): Array<BoardCellProps> =>
-      [...Array(columnCount)].map((): BoardCellProps => ({ player: undefined }))
+      [...Array(columnCount)].map(
+        (): BoardCellProps => ({ player: undefined, uuid: crypto.randomUUID() }),
+      )
   }
 
   return [...Array(rowCount)].map(mapper)

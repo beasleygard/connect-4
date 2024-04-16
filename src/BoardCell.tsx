@@ -6,6 +6,7 @@ type TokenProps = {
 
 export type BoardCellProps = {
   player?: 1 | 2
+  uuid: string
 }
 
 const StyledBoardCell = styled.div`

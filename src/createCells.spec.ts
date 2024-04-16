@@ -4,7 +4,7 @@ import createCells from '@/createCells'
 describe('createCells', () => {
   const matchDefaultCell = expect.objectContaining({
     player: undefined,
-    uuid: expect.any(String),
+    uuid: expect.toBeUuid(),
   })
 
   it('returns a 0x0 matrix given defaults', () => {

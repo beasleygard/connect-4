@@ -1,4 +1,4 @@
-import { BoardCell, BoardCellProps } from './BoardCell'
+import { BoardCellProps } from './BoardCell'
 
 const createCells = (
   rowCount?: number,

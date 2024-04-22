@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { StyledBoardCell, BoardCellProps } from './BoardCell'
+import { BoardCell, BoardCellProps } from './BoardCell'
 import createCells from './create-cells'
 
 export type BoardProps = {
@@ -17,7 +17,7 @@ const StyledBoard = styled.div`
   grid-auto-columns: max-content;
 `
 
-const GridBoardCell = styled(StyledBoardCell)<GridBoardCellProps>`
+const GridBoardCell = styled(BoardCell)<GridBoardCellProps>`
   grid-column-start: ${(props) => props.column};
   grid-row-start: ${(props) => props.row};
 `
@@ -25,18 +25,20 @@ const GridBoardCell = styled(StyledBoardCell)<GridBoardCellProps>`
 const Board = (props: BoardProps) => {
   return (
     <StyledBoard>
-      {props.cells.flatMap((row, rowIndex) =>
-        row.map((cell, columnIndex) => (
-          <GridBoardCell
-            className={cell.className}
-            player={cell.player}
-            uuid={cell.uuid}
-            key={cell.uuid}
-            column={columnIndex + 1}
-            row={rowIndex + 1}
-          />
-        )),
-      )}
+      {props.cells
+        .reverse()
+        .flatMap((row, rowIndex) =>
+          row.map((cell, columnIndex) => (
+            <GridBoardCell
+              className={cell.className}
+              player={cell.player}
+              uuid={cell.uuid}
+              key={cell.uuid}
+              column={columnIndex + 1}
+              row={rowIndex + 1}
+            />
+          )),
+        )}
     </StyledBoard>
   )
 }

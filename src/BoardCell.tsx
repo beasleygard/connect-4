@@ -43,4 +43,4 @@ const StyledBoardCell = styled(BoardCell)`
   background: blue;
 `
 
-export { BoardCell, StyledPlayerToken, StyledBoardCell }
+export { StyledBoardCell as BoardCell }

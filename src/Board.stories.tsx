@@ -1,5 +1,6 @@
 import { StoryObj, Meta } from '@storybook/react'
-import { Board } from '@/Board'
+import Board, { BoardProps } from '@/Board'
+import createCells from './create-cells'
 
 type Story = StoryObj<typeof Board>
 
@@ -9,5 +10,5 @@ const meta: Meta<typeof Board> = {
 
 export default meta
 export const TheOneWithDefaults: Story = {
-  args: {},
+  args: { cells: createCells(6, 7) } as BoardProps,
 }

@@ -5,17 +5,10 @@ type TokenProps = {
 }
 
 export type BoardCellProps = {
+  className: string
   player?: 1 | 2
   uuid: string
 }
-
-const StyledBoardCell = styled.div`
-  display: flex;
-  position: relative;
-  width: 60px;
-  height: 60px;
-  background: blue;
-`
 
 const StyledPlayerToken = styled.div<TokenProps>`
   width: 50px;
@@ -34,12 +27,20 @@ const StyledPlayerToken = styled.div<TokenProps>`
   }};
 `
 
-const BoardCell = ({ player }: BoardCellProps) => {
+const BoardCell = ({ className, player }: BoardCellProps) => {
   return (
-    <StyledBoardCell>
+    <div className={className}>
       <StyledPlayerToken $player={player} />
-    </StyledBoardCell>
+    </div>
   )
 }
 
-export { BoardCell, StyledPlayerToken }
+const StyledBoardCell = styled(BoardCell)`
+  display: flex;
+  position: relative;
+  width: 60px;
+  height: 60px;
+  background: blue;
+`
+
+export { BoardCell, StyledPlayerToken, StyledBoardCell }

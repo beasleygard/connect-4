@@ -5,9 +5,9 @@ type TokenProps = {
 }
 
 export type BoardCellProps = {
-  className: string
   player?: 1 | 2
   uuid: string
+  className?: string
 }
 
 const StyledPlayerToken = styled.div<TokenProps>`
@@ -27,15 +27,7 @@ const StyledPlayerToken = styled.div<TokenProps>`
   }};
 `
 
-const BoardCell = ({ className, player }: BoardCellProps) => {
-  return (
-    <div className={className}>
-      <StyledPlayerToken $player={player} />
-    </div>
-  )
-}
-
-const StyledBoardCell = styled(BoardCell)`
+const StyledBoardCell = styled.div`
   display: flex;
   position: relative;
   width: 60px;
@@ -43,4 +35,12 @@ const StyledBoardCell = styled(BoardCell)`
   background: blue;
 `
 
-export { StyledBoardCell as BoardCell }
+const BoardCell = ({ player, className }: BoardCellProps) => {
+  return (
+    <StyledBoardCell className={className}>
+      <StyledPlayerToken $player={player} />
+    </StyledBoardCell>
+  )
+}
+
+export default BoardCell

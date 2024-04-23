@@ -1,5 +1,5 @@
 import { StoryObj, Meta } from '@storybook/react'
-import { BoardCell } from '@/BoardCell'
+import BoardCell, { BoardCellProps } from '@/BoardCell'
 
 type Story = StoryObj<typeof BoardCell>
 
@@ -15,5 +15,5 @@ export const TheOneWithDefaults: Story = {
 export const TheOneWithAPlayerToken: Story = {
   args: {
     player: 1,
-  },
+  } as BoardCellProps,
 }

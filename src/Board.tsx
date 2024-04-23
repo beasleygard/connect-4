@@ -1,12 +1,12 @@
 import styled from 'styled-components'
-import { BoardCell, BoardCellProps } from './BoardCell'
+import BoardCell, { BoardCellProps } from './BoardCell'
 import createCells from './create-cells'
 
 export type BoardProps = {
   cells: Array<Array<BoardCellProps>>
 }
 
-type GridBoardCellProps = BoardCellProps & {
+type GridBoardCellProps = {
   row: number
   column: number
 }
@@ -30,7 +30,6 @@ const Board = (props: BoardProps) => {
         .flatMap((row, rowIndex) =>
           row.map((cell, columnIndex) => (
             <GridBoardCell
-              className={cell.className}
               player={cell.player}
               uuid={cell.uuid}
               key={cell.uuid}

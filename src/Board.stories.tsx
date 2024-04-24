@@ -1,7 +1,6 @@
 import { StoryObj, Meta } from '@storybook/react'
 import Board, { BoardProps } from '@/Board'
 import createCells from './create-cells'
-import { BoardCellProps } from './BoardCell'
 
 type Story = StoryObj<typeof Board>
 

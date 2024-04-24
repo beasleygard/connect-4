@@ -1,32 +1,11 @@
 import styled from 'styled-components'
 import Token from './Token'
 
-type TokenProps = {
-  $player?: 1 | 2
-}
-
 export type BoardCellProps = {
   player?: 1 | 2
   uuid: string
   className?: string
 }
-
-export const StyledPlayerToken = styled.div<TokenProps>`
-  width: 50px;
-  height: 50px;
-  margin: auto;
-  border-radius: 50%;
-  background: ${(props) => {
-    switch (props.$player) {
-      case 1:
-        return 'crimson'
-      case 2:
-        return 'gold'
-      default:
-        return 'white'
-    }
-  }};
-`
 
 const StyledBoardCell = styled.div`
   display: flex;

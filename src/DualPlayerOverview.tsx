@@ -11,7 +11,7 @@ export type DualPlayerOverviewProps = {
 
 const DualPlayerOverviewProps = styled.div`
   display: flex;
-  gap: 1px;
+  gap: 5px;
 
   & > div {
     width: 50%;

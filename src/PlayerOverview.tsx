@@ -14,22 +14,40 @@ const StyledPlayerOverview = styled.div`
   background-color: #434c5e;
   color: #eceff4;
   text-align: center;
+  font-variant-caps: all-small-caps;
 `
 
 const OverviewToken = styled(Token)<PlayerOverviewProps>`
-  /* opacity: ${(props) => (props.isActive ? '100%' : '60%')}; */
   filter: ${(props) => (props.isActive ? 'grayscale(0%)' : 'grayscale(90%)')};
 `
 
 const TurnIndicator = styled.div<{ isActive: boolean }>`
   display: flex;
   flex-direction: column;
-  height: 80px;
+  height: 50px;
   align-items: center;
 
   & p {
-    margin-top: 0px;
+    margin-top: 5px;
     font-weight: ${(props) => (props.isActive ? '600' : 'inherit')};
+  }
+  ${(props) =>
+    props.isActive
+      ? `& div {
+    animation-name: spin;
+    animation-duration: 4000ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+  }`
+      : ''}
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
   }
 `
 

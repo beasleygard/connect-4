@@ -12,6 +12,8 @@ const StyledToken = styled.div<TokenProps>`
   width: ${(props) => props.size}px;
   background-color: ${(props) => props.color};
   border-radius: 50%;
+  min-height: ${(props) => props.size}px;
+  min-width: ${(props) => props.size}px;
 `
 
 const OuterToken = styled(StyledToken)`
@@ -20,15 +22,17 @@ const OuterToken = styled(StyledToken)`
   background-color: ${(props) => props.color};
   align-items: center;
   justify-content: center;
-`
 
-const TokenRidges = styled(StyledToken)`
-  box-sizing: border-box;
-  height: 90%;
-  width: 90%;
-  border-style: dashed;
-  border-width: ${(props) => props.size * 0.06}px;
-  border-color: rgba(0, 0, 0, 0.1);
+  &:after {
+    content: '';
+    box-sizing: border-box;
+    border-radius: 50%;
+    height: 90%;
+    width: 90%;
+    border-style: dashed;
+    border-width: ${(props) => props.size * 0.06}px;
+    border-color: rgba(0, 0, 0, 0.12);
+  }
 `
 
 const InnerToken = styled(StyledToken)`
@@ -36,10 +40,12 @@ const InnerToken = styled(StyledToken)`
   box-sizing: border-box;
   height: 75%;
   width: 75%;
+  min-height: 75%;
+  min-width: 75%;
   background-color: rgba(0, 0, 0, 0.1);
   border-width: ${(props) => props.size * 0.04}px;
   border-style: inset;
-  border-color: rgba(0, 0, 0, 0.11);
+  border-color: rgba(0, 0, 0, 0.1);
 `
 
 function Token(props: TokenProps) {
@@ -49,7 +55,6 @@ function Token(props: TokenProps) {
         <StyledToken size={props.size} color={'white'} />
       ) : (
         <OuterToken {...props}>
-          <TokenRidges {...props} />
           <InnerToken {...props} />
         </OuterToken>
       )}

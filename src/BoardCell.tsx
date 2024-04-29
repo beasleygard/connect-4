@@ -39,8 +39,8 @@ const BoardCell = ({ player, className }: BoardCellProps) => {
   return (
     <StyledBoardCell className={className}>
       <Token
-        size={50}
-        color={player === undefined ? undefined : player === 1 ? 'crimson' : 'gold'}
+        $size={50}
+        $color={player === undefined ? undefined : player === 1 ? 'crimson' : 'gold'}
       />
     </StyledBoardCell>
   )

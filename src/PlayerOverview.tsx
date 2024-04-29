@@ -6,6 +6,7 @@ export type PlayerOverviewProps = {
   turnsLeft: number
   isActive: boolean
   playerTokenColour?: string
+  className?: string
 }
 
 const StyledPlayerOverview = styled.div`
@@ -59,7 +60,17 @@ function PlayerOverview(props: PlayerOverviewProps) {
     <StyledPlayerOverview>
       <p>{`Player ${player}`}</p>
       <TurnIndicator isActive={isActive}>
-        <OverviewToken {...props} size={35} color={player === 1 ? 'crimson' : 'gold'} />
+        <OverviewToken
+          {...props}
+          $size={35}
+          $color={
+            props.playerTokenColour === undefined
+              ? player === 1
+                ? 'crimson'
+                : 'gold'
+              : props.playerTokenColour
+          }
+        />
         <p>{isActive ? 'Your Turn!' : `Waiting for Player ${otherPlayer}...`}</p>
       </TurnIndicator>
       <p>{`Turns left: ${turnsLeft}`}</p>

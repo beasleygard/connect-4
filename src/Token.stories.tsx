@@ -11,4 +11,11 @@ export const TheOneWithDefaults: Story = {
   args: {},
 }
 
+export const TheOneWithACustomColour: Story = {
+  args: {
+    $size: 80,
+    $color: 'pink',
+  },
+}
+
 export default meta

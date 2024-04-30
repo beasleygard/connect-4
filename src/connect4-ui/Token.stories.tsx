@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react'
-import Token from '@/Token'
+import Token, { TokenProps } from '@/connect4-ui/Token'
 
 const meta: Meta<typeof Token> = {
   component: Token,
@@ -13,9 +13,9 @@ export const TheOneWithDefaults: Story = {
 
 export const TheOneWithACustomColour: Story = {
   args: {
-    $size: 80,
-    $color: 'pink',
-  },
+    size: 80,
+    color: 'pink',
+  } satisfies TokenProps,
 }
 
 export default meta

@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import Token from './Token'
+import Token from '@/connect4-ui/Token'
 
 export type BoardCellProps = {
   player?: 1 | 2
@@ -39,8 +39,8 @@ const BoardCell = ({ player, className }: BoardCellProps) => {
   return (
     <StyledBoardCell className={className}>
       <Token
-        $size={50}
-        $color={player === undefined ? undefined : player === 1 ? 'crimson' : 'gold'}
+        size={50}
+        color={player === undefined ? undefined : player === 1 ? 'crimson' : 'gold'}
       />
     </StyledBoardCell>
   )

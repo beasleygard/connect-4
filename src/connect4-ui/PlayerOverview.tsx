@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import Token from './Token'
+import Token from '@/connect4-ui/Token'
 
 export type PlayerOverviewProps = {
   player: 1 | 2
@@ -18,10 +18,6 @@ const StyledPlayerOverview = styled.div`
   font-variant-caps: all-small-caps;
 `
 
-const OverviewToken = styled(Token)<PlayerOverviewProps>`
-  filter: ${(props) => (props.isActive ? 'grayscale(0%)' : 'grayscale(90%)')};
-`
-
 const TurnIndicator = styled.div<{ isActive: boolean }>`
   display: flex;
   flex-direction: column;
@@ -32,15 +28,11 @@ const TurnIndicator = styled.div<{ isActive: boolean }>`
     margin-top: 5px;
     font-weight: ${(props) => (props.isActive ? '600' : 'inherit')};
   }
-  ${(props) =>
-    props.isActive
-      ? `& div {
-    animation-name: spin;
-    animation-duration: 4000ms;
-    animation-iteration-count: infinite;
-    animation-timing-function: linear;
-  }`
-      : ''}
+
+  & > div {
+    filter: ${(props) => (props.isActive ? 'grayscale(0%)' : 'grayscale(90%)')};
+    animation: ${(props) => (props.isActive ? 'spin 2s infinite linear' : 'none')};
+  }
 
   @keyframes spin {
     from {
@@ -52,23 +44,21 @@ const TurnIndicator = styled.div<{ isActive: boolean }>`
   }
 `
 
-function PlayerOverview(props: PlayerOverviewProps) {
-  const { player, isActive, turnsLeft } = props
+function PlayerOverview({ player, isActive, turnsLeft, playerTokenColour }: PlayerOverviewProps) {
   const otherPlayer = player === 1 ? 2 : 1
 
   return (
     <StyledPlayerOverview>
       <p>{`Player ${player}`}</p>
       <TurnIndicator isActive={isActive}>
-        <OverviewToken
-          {...props}
-          $size={35}
-          $color={
-            props.playerTokenColour === undefined
+        <Token
+          size={35}
+          color={
+            playerTokenColour === undefined
               ? player === 1
                 ? 'crimson'
                 : 'gold'
-              : props.playerTokenColour
+              : playerTokenColour
           }
         />
         <p>{isActive ? 'Your Turn!' : `Waiting for Player ${otherPlayer}...`}</p>

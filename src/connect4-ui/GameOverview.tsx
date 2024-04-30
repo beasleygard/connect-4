@@ -1,8 +1,8 @@
-import RoundOverview from '@/RoundOverview'
-import DualPlayerOverview from './DualPlayerOverview'
+import RoundOverview from '@/connect4-ui/RoundOverview'
+import DualPlayerOverview from '@/connect4-ui/DualPlayerOverview'
 import styled from 'styled-components'
 
-type FullRoundOverviewProps = {
+export type GameOverviewProps = {
   roundNumber: number
   movesLeft: number
   activePlayer: 1 | 2
@@ -16,7 +16,7 @@ const StyledFullRoundOverview = styled.div`
   max-width: 350px;
 `
 
-function FullRoundOverview({ activePlayer, roundNumber, movesLeft }: FullRoundOverviewProps) {
+function GameOverview({ activePlayer, roundNumber, movesLeft }: GameOverviewProps) {
   return (
     <StyledFullRoundOverview>
       <RoundOverview roundNumber={roundNumber} />
@@ -36,10 +36,10 @@ function FullRoundOverview({ activePlayer, roundNumber, movesLeft }: FullRoundOv
   )
 }
 
-FullRoundOverview.defaultProps = {
+GameOverview.defaultProps = {
   roundNumber: 1,
   movesLeft: 42,
   activePlayer: 1,
-} as FullRoundOverviewProps
+} as GameOverviewProps
 
-export default FullRoundOverview
+export default GameOverview

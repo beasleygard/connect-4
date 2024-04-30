@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react'
-import DualPlayerOverview, { DualPlayerOverviewProps } from '@/DualPlayerOverview'
+import DualPlayerOverview, { DualPlayerOverviewProps } from '@/connect4-ui/DualPlayerOverview'
 
 const meta: Meta<typeof DualPlayerOverview> = {
   component: DualPlayerOverview,
@@ -8,7 +8,7 @@ const meta: Meta<typeof DualPlayerOverview> = {
 type Story = StoryObj<typeof DualPlayerOverview>
 
 export const TheOneWithDefaults: Story = {
-  args: {} as DualPlayerOverviewProps,
+  args: {},
 }
 
 export default meta

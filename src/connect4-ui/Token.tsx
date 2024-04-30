@@ -1,12 +1,18 @@
 import styled from 'styled-components'
 
-type TokenProps = {
+export type TokenProps = {
+  size: number
+  color?: string
+  className?: string
+}
+
+type StyledTokenProps = {
   $size: number
   $color?: string
   className?: string
 }
 
-const StyledToken = styled.div<TokenProps>`
+const StyledToken = styled.div<StyledTokenProps>`
   box-sizing: border-box;
   height: ${(props) => props.$size}px;
   width: ${(props) => props.$size}px;
@@ -19,12 +25,13 @@ const StyledToken = styled.div<TokenProps>`
 const OuterToken = styled(StyledToken)`
   display: flex;
   position: relative;
-  background-color: ${(props) => props.$color};
+  background-color: ${(props) => props.color};
   align-items: center;
   justify-content: center;
 
   &:after {
     content: '';
+    position: absolute;
     box-sizing: border-box;
     border-radius: 50%;
     height: 90%;
@@ -36,26 +43,25 @@ const OuterToken = styled(StyledToken)`
 `
 
 const InnerToken = styled(StyledToken)`
-  position: absolute;
   box-sizing: border-box;
-  height: 75%;
-  width: 75%;
-  min-height: 75%;
-  min-width: 75%;
+  height: 70%;
+  width: 70%;
+  min-height: 70%;
+  min-width: 70%;
   background-color: rgba(0, 0, 0, 0.1);
   border-width: ${(props) => props.$size * 0.04}px;
   border-style: inset;
   border-color: rgba(0, 0, 0, 0.1);
 `
 
-function Token(props: TokenProps) {
+function Token({ size, color, className }: TokenProps) {
   return (
     <>
-      {props.$color === undefined ? (
-        <StyledToken $size={props.$size} $color={'white'} />
+      {color === undefined ? (
+        <StyledToken $size={size} $color={'white'} className={className} />
       ) : (
-        <OuterToken {...props}>
-          <InnerToken {...props} />
+        <OuterToken $size={size} $color={color} className={className}>
+          <InnerToken $size={size} $color={color} className={className} />
         </OuterToken>
       )}
     </>
@@ -65,6 +71,6 @@ function Token(props: TokenProps) {
 Token.defaultProps = {
   size: 200,
   color: undefined,
-}
+} as TokenProps
 
 export default Token

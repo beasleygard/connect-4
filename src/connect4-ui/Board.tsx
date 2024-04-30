@@ -1,6 +1,6 @@
 import styled from 'styled-components'
-import BoardCell, { BoardCellProps } from './BoardCell'
-import createCells from './create-cells'
+import BoardCell, { BoardCellProps } from '@/connect4-ui/BoardCell'
+import createCells from '@/create-cells'
 
 export type BoardProps = {
   cells: Array<Array<BoardCellProps>>

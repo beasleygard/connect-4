@@ -1,4 +1,4 @@
-import PlayerOverview, { PlayerOverviewProps } from '@/PlayerOverview'
+import PlayerOverview, { PlayerOverviewProps } from '@/connect4-ui/PlayerOverview'
 import styled from 'styled-components'
 
 type SpecifiedPlayerOverviewProps<T extends 1 | 2> = Omit<PlayerOverviewProps, 'player'> & {
@@ -7,6 +7,7 @@ type SpecifiedPlayerOverviewProps<T extends 1 | 2> = Omit<PlayerOverviewProps, '
 export type DualPlayerOverviewProps = {
   player1State: SpecifiedPlayerOverviewProps<1>
   player2State: SpecifiedPlayerOverviewProps<2>
+  activePlayer: 1 | 2
 }
 
 const DualPlayerOverviewProps = styled.div`
@@ -38,6 +39,7 @@ DualPlayerOverview.defaultProps = {
     isActive: false,
     turnsLeft: 21,
   },
+  activePlayer: 1,
 } as DualPlayerOverviewProps
 
 export default DualPlayerOverview

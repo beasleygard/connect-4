@@ -1,4 +1,4 @@
-import { BoardCellProps } from './BoardCell'
+import { BoardCellProps } from '@/connect4-ui/BoardCell'
 
 export type CreateCellsStrategy = () => 1 | 2 | undefined
 

@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react'
-import RoundOverview, { RoundOverviewProps } from '@/RoundOverview'
+import RoundOverview, { RoundOverviewProps } from '@/connect4-ui/RoundOverview'
 
 type Story = StoryObj<typeof RoundOverview>
 

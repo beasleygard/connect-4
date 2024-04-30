@@ -1,5 +1,5 @@
 import { StoryObj, Meta } from '@storybook/react'
-import BoardCell, { BoardCellProps } from '@/BoardCell'
+import BoardCell, { BoardCellProps } from '@/connect4-ui/BoardCell'
 
 type Story = StoryObj<typeof BoardCell>
 

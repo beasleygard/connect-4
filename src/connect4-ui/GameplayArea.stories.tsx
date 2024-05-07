@@ -1,5 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react'
-import GameplayArea from '@/connect4-ui/GameplayArea'
+import GameplayArea, { GameplayAreaProps } from '@/connect4-ui/GameplayArea'
+import createCells from '@/connect4-ui/create-cells'
 
 export default {
   component: GameplayArea,
@@ -7,6 +8,17 @@ export default {
 
 type Story = StoryObj<typeof GameplayArea>
 
-export const TheOneWithDefaults: Story = {
-  args: {},
+export const TheOneWithAnActiveGame: Story = {
+  args: {
+    activeGame: {
+      gameOverview: {
+        roundNumber: 1,
+        movesLeft: 42,
+        activePlayer: 1,
+      },
+      board: {
+        cells: createCells(6, 7),
+      },
+    },
+  } satisfies GameplayAreaProps,
 }

@@ -1,7 +1,6 @@
 import styled from 'styled-components'
-import createCells from '@/create-cells'
 import GameOverview, { GameOverviewProps } from '@/connect4-ui/GameOverview'
-import { BoardProps } from '@/connect4-ui/Board'
+import Board, { BoardProps } from '@/connect4-ui/Board'
 
 type ActiveGame = {
   gameOverview: GameOverviewProps
@@ -14,10 +13,12 @@ export type GameplayAreaProps = {
 
 const StyledGameplayArea = styled.div<ActiveGame>`
   display: flex;
-  background-color: aquamarine;
-  justify-content: center;
   align-items: center;
-  height: 100vh;
+  flex-direction: row-reverse;
+  justify-content: space-evenly;
+  gap: 5px;
+  flex-wrap: wrap;
+  min-width: 200px;
 `
 
 const StyledButton = styled.button`
@@ -32,15 +33,10 @@ function GameplayArea({ activeGame }: GameplayAreaProps) {
   const { gameOverview, board } = activeGame
 
   return (
-    <>
-      {activeGame ? (
-        <>
-          <GameOverview />
-        </>
-      ) : (
-        <></>
-      )}
-    </>
+    <StyledGameplayArea {...activeGame}>
+      <GameOverview {...gameOverview} />
+      <Board {...board} />
+    </StyledGameplayArea>
   )
 }
 

@@ -38,7 +38,7 @@ const OuterToken = styled(StyledToken)`
     width: 90%;
     border-style: dashed;
     border-width: ${(props) => props.$size * 0.06}px;
-    border-color: rgba(0, 0, 0, 0.12);
+    border-color: rgba(0, 0, 0, 0.2);
   }
 `
 
@@ -58,7 +58,7 @@ function Token({ size, color, className }: TokenProps) {
   return (
     <>
       {color === undefined ? (
-        <StyledToken $size={size} $color={'white'} className={className} />
+        <StyledToken $size={size} $color={'rgba(0, 0, 0, 0)'} className={className} />
       ) : (
         <OuterToken $size={size} $color={color} className={className}>
           <InnerToken $size={size} $color={color} className={className} />

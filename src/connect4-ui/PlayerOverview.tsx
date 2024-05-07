@@ -16,12 +16,14 @@ const StyledPlayerOverview = styled.div`
   color: #eceff4;
   text-align: center;
   font-variant-caps: all-small-caps;
+  line-height: 90%;
+  font-size: 20px;
 `
 
 const TurnIndicator = styled.div<{ isActive: boolean }>`
   display: flex;
   flex-direction: column;
-  height: 50px;
+  height: 70px;
   align-items: center;
 
   & p {

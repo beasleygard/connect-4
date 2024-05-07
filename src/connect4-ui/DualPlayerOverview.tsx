@@ -1,5 +1,5 @@
-import PlayerOverview, { PlayerOverviewProps } from '@/connect4-ui/PlayerOverview'
 import styled from 'styled-components'
+import PlayerOverview, { PlayerOverviewProps } from '@/connect4-ui/PlayerOverview'
 
 type SpecifiedPlayerOverviewProps<T extends 1 | 2> = Omit<PlayerOverviewProps, 'player'> & {
   player: T

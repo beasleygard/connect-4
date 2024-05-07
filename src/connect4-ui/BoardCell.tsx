@@ -8,30 +8,32 @@ export type BoardCellProps = {
 }
 
 const StyledBoardCell = styled.div`
-  display: flex;
-  box-sizing: border-box;
   position: relative;
+  display: flex;
   width: 60px;
   height: 60px;
-  background: blue;
   align-items: center;
   justify-content: center;
-  border-color: blue;
-  border-style: solid;
+
+  & > div {
+    position: absolute;
+  }
 
   &:after {
     content: '';
-    display: absolute;
-    z-index: 1;
-    width: 45px;
-    height: 45px;
-    border-width: 5px;
-    border-radius: 50%;
-    border-style: inset;
+    min-width: inherit;
+    width: inherit;
+    min-height: inherit;
+    height: inherit;
+    background: blue;
     border-color: blue;
-  }
-  & div {
-    position: absolute;
+    border-style: solid;
+    mask:
+      url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" preserveAspectRatio="XMaxYMax meet"><circle cx="50%" cy="50%" r="40%" fill="black"/></svg>')
+        0/100% 100%,
+      linear-gradient(#fff, #fff);
+    mask-composite: exclude;
+    box-sizing: border-box;
   }
 `
 

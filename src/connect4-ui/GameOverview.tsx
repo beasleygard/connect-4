@@ -12,8 +12,8 @@ const StyledFullRoundOverview = styled.div`
   display: flex;
   flex-direction: column;
   gap: 5px;
-  min-width: 300px;
-  max-width: 350px;
+  min-width: 225px;
+  max-width: 300px;
 `
 
 function GameOverview({ activePlayer, roundNumber, movesLeft }: GameOverviewProps) {

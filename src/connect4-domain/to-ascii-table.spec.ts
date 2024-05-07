@@ -17,6 +17,43 @@ describe('to-ascii-table', () => {
 | 1 |
 |---|`)
       })
+      describe('and a custom cell resolver', () => {
+        it('will use the custom cell resolver to resolve the value of the cell', () => {
+          const customResolver = (value: any) => (value === null ? '💩' : '😿')
+          const asciiTable = toAsciiTable([[null]], customResolver)
+          expect(asciiTable).toStrictEqual(`
+|----|
+| 💩 |
+|----|`)
+        })
+      })
+      describe('where the length of the content of the cell is more than one character', () => {
+        it('returns a 1x1 ascii table', () => {
+          const asciiTable = toAsciiTable([['999']])
+          expect(asciiTable).toStrictEqual(`
+|-----|
+| 999 |
+|-----|`)
+        })
+      })
+      describe('with content 0 characters in length', () => {
+        it('returns an empty 1x1 ascii table', () => {
+          const asciiTable = toAsciiTable([['']])
+          expect(asciiTable).toStrictEqual(`
+|---|
+|   |
+|---|`)
+        })
+      })
+      describe('containing undefined', () => {
+        it('returns a 1x1 ascii table', () => {
+          const asciiTable = toAsciiTable([[undefined]])
+          expect(asciiTable).toStrictEqual(`
+|---|
+|   |
+|---|`)
+        })
+      })
     })
   })
 })

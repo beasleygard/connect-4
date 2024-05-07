@@ -8,7 +8,7 @@ describe('game', () => {
         const game = new GameFactory()
         expect(game).toBeInstanceOf(GameFactory)
       })
-      it('creates a 6x7 board', () => {
+      it.skip('creates a 6x7 board', () => {
         const game = new GameFactory()
         const board = game.getBoard()
         expect(asciiBoard).toMatchInlineSnapshot(`

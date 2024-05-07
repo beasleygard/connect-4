@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { CreateCellsStrategy, createCells } from '@/create-cells'
+import { CreateCellsStrategy, createCells } from '@/connect4-ui/create-cells'
 
 describe('createCells', () => {
   const matchDefaultCell = expect.objectContaining({

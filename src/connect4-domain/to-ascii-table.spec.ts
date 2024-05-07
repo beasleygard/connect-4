@@ -54,6 +54,15 @@ describe('to-ascii-table', () => {
 |---|`)
         })
       })
+      describe('containing null', () => {
+        it('returns a 1x1 ascii table', () => {
+          const asciiTable = toAsciiTable([[null]])
+          expect(asciiTable).toStrictEqual(`
+|---|
+|   |
+|---|`)
+        })
+      })
     })
   })
 })

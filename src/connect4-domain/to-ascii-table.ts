@@ -2,7 +2,10 @@ function createBorder(width: number): string {
   return `|${'-'.repeat(width)}`
 }
 
-function toAsciiTable(grid: Array<Array<string>>): string {
+function toAsciiTable<T>(
+  grid: Array<Array<T>>,
+  cellResolver: (value: T) => string = (value: T) => `${value}`,
+): string {
   const cellPadding = 1
   const widths: Array<number> = []
 
@@ -16,7 +19,7 @@ function toAsciiTable(grid: Array<Array<string>>): string {
         if (grid[rowIndex][columnIndex] === undefined) {
           return maxWidth
         }
-        const cellContentLength = `${grid[rowIndex][columnIndex]}`.length
+        const cellContentLength = cellResolver(grid[rowIndex][columnIndex]).length
         return cellContentLength > maxWidth ? cellContentLength : maxWidth
       }, 1),
     )
@@ -25,12 +28,12 @@ function toAsciiTable(grid: Array<Array<string>>): string {
   let tableRows: Array<string> = grid.reduce((tableRows, gridRow) => {
     tableRows.push(
       gridRow.reduce((tableRow, gridElement) => {
-        const shouldUseSpace = gridElement === undefined || `${gridElement}`.length < 1
-        return tableRow.concat(`| ${shouldUseSpace ? ' ' : `${gridElement}`} |`)
+        const shouldUseSpace = gridElement === undefined || cellResolver(gridElement).length < 1
+        return tableRow.concat(`| ${shouldUseSpace ? ' ' : cellResolver(gridElement)} |`)
       }, ''),
     )
     return tableRows
-  }, [])
+  }, [] as Array<string>)
 
   tableRows = tableRows.reduce((tableRows, tableRow) => {
     tableRows.push(

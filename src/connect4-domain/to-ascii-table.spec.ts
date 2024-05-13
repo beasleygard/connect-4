@@ -65,13 +65,22 @@ describe('to-ascii-table', () => {
       })
     })
     describe('and multiple columns', () => {
-      describe('where each element resolves to a string of the same length', () => {
-        it('returns an ascii table', () => {
+      describe('where each element resolves to strings of the same length', () => {
+        it('returns an ascii table with one row and multiple columns', () => {
           const asciiTable = toAsciiTable<string>([['O', 'O']])
           expect(asciiTable).toStrictEqual(`
 |---|---|
 | O | O |
 |---|---|`)
+        })
+      })
+      describe('where each element resolves to strings of differing lengths', () => {
+        it('returns an ascii table with one row and multiple columns', () => {
+          const asciiTable = toAsciiTable<number>([[1, 10]])
+          expect(asciiTable).toStrictEqual(`
+|---|----|
+| 1 | 10 |
+|---|----|`)
         })
       })
     })

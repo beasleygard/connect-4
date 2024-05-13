@@ -35,11 +35,13 @@ function toAsciiTable<T>(
   const tableLines: Array<string> = grid.reduce(
     (tableLines, gridRow) => {
       tableLines.push(
-        gridRow.reduce((tableRow, gridElement) => {
-          const cellContent = cellResolver(gridElement)
-          const isEmptyCell = cellContent.length < 1
-          return tableRow.concat(`| ${isEmptyCell ? ' ' : cellContent} |`)
-        }, ''),
+        gridRow
+          .reduce((tableRow, gridElement) => {
+            const cellContent = cellResolver(gridElement)
+            const isEmptyCell = cellContent.length < 1
+            return tableRow.concat(`| ${isEmptyCell ? ' ' : cellContent} `)
+          }, '')
+          .concat('|'),
       )
       return tableLines
     },

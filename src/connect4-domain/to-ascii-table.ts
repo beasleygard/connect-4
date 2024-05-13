@@ -15,7 +15,7 @@ function defaultResolver<T>(value: T): string {
 
 function toAsciiTable<T>(
   grid: Array<Array<T>>,
-  cellResolver: (value: T) => string = defaultResolver,
+  cellResolver: (value: T) => string = defaultResolver<T>,
 ): string {
   const rowCount: number = grid.length
   const columnCount: number = grid[0]?.length

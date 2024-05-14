@@ -24,4 +24,9 @@ describe('toBeDeeplyUnequal', () => {
     const obj = {}
     expect(undefined).toBeDeeplyUnequal(obj)
   })
+  it('should fail given arrays that are the same', () => {
+    const arr1 = []
+    const arr2 = arr1
+    expect(arr1).not.toBeDeeplyUnequal(arr2)
+  })
 })

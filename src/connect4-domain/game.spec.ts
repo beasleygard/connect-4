@@ -1,17 +1,18 @@
 import { describe, expect, it } from 'vitest'
 import GameFactory, { BoardCell } from '@/connect4-domain/game'
-import toAsciiTable from '@/connect4-domain/to-ascii-table'
+import _toAsciiTable from '@/connect4-domain/to-ascii-table'
 
-const boardAsciiTableStrategy = (value: BoardCell) => {
-  switch (value.player) {
-    case 1:
-      return '1'
-    case 2:
-      return '2'
-    default:
-      return ''
-  }
-}
+const toAsciiTable = (board: Array<Array<BoardCell>>): string =>
+  _toAsciiTable<BoardCell>(board, (value): string => {
+    switch (value.player) {
+      case 1:
+        return '1'
+      case 2:
+        return '2'
+      default:
+        return ''
+    }
+  })
 describe('game', () => {
   describe('new game', () => {
     describe('given defaults', () => {
@@ -22,20 +23,22 @@ describe('game', () => {
       it('creates a 6x7 board', () => {
         const game = new GameFactory()
         const board = game.getBoard()
-        expect(toAsciiTable(board, boardAsciiTableStrategy)).toStrictEqual(`
-|---|---|---|---|---|---|---|
-|   |   |   |   |   |   |   |
-|---|---|---|---|---|---|---|
-|   |   |   |   |   |   |   |
-|---|---|---|---|---|---|---|
-|   |   |   |   |   |   |   |
-|---|---|---|---|---|---|---|
-|   |   |   |   |   |   |   |
-|---|---|---|---|---|---|---|
-|   |   |   |   |   |   |   |
-|---|---|---|---|---|---|---|
-|   |   |   |   |   |   |   |
-|---|---|---|---|---|---|---|`)
+        expect(toAsciiTable(board)).toMatchInlineSnapshot(`
+          "
+          |---|---|---|---|---|---|---|
+          |   |   |   |   |   |   |   |
+          |---|---|---|---|---|---|---|
+          |   |   |   |   |   |   |   |
+          |---|---|---|---|---|---|---|
+          |   |   |   |   |   |   |   |
+          |---|---|---|---|---|---|---|
+          |   |   |   |   |   |   |   |
+          |---|---|---|---|---|---|---|
+          |   |   |   |   |   |   |   |
+          |---|---|---|---|---|---|---|
+          |   |   |   |   |   |   |   |
+          |---|---|---|---|---|---|---|"
+        `)
       })
     })
   })

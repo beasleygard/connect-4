@@ -1,6 +1,5 @@
+import { v1 as randomUuid } from 'uuid'
 import { BoardCellProps } from '@/connect4-ui/BoardCell'
-
-const crypto = require('crypto')
 
 export type CreateCellsStrategy = () => 1 | 2 | undefined
 
@@ -18,7 +17,7 @@ export const createCells = (
       [...Array(columnCount)].map(
         (): BoardCellProps => ({
           player: strategy(),
-          uuid: crypto.randomUUID(),
+          uuid: randomUuid(),
         }),
       ),
   )

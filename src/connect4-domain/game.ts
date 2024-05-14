@@ -1,6 +1,11 @@
-type Player = 1 | 2 | undefined
+type PlayerNumber = 1 | 2
+type PlayerStats = {
+  player: PlayerNumber
+  discsLeft: number
+}
+type CellPlayer = PlayerNumber | undefined
 export type BoardCell = {
-  player: Player
+  player: CellPlayer
 }
 export type Board = Array<Array<BoardCell>>
 type BoardDimensions = {
@@ -16,15 +21,15 @@ interface Game {
 }
 
 class GameFactory implements Game {
-  board: Board
-  movesLeft: number
+  private board: Board
+  private playerStats: Record<PlayerNumber, PlayerStats>
 
   constructor({ boardDimensions }: GameParameters = { boardDimensions: { rows: 6, columns: 7 } }) {
     this.board = this.#createBoard(boardDimensions)
-    this.movesLeft = boardDimensions.rows * boardDimensions.columns
+    this.playerStats = this.#createPlayerStatsRecord(boardDimensions)
   }
 
-  #createBoard({ rows, columns }: BoardDimensions) {
+  #createBoard({ rows, columns }: BoardDimensions): Board {
     return Array(rows)
       .fill(undefined)
       .map(
@@ -39,15 +44,20 @@ class GameFactory implements Game {
       )
   }
 
-  getBoard() {
+  #createPlayerStatsRecord({ rows, columns }: BoardDimensions): Record<PlayerNumber, PlayerStats> {
+    const playerMovesLeft = (rows * columns) / 2
+    return {
+      1: { player: 1, discsLeft: Math.ceil(playerMovesLeft) },
+      2: { player: 2, discsLeft: Math.floor(playerMovesLeft) },
+    }
+  }
+
+  getBoard(): Board {
     return this.board
   }
 
-  getStatsForPlayer(player: 1 | 2) {
-    return {
-      player: player,
-      discsLeft: player === 1 ? Math.ceil(this.movesLeft / 2) : Math.floor(this.movesLeft / 2),
-    }
+  getStatsForPlayer(playerNumber: PlayerNumber): PlayerStats {
+    return this.playerStats[playerNumber]
   }
 }
 

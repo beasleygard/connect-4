@@ -5,9 +5,9 @@ import toAsciiTable from '@/connect4-domain/to-ascii-table'
 const boardAsciiTableStrategy = (value: BoardCell) => {
   switch (value.player) {
     case 1:
-      return 'x'
+      return '1'
     case 2:
-      return 'o'
+      return '2'
     default:
       return ''
   }
@@ -19,7 +19,7 @@ describe('game', () => {
         const game = new GameFactory()
         expect(game).toBeInstanceOf(GameFactory)
       })
-      it.skip('creates a 6x7 board', () => {
+      it('creates a 6x7 board', () => {
         const game = new GameFactory()
         const board = game.getBoard()
         expect(toAsciiTable(board, boardAsciiTableStrategy)).toStrictEqual(`
@@ -35,8 +35,7 @@ describe('game', () => {
 |   |   |   |   |   |   |   |
 |---|---|---|---|---|---|---|
 |   |   |   |   |   |   |   |
-|---|---|---|---|---|---|---|
-`)
+|---|---|---|---|---|---|---|`)
       })
     })
   })

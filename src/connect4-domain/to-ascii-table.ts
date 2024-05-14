@@ -1,4 +1,4 @@
-const CELL_PADDING = 1
+const DEFAULT_CELL_PADDING = 1
 
 const createBorderLine = (widths: Array<number>, cellPadding: number): string =>
   `${widths.reduce((borderLine, currentCellWidth) => {
@@ -28,15 +28,30 @@ function toAsciiTable<T>(
     }, 1),
   )
 
-  const borderLine: string = createBorderLine(widths, CELL_PADDING)
+  const borderLine: string = createBorderLine(widths, DEFAULT_CELL_PADDING)
 
   const tableLines: Array<string> = resolvedCells.reduce(
     (tableLines, resolvedCellRow) => {
       tableLines.push(
         resolvedCellRow
-          .reduce((tableRow, cellContent) => {
+          .reduce((tableRow, cellContent, columnIndex) => {
+            if (cellContent.length === 0) {
+              cellContent = ' '
+            }
             const isEmptyCell = cellContent.length < 1
-            return tableRow.concat(`| ${isEmptyCell ? ' ' : cellContent} `)
+            const cellPadding =
+              cellContent.length < widths[columnIndex]
+                ? [
+                    DEFAULT_CELL_PADDING,
+                    DEFAULT_CELL_PADDING + widths[columnIndex] - cellContent.length,
+                  ]
+                : [DEFAULT_CELL_PADDING, DEFAULT_CELL_PADDING]
+            return tableRow.concat(
+              '|',
+              ' '.repeat(cellPadding[0]),
+              isEmptyCell ? ' ' : cellContent,
+              ' '.repeat(cellPadding[1]),
+            )
           }, '')
           .concat('|'),
       )

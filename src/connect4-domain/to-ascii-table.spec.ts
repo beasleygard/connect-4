@@ -87,7 +87,7 @@ describe('to-ascii-table', () => {
   })
   describe('given a grid with multiple rows', () => {
     describe('and 1 column', () => {
-      describe('where the content of each column is of equal length', () => {
+      describe('where the content of each cell is of equal length', () => {
         it('returns an ascii table with multiple rows and 1 column', () => {
           const asciiTable = toAsciiTable([[1], [2]])
           expect(asciiTable).toStrictEqual(`
@@ -96,6 +96,47 @@ describe('to-ascii-table', () => {
 |---|
 | 2 |
 |---|`)
+        })
+      })
+      describe('where the content of each cell is of differing length', () => {
+        it('returns an ascii table with multiple rows and 1 column', () => {
+          const asciiTable = toAsciiTable([[1], [20]])
+          expect(asciiTable).toStrictEqual(`
+|----|
+| 1  |
+|----|
+| 20 |
+|----|`)
+        })
+      })
+    })
+    describe('and multiple columns', () => {
+      describe('where the content of each cell is of equal length', () => {
+        it('returns an ascii table with multiple rows and multiple columns', () => {
+          const asciiTable = toAsciiTable([
+            [1, 1],
+            [1, 1],
+          ])
+          expect(asciiTable).toStrictEqual(`
+|---|---|
+| 1 | 1 |
+|---|---|
+| 1 | 1 |
+|---|---|`)
+        })
+      })
+      describe('where the content of each cell is of differing length', () => {
+        it('returns an ascii table with multiple rows and multiple columns', () => {
+          const asciiTable = toAsciiTable([
+            [1, 11],
+            [111, 1111],
+          ])
+          expect(asciiTable).toStrictEqual(`
+|-----|------|
+| 1   | 11   |
+|-----|------|
+| 111 | 1111 |
+|-----|------|`)
         })
       })
     })

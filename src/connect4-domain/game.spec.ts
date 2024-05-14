@@ -50,6 +50,16 @@ describe('game', () => {
           }),
         )
       })
+      it('creates a game where player 2 starts with a number of discs equal to half the number of cells', () => {
+        const game = new GameFactory()
+        const player1Stats = game.getStatsForPlayer(2)
+        expect(player1Stats).toEqual(
+          expect.objectContaining({
+            player: 2,
+            discsLeft: 21,
+          }),
+        )
+      })
     })
   })
 })

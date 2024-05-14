@@ -17,9 +17,11 @@ interface Game {
 
 class GameFactory implements Game {
   board: Board
+  movesLeft: number
 
   constructor({ boardDimensions }: GameParameters = { boardDimensions: { rows: 6, columns: 7 } }) {
     this.board = this.#createBoard(boardDimensions)
+    this.movesLeft = boardDimensions.rows * boardDimensions.columns
   }
 
   #createBoard({ rows, columns }: BoardDimensions) {
@@ -39,6 +41,13 @@ class GameFactory implements Game {
 
   getBoard() {
     return this.board
+  }
+
+  getStatsForPlayer(player: 1 | 2) {
+    return {
+      player: player,
+      discsLeft: player === 1 ? Math.ceil(this.movesLeft / 2) : Math.floor(this.movesLeft / 2),
+    }
   }
 }
 

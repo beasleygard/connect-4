@@ -29,4 +29,9 @@ describe('toBeDeeplyUnequal', () => {
     const arr2 = arr1
     expect(arr1).not.toBeDeeplyUnequal(arr2)
   })
+  it('should pass given two arrays that are different', () => {
+    const arr1 = []
+    const arr2 = []
+    expect(arr1).toBeDeeplyUnequal(arr2)
+  })
 })

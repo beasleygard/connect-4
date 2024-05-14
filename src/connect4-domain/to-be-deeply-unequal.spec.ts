@@ -39,4 +39,10 @@ describe('toBeDeeplyUnequal', () => {
     const arr2 = [2]
     expect(arr1).toBeDeeplyUnequal(arr2)
   })
+  it('should fail given two arrays that are equal at a shallow level', () => {
+    const innerArray = []
+    const arr1 = [innerArray]
+    const arr2 = [innerArray]
+    expect(arr1).not.toBeDeeplyUnequal(arr2)
+  })
 })

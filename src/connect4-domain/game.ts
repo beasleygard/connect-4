@@ -53,6 +53,10 @@ class GameFactory implements Game {
   }
 
   getBoard(): Board {
+    return this.#createDeepBoardClone()
+  }
+
+  #createDeepBoardClone(): Board {
     return this.board.map(
       (row): Array<BoardCell> =>
         row.map(
@@ -62,7 +66,6 @@ class GameFactory implements Game {
         ),
     )
   }
-
   getStatsForPlayer(playerNumber: PlayerNumber): PlayerStats {
     return this.playerStats[playerNumber]
   }

@@ -1,23 +1,20 @@
 import { MatcherResult } from '@/vitest'
 
-function getCannotFindSharedReference(obj1: any, obj2: any): boolean {
-  const firstIsObject = obj1 instanceof Object
-  const secondIsObject = obj2 instanceof Object
+function getCannotFindSharedReference(first: any, second: any): boolean {
+  const firstIsObject = first instanceof Object
+  const secondIsObject = second instanceof Object
   if (!(firstIsObject && secondIsObject)) {
     return true
-  }
-  if (obj1 === obj2) {
+  } else if (first === second) {
     return false
   }
 
-  const keys = new Set([...Object.keys(obj1), ...Object.keys(obj2)])
-  for (const key of keys) {
-    if (!getCannotFindSharedReference(obj1[key], obj2[key])) {
-      return false
-    }
-  }
-
-  return true
+  const keys = new Set([...Object.keys(first), ...Object.keys(second)])
+  return Array.from(keys).reduce(
+    (isDeeplyUnequal, currentKey) =>
+      isDeeplyUnequal && getCannotFindSharedReference(first[currentKey], second[currentKey]),
+    true,
+  )
 }
 
 function toBeDeeplyUnequal(
@@ -25,8 +22,8 @@ function toBeDeeplyUnequal(
   received: object,
   expected: object,
 ): MatcherResult {
-  const isNot = this?.isNot ?? false
-  let objsAreDeeplyUnequal = getCannotFindSharedReference(received, expected)
+  const { isNot } = this ?? {}
+  const objsAreDeeplyUnequal = getCannotFindSharedReference(received, expected)
   return {
     pass: objsAreDeeplyUnequal,
     message: () => `Objects are deeply ${isNot ? 'un' : ''}equal`,

@@ -8,7 +8,8 @@ interface MatcherResult {
 }
 
 interface CustomMatchers<R = unknown> {
-  toBeUuid: () => R
+  toBeUuid: (value: string) => R
+  toBeDeeplyUnequal: (value: object) => R
 }
 
 declare module 'vitest' {

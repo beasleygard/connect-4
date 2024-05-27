@@ -68,4 +68,15 @@ describe('toBeDeeplyUnequal', () => {
     const second = [1, 2]
     expect(first).toBeDeeplyUnequal(second)
   })
+  it('should pass given objects that are deeply unequal at a nested level', () => {
+    const first = { a: { a1: 1 }, b: 2 }
+    const second = { a: { a1: 1 }, b: 2 }
+    expect(first).toBeDeeplyUnequal(second)
+  })
+  it('should fail given objects that are not deeply unequal at a nested level', () => {
+    const innerObject = { a1: 1 }
+    const first = { a: innerObject, b: 2 }
+    const second = { a: innerObject, b: 2 }
+    expect(first).not.toBeDeeplyUnequal(second)
+  })
 })

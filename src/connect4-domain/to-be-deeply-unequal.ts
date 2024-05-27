@@ -26,7 +26,7 @@ function toBeDeeplyUnequal(
   const objsAreDeeplyUnequal = getIsDeeplyUnequal(received, expected)
   return {
     pass: objsAreDeeplyUnequal,
-    message: () => `Objects are deeply ${isNot ? 'un' : ''}equal`,
+    message: () => `Objects are ${isNot ? '' : 'not'}deeply unequal`,
   }
 }
 

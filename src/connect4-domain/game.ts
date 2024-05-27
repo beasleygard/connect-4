@@ -53,7 +53,14 @@ class GameFactory implements Game {
   }
 
   getBoard(): Board {
-    return this.board
+    return this.board.map(
+      (row): Array<BoardCell> =>
+        row.map(
+          (cell): BoardCell => ({
+            player: cell.player,
+          }),
+        ),
+    )
   }
 
   getStatsForPlayer(playerNumber: PlayerNumber): PlayerStats {

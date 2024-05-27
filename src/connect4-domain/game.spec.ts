@@ -60,7 +60,7 @@ describe('game', () => {
           }),
         )
       })
-      it.skip('creates a deep copy of the board', () => {
+      it('creates a deep copy of the board', () => {
         const game = new GameFactory()
         const firstBoard = game.getBoard()
         const secondBoard = game.getBoard()

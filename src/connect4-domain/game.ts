@@ -1,3 +1,5 @@
+import deepClone from '@/connect4-domain/deep-clone'
+
 type PlayerNumber = 1 | 2
 type PlayerStats = {
   player: PlayerNumber
@@ -57,14 +59,7 @@ class GameFactory implements Game {
   }
 
   #createDeepBoardClone(): Board {
-    return this.board.map(
-      (row): Array<BoardCell> =>
-        row.map(
-          (cell): BoardCell => ({
-            player: cell.player,
-          }),
-        ),
-    )
+    return deepClone(this.board)
   }
   getStatsForPlayer(playerNumber: PlayerNumber): PlayerStats {
     return this.playerStats[playerNumber]

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import GameFactory, { BoardCell } from '@/connect4-domain/game'
+import GameFactory, { BoardCell, InvalidBoardDimensionsError } from '@/connect4-domain/game'
 import _toAsciiTable from '@/connect4-domain/to-ascii-table'
 
 const toAsciiTable = (board: Array<Array<BoardCell>>): string =>

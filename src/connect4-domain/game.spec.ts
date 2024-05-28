@@ -83,6 +83,14 @@ describe('game', () => {
           )
         })
       })
+      describe('with a negative number of rows', () => {
+        it('throws an error', () => {
+          expect(() => new GameFactory({ boardDimensions: { rows: -2, columns: 3 } })).toThrow(
+            new InvalidBoardDimensionsError('Number of rows must be greater than or equal to 1'),
+          )
+        })
+      })
+
       describe('which results in an odd number of cells', () => {
         it('throws an error', () => {
           expect(() => new GameFactory({ boardDimensions: { rows: 3, columns: 3 } })).toThrow(

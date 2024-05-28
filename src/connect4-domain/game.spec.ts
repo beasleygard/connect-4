@@ -76,6 +76,13 @@ describe('game', () => {
           )
         })
       })
+      describe('with 0 columns', () => {
+        it('throws an error', () => {
+          expect(() => new GameFactory({ boardDimensions: { rows: 3, columns: 0 } })).toThrow(
+            new InvalidBoardDimensionsError('Number of columns must be greater than or equal to 1'),
+          )
+        })
+      })
     })
   })
 })

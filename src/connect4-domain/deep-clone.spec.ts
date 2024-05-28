@@ -43,4 +43,16 @@ describe('deep-clone', () => {
     expect(original(3)).toStrictEqual(cloned(3))
     expect(original).toBe(cloned)
   })
+  it('should return an identical symbol given a symbol', () => {
+    const original = Symbol('shdf')
+    const cloned = deepClone(original)
+    expect(cloned).toBe(original)
+  })
+  it('should deeply clone objects with circular references', () => {
+    const original: { a: number; b?: object } = { a: 1 }
+    original.b = original
+    const cloned = deepClone(original)
+    expect(cloned).not.toBe(original)
+    expect(cloned.b).toBe(cloned)
+  })
 })

@@ -10,7 +10,7 @@ export type BoardCell = {
   player: CellPlayer
 }
 export type Board = Array<Array<BoardCell>>
-type BoardDimensions = {
+export type BoardDimensions = {
   rows: number
   columns: number
 }

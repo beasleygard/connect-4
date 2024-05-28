@@ -1,5 +1,5 @@
 function deepClone<T>(value: T): T {
-  if (!(value instanceof Object)) {
+  if (!(value instanceof Object) || typeof value === 'function') {
     return value
   }
 

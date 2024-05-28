@@ -55,12 +55,9 @@ class GameFactory implements Game {
   }
 
   getBoard(): Board {
-    return this.#createDeepBoardClone()
-  }
-
-  #createDeepBoardClone(): Board {
     return deepClone(this.board)
   }
+
   getStatsForPlayer(playerNumber: PlayerNumber): PlayerStats {
     return this.playerStats[playerNumber]
   }

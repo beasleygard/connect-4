@@ -27,11 +27,13 @@ export class InvalidBoardDimensionsError extends RangeError {}
 class GameFactory implements Game {
   private board: Board
   private playerStats: Record<PlayerNumber, PlayerStats>
+  private activePlayer: PlayerNumber
 
   constructor({ boardDimensions }: GameParameters = { boardDimensions: { rows: 6, columns: 7 } }) {
     this.#validateBoardDimensions(boardDimensions)
     this.board = this.#createBoard(boardDimensions)
     this.playerStats = this.#createPlayerStatsRecord(boardDimensions)
+    this.activePlayer = 1
   }
 
   #validateBoardDimensions(boardDimensions: BoardDimensions) {
@@ -75,6 +77,10 @@ class GameFactory implements Game {
 
   getStatsForPlayer(playerNumber: PlayerNumber): PlayerStats {
     return this.playerStats[playerNumber]
+  }
+
+  getActivePlayer(): number {
+    return this.activePlayer
   }
 }
 

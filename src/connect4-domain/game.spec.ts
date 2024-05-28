@@ -128,7 +128,7 @@ describe('game', () => {
         })
       })
     })
-    it('return the currently active player', () => {
+    it('returns the currently active player', () => {
       const game = new GameFactory()
       expect(game.getActivePlayer()).toBe(1)
     })

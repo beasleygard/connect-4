@@ -15,6 +15,12 @@ function deepClone<T>(value: T, visited: WeakMap<any, any> = new WeakMap<any, an
     ;(result as any)[key] = clonedValue
   }
 
+  for (const symbol of Object.getOwnPropertySymbols(value)) {
+    const nestedValue = (value as any)[symbol]
+    const clonedValue = deepClone<typeof nestedValue>(nestedValue, visited)
+    ;(result as any)[symbol] = clonedValue
+  }
+
   return result
 }
 

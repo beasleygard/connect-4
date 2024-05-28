@@ -55,4 +55,16 @@ describe('deep-clone', () => {
     expect(cloned).not.toBe(original)
     expect(cloned.b).toBe(cloned)
   })
+  it('should properly deeply clone objects that use symbols as keys', () => {
+    const symB: unique symbol = Symbol('b')
+    const symD: unique symbol = Symbol('d')
+    const original: { a: number; [symB]: { c: number; [symD]: number } } = {
+      a: 1,
+      [symB]: { c: 2, [symD]: 4 },
+    }
+    const cloned = deepClone(original)
+    expect(cloned[symB]).not.toBe(original[symB])
+    expect(cloned[symB].c).toStrictEqual(original[symB].c)
+    expect(cloned[symB][symD]).toStrictEqual(original[symB][symD])
+  })
 })

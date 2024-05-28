@@ -133,4 +133,33 @@ describe('game', () => {
       expect(game.getActivePlayer()).toBe(1)
     })
   })
+  describe('making a move', () => {
+    describe('given a player is currently active', () => {
+      describe('and a cell location that is not on the board', () => {
+        it('the player is unable to move to a cell with a row number below the first row', () => {
+          const game = new GameFactory({ boardDimensions: { rows: 2, columns: 2 } })
+          expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(`
+            "
+            |---|---|
+            |   |   |
+            |---|---|
+            |   |   |
+            |---|---|"
+          `)
+          const movePlayerCommand = createMovePlayerCommand({
+            player: 1,
+            targetCell: { row: -1, column: 0 },
+          })
+          const event = game.move(movePlayerCommand)
+          expect(event).toEqual({
+            type: 'PLAYER_MOVE_FAILED',
+            payload: {
+              message:
+                'Cell at row -1 column 0 does not exist on the board. The row number must be >= 0 and <= 1',
+            },
+          })
+        })
+      })
+    })
+  })
 })

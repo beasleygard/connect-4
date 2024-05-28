@@ -83,6 +83,15 @@ describe('game', () => {
           )
         })
       })
+      describe('which results in an odd number of cells', () => {
+        it('throws an error', () => {
+          expect(() => new GameFactory({ boardDimensions: { rows: 3, columns: 3 } })).toThrow(
+            new InvalidBoardDimensionsError(
+              'Total number of cells on a board must be even. Supplied board dimensions (3 rows x 3 columns) results in an odd number of cells (9)',
+            ),
+          )
+        })
+      })
     })
   })
 })

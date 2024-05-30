@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { createMovePlayerCommand } from '@/connect4-domain/commands'
+import { PlayerMovedEvent } from '@/connect4-domain/events'
 import GameFactory, { BoardCell, InvalidBoardDimensionsError } from '@/connect4-domain/game'
 import _toAsciiTable from '@/connect4-domain/to-ascii-table'
 
@@ -221,14 +222,6 @@ describe('game', () => {
         })
       })
       describe('and a cell on the first row', () => {
-        const bottomCornerMoveMade2x2BoardSnapshot = `
-            "
-            |---|---|
-            |   |   |
-            |---|---|
-            | 1 |   |
-            |---|---|"
-          `
         describe('and the cell is unoccupied', () => {
           it('the player should be able to move a disk into the cell', () => {
             const game = new GameFactory({ boardDimensions: { rows: 2, columns: 2 } })
@@ -240,9 +233,14 @@ describe('game', () => {
               },
             })
             expect(game.move(movePlayerCommand)).toBeInstanceOf(PlayerMovedEvent)
-            expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(
-              bottomCornerMoveMade2x2BoardSnapshot,
-            )
+            expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(`
+              "
+              |---|---|
+              | 1 |   |
+              |---|---|
+              |   |   |
+              |---|---|"
+            `)
           })
         })
       })

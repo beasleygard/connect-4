@@ -1,6 +1,6 @@
 import { MovePlayerCommand, MovePlayerCommandPayload } from '@/connect4-domain/commands'
 import deepClone from '@/connect4-domain/deep-clone'
-import { PlayerMoveFailedEvent, createPlayerMoveFailedEvent } from '@/connect4-domain/events'
+import { Event, PlayerMoveFailedEvent, createPlayerMoveFailedEvent } from '@/connect4-domain/events'
 
 type PlayerNumber = 1 | 2
 type PlayerStats = {
@@ -85,22 +85,34 @@ class GameFactory implements Game {
     return this.activePlayer
   }
 
-  move({
-    payload: {
-      targetCell: { row, column },
-    },
-  }: MovePlayerCommand): PlayerMoveFailedEvent {
+  move(movePlayerCommand: MovePlayerCommand): Event {
+    const validatedMove = this.#createValidatedMove(undefined, movePlayerCommand)
+    return validatedMove()
+  }
+
+  #createValidatedMove(
+    moveFunction: (movePlayerCommand: MovePlayerCommand) => PlayerMovedEvent,
+    movePlayerCommand: MovePlayerCommand,
+  ): () => Event {
+    const {
+      payload: {
+        targetCell: { row, column },
+      },
+    } = movePlayerCommand
     const rangeErrorMessage = `Cell at row ${row} column ${column} does not exist on the board.`
     if (row < 0 || row >= this.board.length) {
-      return createPlayerMoveFailedEvent({
-        message: `${rangeErrorMessage} The row number must be >= 0 and <= ${this.board.length - 1}`,
-      })
+      return () =>
+        createPlayerMoveFailedEvent({
+          message: `${rangeErrorMessage} The row number must be >= 0 and <= ${this.board.length - 1}`,
+        })
     } else if (column < 0 || column >= this.board[0].length) {
-      return createPlayerMoveFailedEvent({
-        message: `${rangeErrorMessage} The column number must be >= 0 and <= ${this.board[0].length - 1}`,
-      })
+      return () =>
+        createPlayerMoveFailedEvent({
+          message: `${rangeErrorMessage} The column number must be >= 0 and <= ${this.board[0].length - 1}`,
+        })
     }
-    console.log(column)
+
+    return () => moveFunction(movePlayerCommand)
   }
 }
 

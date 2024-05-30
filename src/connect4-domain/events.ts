@@ -1,10 +1,17 @@
 export enum EventTypes {
   PLAYER_MOVE_FAILED = 'PLAYER_MOVE_FAILED',
 }
-type PlayerMoveFailedEventPayload = {
+
+type EventPayload = {
   message: string
 }
-export class PlayerMoveFailedEvent {
+export interface Event {
+  type: EventTypes
+  payload: EventPayload
+}
+
+interface PlayerMoveFailedEventPayload extends EventPayload {}
+export class PlayerMoveFailedEvent implements Event {
   type: EventTypes.PLAYER_MOVE_FAILED
   payload: PlayerMoveFailedEventPayload
 

@@ -90,9 +90,17 @@ class GameFactory implements Game {
       targetCell: { row, column },
     },
   }: MovePlayerCommand): PlayerMoveFailedEvent {
-    const message = `Cell at row ${row} column ${column} does not exist on the board. The row number must be >= 0 and <= ${this.board.length - 1}`
-
-    return createPlayerMoveFailedEvent({ message: message })
+    const rangeErrorMessage = `Cell at row ${row} column ${column} does not exist on the board.`
+    if (row < 0 || row >= this.board.length) {
+      return createPlayerMoveFailedEvent({
+        message: `${rangeErrorMessage} The row number must be >= 0 and <= ${this.board.length - 1}`,
+      })
+    } else if (column < 0) {
+      return createPlayerMoveFailedEvent({
+        message: `${rangeErrorMessage} The column number must be >= 0 and <= ${this.board[0].length - 1}`,
+      })
+    }
+    console.log(column)
   }
 }
 

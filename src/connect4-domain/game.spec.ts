@@ -196,7 +196,7 @@ describe('game', () => {
             type: 'PLAYER_MOVE_FAILED',
             payload: {
               message:
-                'Cell at row 2 column 0 does not exist on the board. The column number must be >= 0 and <= 1',
+                'Cell at row 0 column -1 does not exist on the board. The column number must be >= 0 and <= 1',
             },
           })
           expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(boardSnapshot2x2)

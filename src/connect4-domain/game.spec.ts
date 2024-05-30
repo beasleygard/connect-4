@@ -137,7 +137,7 @@ describe('game', () => {
   describe('making a move', () => {
     describe('given a player is currently active', () => {
       describe('and a cell location that is not on the board', () => {
-        const boardSnapshot2x2 = `
+        const empty2x2BoardSnapshot = `
             "
             |---|---|
             |   |   |
@@ -147,7 +147,7 @@ describe('game', () => {
           `
         it('the player is unable to move to a cell with a row number below the first row', () => {
           const game = new GameFactory({ boardDimensions: { rows: 2, columns: 2 } })
-          expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(boardSnapshot2x2)
+          expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(empty2x2BoardSnapshot)
           expect(game.getActivePlayer()).toBe(1)
           const movePlayerCommand = createMovePlayerCommand({
             player: 1,
@@ -161,12 +161,12 @@ describe('game', () => {
                 'Cell at row -1 column 0 does not exist on the board. The row number must be >= 0 and <= 1',
             },
           })
-          expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(boardSnapshot2x2)
+          expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(empty2x2BoardSnapshot)
           expect(game.getActivePlayer()).toBe(1)
         })
         it('the player is unable to move to a cell with a row number above the last row', () => {
           const game = new GameFactory({ boardDimensions: { rows: 2, columns: 2 } })
-          expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(boardSnapshot2x2)
+          expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(empty2x2BoardSnapshot)
           expect(game.getActivePlayer()).toBe(1)
           const movePlayerCommand = createMovePlayerCommand({
             player: 1,
@@ -180,12 +180,12 @@ describe('game', () => {
                 'Cell at row 2 column 0 does not exist on the board. The row number must be >= 0 and <= 1',
             },
           })
-          expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(boardSnapshot2x2)
+          expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(empty2x2BoardSnapshot)
           expect(game.getActivePlayer()).toBe(1)
         })
         it('the player is unable to move to a cell with a column number before the first column', () => {
           const game = new GameFactory({ boardDimensions: { rows: 2, columns: 2 } })
-          expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(boardSnapshot2x2)
+          expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(empty2x2BoardSnapshot)
           expect(game.getActivePlayer()).toBe(1)
           const movePlayerCommand = createMovePlayerCommand({
             player: 1,
@@ -199,12 +199,12 @@ describe('game', () => {
                 'Cell at row 0 column -1 does not exist on the board. The column number must be >= 0 and <= 1',
             },
           })
-          expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(boardSnapshot2x2)
+          expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(empty2x2BoardSnapshot)
           expect(game.getActivePlayer()).toBe(1)
         })
         it('the player is unable to move to a cell with a column number after the last column', () => {
           const game = new GameFactory({ boardDimensions: { rows: 2, columns: 2 } })
-          expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(boardSnapshot2x2)
+          expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(empty2x2BoardSnapshot)
           expect(game.getActivePlayer()).toBe(1)
           const movePlayerCommand = createMovePlayerCommand({
             player: 1,
@@ -217,6 +217,32 @@ describe('game', () => {
               message:
                 'Cell at row 0 column 2 does not exist on the board. The column number must be >= 0 and <= 1',
             },
+          })
+        })
+      })
+      describe('and a cell on the first row', () => {
+        const bottomCornerMoveMade2x2BoardSnapshot = `
+            "
+            |---|---|
+            |   |   |
+            |---|---|
+            | 1 |   |
+            |---|---|"
+          `
+        describe('and the cell is unoccupied', () => {
+          it('the player should be able to move a disk into the cell', () => {
+            const game = new GameFactory({ boardDimensions: { rows: 2, columns: 2 } })
+            const movePlayerCommand = createMovePlayerCommand({
+              player: 1,
+              targetCell: {
+                row: 0,
+                column: 0,
+              },
+            })
+            expect(game.move(movePlayerCommand)).toBeInstanceOf(PlayerMovedEvent)
+            expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(
+              bottomCornerMoveMade2x2BoardSnapshot,
+            )
           })
         })
       })

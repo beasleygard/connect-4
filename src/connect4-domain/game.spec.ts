@@ -183,6 +183,25 @@ describe('game', () => {
           expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(boardSnapshot2x2)
           expect(game.getActivePlayer()).toBe(1)
         })
+        it('the player is unable to move to a cell with a column number before the first column', () => {
+          const game = new GameFactory({ boardDimensions: { rows: 2, columns: 2 } })
+          expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(boardSnapshot2x2)
+          expect(game.getActivePlayer()).toBe(1)
+          const movePlayerCommand = createMovePlayerCommand({
+            player: 1,
+            targetCell: { row: 0, column: -1 },
+          })
+          const event = game.move(movePlayerCommand)
+          expect(event).toEqual({
+            type: 'PLAYER_MOVE_FAILED',
+            payload: {
+              message:
+                'Cell at row 2 column 0 does not exist on the board. The column number must be >= 0 and <= 1',
+            },
+          })
+          expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(boardSnapshot2x2)
+          expect(game.getActivePlayer()).toBe(1)
+        })
       })
     })
   })

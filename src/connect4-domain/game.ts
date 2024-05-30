@@ -1,3 +1,4 @@
+import { MovePlayerCommand } from '@/connect4-domain/commands'
 import deepClone from '@/connect4-domain/deep-clone'
 
 type PlayerNumber = 1 | 2
@@ -82,6 +83,7 @@ class GameFactory implements Game {
   getActivePlayer(): number {
     return this.activePlayer
   }
+  move(moveCommand: MovePlayerCommand): 
 }
 
 export default GameFactory

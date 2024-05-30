@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { createMovePlayerCommand } from '@/connect4-domain/commands'
 import GameFactory, { BoardCell, InvalidBoardDimensionsError } from '@/connect4-domain/game'
 import _toAsciiTable from '@/connect4-domain/to-ascii-table'
 

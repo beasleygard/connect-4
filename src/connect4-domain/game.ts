@@ -87,7 +87,6 @@ class GameFactory implements Game {
 
   move({
     payload: {
-      player,
       targetCell: { row, column },
     },
   }: MovePlayerCommand): PlayerMoveFailedEvent {

@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { PlayerMoveFailedEvent, createPlayerMoveFailedEvent } from '@/connect4-domain/events'
 
 describe('events', () => {
   describe('createPlayerMoveFailedEvent', () => {

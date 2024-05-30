@@ -147,6 +147,7 @@ describe('game', () => {
             |   |   |
             |---|---|"
           `)
+          expect(game.getActivePlayer()).toBe(1)
           const movePlayerCommand = createMovePlayerCommand({
             player: 1,
             targetCell: { row: -1, column: 0 },
@@ -159,6 +160,15 @@ describe('game', () => {
                 'Cell at row -1 column 0 does not exist on the board. The row number must be >= 0 and <= 1',
             },
           })
+          expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(`
+            "
+            |---|---|
+            |   |   |
+            |---|---|
+            |   |   |
+            |---|---|"
+          `)
+          expect(game.getActivePlayer()).toBe(1)
         })
       })
     })

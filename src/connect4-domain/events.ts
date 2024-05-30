@@ -39,4 +39,5 @@ const createPlayerMoveFailedEvent = (
 
 const createPlayerMovedEvent = (eventPayload?: PlayerMovedEventPayload): PlayerMovedEvent =>
   new PlayerMovedEvent(eventPayload)
+
 export { createPlayerMoveFailedEvent, createPlayerMovedEvent }

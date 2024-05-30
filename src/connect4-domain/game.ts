@@ -90,10 +90,7 @@ class GameFactory implements Game {
     return this.activePlayer
   }
 
-  move(movePlayerCommand: MovePlayerCommand): Event {
-    const validatedMove = this.#createValidatedMove(this.#move.bind(this), movePlayerCommand)
-    return validatedMove()
-  }
+  move = this.#createValidatedMove(this.#move.bind(this))
 
   #move(movePlayerCommand: MovePlayerCommand): PlayerMovedEvent {
     const {
@@ -102,6 +99,7 @@ class GameFactory implements Game {
         targetCell: { row, column },
       },
     } = movePlayerCommand
+
     this.board[row][column] = {
       player: player,
     } satisfies BoardCell
@@ -110,34 +108,28 @@ class GameFactory implements Game {
 
   #createValidatedMove(
     moveFunction: (movePlayerCommand: MovePlayerCommand) => PlayerMovedEvent,
-    movePlayerCommand: MovePlayerCommand,
-  ): () => Event {
-    const {
-      payload: {
-        targetCell: { row, column },
-      },
-    } = movePlayerCommand
+  ): (movePlayerCommand: MovePlayerCommand) => Event {
+    return (movePlayerCommand: MovePlayerCommand) => {
+      const {
+        payload: {
+          targetCell: { row, column },
+        },
+      } = movePlayerCommand
 
-    const rowInValidRange = row >= 0 && row < this.board.length
-    const columnInValidRange = column >= 0 && column < this.board[0].length
-    const moveIsValid = rowInValidRange && columnInValidRange
-    if (moveIsValid) {
-      return () => moveFunction(movePlayerCommand)
-    } else {
-      const rangeErrorMessage = `Cell at row ${row} column ${column} does not exist on the board.`
-      if (!rowInValidRange) {
-        return () =>
-          createPlayerMoveFailedEvent({
-            message: `${rangeErrorMessage} The row number must be >= 0 and <= ${this.board.length - 1}`,
-          })
+      const rowInValidRange = row >= 0 && row < this.board.length
+      const columnInValidRange = column >= 0 && column < this.board[0].length
+      const moveIsValid = rowInValidRange && columnInValidRange
+      if (moveIsValid) {
+        return moveFunction(movePlayerCommand)
       } else {
-        return () =>
-          createPlayerMoveFailedEvent({
-            message: `${rangeErrorMessage} The column number must be >= 0 and <= ${this.board[0].length - 1}`,
-          })
+        const rangeErrorMessage = `Cell at row ${row} column ${column} does not exist on the board. ${
+          !rowInValidRange
+            ? `The row number must be >= 0 and <= ${this.board.length - 1}`
+            : `The column number must be >= 0 and <= ${this.board[0].length - 1}`
+        }`
+        return createPlayerMoveFailedEvent({ message: rangeErrorMessage })
       }
     }
   }
 }
-
 export default GameFactory

@@ -95,7 +95,7 @@ class GameFactory implements Game {
       return createPlayerMoveFailedEvent({
         message: `${rangeErrorMessage} The row number must be >= 0 and <= ${this.board.length - 1}`,
       })
-    } else if (column < 0) {
+    } else if (column < 0 || column >= this.board[0].length) {
       return createPlayerMoveFailedEvent({
         message: `${rangeErrorMessage} The column number must be >= 0 and <= ${this.board[0].length - 1}`,
       })

@@ -122,17 +122,11 @@ class GameFactory implements Game {
     }
   }
 
-  getBoard(): Board {
-    return deepClone(this.board)
-  }
+  getBoard = (): Board => deepClone(this.board)
 
-  getStatsForPlayer(playerNumber: PlayerNumber): PlayerStats {
-    return this.playerStats[playerNumber]
-  }
+  getStatsForPlayer = (playerNumber: PlayerNumber): PlayerStats => this.playerStats[playerNumber]
 
-  getActivePlayer(): PlayerNumber {
-    return this.activePlayer
-  }
+  getActivePlayer = (): PlayerNumber => this.activePlayer
 
   move = this.#createValidatedMove(this.#move.bind(this))
 

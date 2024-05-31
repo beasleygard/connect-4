@@ -348,5 +348,25 @@ describe('game', () => {
         })
       })
     })
+    describe('given a player is currently inactive', () => {
+      it('the player should not be able to move a disk into the cell', () => {
+        const game = create2x2Board()
+        const movePlayerCommand = createMovePlayerCommand({
+          player: 2,
+          targetCell: {
+            row: 0,
+            column: 0,
+          },
+        })
+        expect(game.getActivePlayer()).toBe(1)
+        expect(game.move(movePlayerCommand)).toEqual({
+          type: 'PLAYER_MOVE_FAILED',
+          payload: {
+            message: "Player 2 cannot make a move while it is player 1's turn",
+          },
+        })
+        expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot()
+      })
+    })
   })
 })

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { createMovePlayerCommand } from '@/connect4-domain/commands'
-import { PlayerMovedEvent } from '@/connect4-domain/events'
+import { PlayerMoveFailedEvent, PlayerMovedEvent } from '@/connect4-domain/events'
 import GameFactory, { BoardCell, InvalidBoardDimensionsError } from '@/connect4-domain/game'
 import _toAsciiTable from '@/connect4-domain/to-ascii-table'
 
@@ -15,6 +15,9 @@ const toAsciiTable = (board: Array<Array<BoardCell>>): string =>
         return ''
     }
   })
+
+const create2x2Board = () => new GameFactory({ boardDimensions: { rows: 2, columns: 2 } })
+
 describe('game', () => {
   describe('new game', () => {
     describe('given defaults', () => {
@@ -224,7 +227,7 @@ describe('game', () => {
       describe('and a cell on the first row', () => {
         describe('and the cell is unoccupied', () => {
           it('the player should be able to move a disk into the cell', () => {
-            const game = new GameFactory({ boardDimensions: { rows: 2, columns: 2 } })
+            const game = create2x2Board()
             const movePlayerCommand = createMovePlayerCommand({
               player: 1,
               targetCell: {
@@ -233,6 +236,39 @@ describe('game', () => {
               },
             })
             expect(game.move(movePlayerCommand)).toBeInstanceOf(PlayerMovedEvent)
+            expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(`
+              "
+              |---|---|
+              | 1 |   |
+              |---|---|
+              |   |   |
+              |---|---|"
+            `)
+          })
+        })
+        describe('and the cell is occupied', () => {
+          it('the player should not be able to move a disk into the cell', () => {
+            const game = create2x2Board()
+            game.move(
+              createMovePlayerCommand({
+                player: 1,
+                targetCell: {
+                  row: 0,
+                  column: 0,
+                },
+              }),
+            )
+            const movePlayerCommand = createMovePlayerCommand({
+              player: 2,
+              targetCell: {
+                row: 0,
+                column: 0,
+              },
+            })
+            expect(game.move(movePlayerCommand)).toBeInstanceOf(PlayerMoveFailedEvent)
+            expect(game.move(movePlayerCommand).payload?.message).toBe(
+              'Cell at row 0 column 0 is already occupied',
+            )
             expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(`
               "
               |---|---|

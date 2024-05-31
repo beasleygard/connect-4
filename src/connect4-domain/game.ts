@@ -21,14 +21,17 @@ export type BoardDimensions = {
   rows: number
   columns: number
 }
+export class InvalidBoardDimensionsError extends RangeError {}
 export type GameParameters = {
   boardDimensions: BoardDimensions
 }
 
+type MoveValidationCheck = {
+  predicate: (movePlayerCommand: MovePlayerCommand) => boolean
+  failureMessageFactory: (movePlayerCommand: MovePlayerCommand) => string
+}
+
 type MoveValidationResult = {
-  rowInValidRange: boolean
-  columnInValidRange: boolean
-  placementIsValid: boolean
   isValid: boolean
   message?: string
 }
@@ -40,13 +43,12 @@ interface Game {
   move: (movePlayerCommand: MovePlayerCommand) => Event
 }
 
-export class InvalidBoardDimensionsError extends RangeError {}
-
 class GameFactory implements Game {
   private board: Board
   private playerStats: Record<PlayerNumber, PlayerStats>
   private activePlayer: PlayerNumber
   private validRowPlacementsByColumn: number[]
+  private moveValidationChecks: MoveValidationCheck[]
 
   constructor({ boardDimensions }: GameParameters = { boardDimensions: { rows: 6, columns: 7 } }) {
     this.#validateBoardDimensions(boardDimensions)
@@ -54,6 +56,29 @@ class GameFactory implements Game {
     this.playerStats = this.#createPlayerStatsRecord(boardDimensions)
     this.activePlayer = 1
     this.validRowPlacementsByColumn = new Array(boardDimensions.columns).fill(0)
+    this.moveValidationChecks = [
+      {
+        predicate: (movePlayerCommand) =>
+          movePlayerCommand.payload.targetCell.row >= 0 &&
+          movePlayerCommand.payload.targetCell.row < this.board.length,
+        failureMessageFactory: (movePlayerCommand) =>
+          `Cell at row ${movePlayerCommand.payload.targetCell.row} column ${movePlayerCommand.payload.targetCell.column} does not exist on the board. The row number must be >= 0 and <= ${this.board.length - 1}`,
+      },
+      {
+        predicate: (movePlayerCommand) =>
+          movePlayerCommand.payload.targetCell.column >= 0 &&
+          movePlayerCommand.payload.targetCell.column < this.board[0].length,
+        failureMessageFactory: (movePlayerCommand) =>
+          `Cell at row ${movePlayerCommand.payload.targetCell.row} column ${movePlayerCommand.payload.targetCell.column} does not exist on the board. The column number must be >= 0 and <= ${this.board[0].length - 1}`,
+      },
+      {
+        predicate: (movePlayerCommand) =>
+          this.validRowPlacementsByColumn[movePlayerCommand.payload.targetCell.column] ===
+          movePlayerCommand.payload.targetCell.row,
+        failureMessageFactory: (movePlayerCommand) =>
+          `Cell at row ${movePlayerCommand.payload.targetCell.row} column ${movePlayerCommand.payload.targetCell.column} is already occupied`,
+      },
+    ]
   }
 
   #validateBoardDimensions(boardDimensions: BoardDimensions) {
@@ -121,26 +146,16 @@ class GameFactory implements Game {
     return createPlayerMovedEvent()
   }
 
-  #validateMove({
-    payload: {
-      targetCell: { row, column },
-    },
-  }: MovePlayerCommand): MoveValidationResult {
-    const result = {} as MoveValidationResult
-    result.rowInValidRange = row >= 0 && row < this.board.length
-    result.columnInValidRange = column >= 0 && column < this.board[0].length
-    result.placementIsValid = this.validRowPlacementsByColumn[column] === row
-    result.isValid = result.rowInValidRange && result.columnInValidRange && result.placementIsValid
-    if (!(result.rowInValidRange && result.columnInValidRange)) {
-      result.message = `Cell at row ${row} column ${column} does not exist on the board. ${
-        !result.rowInValidRange
-          ? `The row number must be >= 0 and <= ${this.board.length - 1}`
-          : `The column number must be >= 0 and <= ${this.board[0].length - 1}`
-      }`
-    } else if (!result.placementIsValid) {
-      result.message = `Cell at row ${row} column ${column} is already occupied`
+  #validateMove(movePlayerCommand: MovePlayerCommand): MoveValidationResult {
+    for (const moveValidationCheck of this.moveValidationChecks) {
+      const moveValidationCheckFailed = !moveValidationCheck.predicate(movePlayerCommand)
+      if (moveValidationCheckFailed)
+        return {
+          isValid: false,
+          message: moveValidationCheck.failureMessageFactory(movePlayerCommand),
+        }
     }
-    return result
+    return { isValid: true }
   }
 
   #createValidatedMove(

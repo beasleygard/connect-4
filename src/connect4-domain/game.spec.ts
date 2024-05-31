@@ -280,6 +280,46 @@ describe('game', () => {
           })
         })
       })
+      describe('and a cell on the second row', () => {
+        describe('and the cell below is occupied', () => {
+          it('the player should be able to move a disk into the cell', () => {
+            const game = create2x2Board()
+            game.move(
+              createMovePlayerCommand({
+                player: 1,
+                targetCell: {
+                  row: 0,
+                  column: 0,
+                },
+              }),
+            )
+            expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(`
+              "
+              |---|---|
+              | 1 |   |
+              |---|---|
+              |   |   |
+              |---|---|"
+            `)
+            const movePlayerCommand = createMovePlayerCommand({
+              player: 2,
+              targetCell: {
+                row: 1,
+                column: 0,
+              },
+            })
+            expect(game.move(movePlayerCommand)).toBeInstanceOf(PlayerMovedEvent)
+            expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(`
+              "
+              |---|---|
+              | 1 |   |
+              |---|---|
+              | 2 |   |
+              |---|---|"
+            `)
+          })
+        })
+      })
     })
   })
 })

@@ -58,6 +58,11 @@ class GameFactory implements Game {
     this.validRowPlacementsByColumn = new Array(boardDimensions.columns).fill(0)
     this.moveValidationChecks = [
       {
+        predicate: ({ payload: { player } }) => player === this.activePlayer,
+        failureMessageFactory: ({ payload: { player } }) =>
+          `Player ${player} cannot make a move while it is player ${this.activePlayer}'s turn`,
+      },
+      {
         predicate: (command) =>
           command.payload.targetCell.row >= 0 && command.payload.targetCell.row < this.board.length,
         failureMessageFactory: (movePlayerCommand) =>
@@ -142,6 +147,7 @@ class GameFactory implements Game {
       player: player,
     }
     this.validRowPlacementsByColumn[column] += 1
+    this.activePlayer = this.activePlayer == 1 ? 2 : 1
 
     return createPlayerMovedEvent()
   }

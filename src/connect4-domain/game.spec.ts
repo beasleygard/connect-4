@@ -365,7 +365,14 @@ describe('game', () => {
             message: "Player 2 cannot make a move while it is player 1's turn",
           },
         })
-        expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot()
+        expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(`
+          "
+          |---|---|
+          |   |   |
+          |---|---|
+          |   |   |
+          |---|---|"
+        `)
       })
     })
   })

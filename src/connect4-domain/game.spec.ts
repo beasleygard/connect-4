@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { createMovePlayerCommand } from '@/connect4-domain/commands'
-import { PlayerMoveFailedEvent, PlayerMovedEvent } from '@/connect4-domain/events'
+import { EventTypes, PlayerMoveFailedEvent, PlayerMovedEvent } from '@/connect4-domain/events'
 import GameFactory, { BoardCell, InvalidBoardDimensionsError } from '@/connect4-domain/game'
 import _toAsciiTable from '@/connect4-domain/to-ascii-table'
 
@@ -317,6 +317,26 @@ describe('game', () => {
               | 2 |   |
               |---|---|"
             `)
+          })
+        })
+        describe('and the cell below is unoccupied', () => {
+          it('the player should not be able to move a disk into the cell', () => {
+            const game = create2x2Board()
+            const movePlayerCommand = createMovePlayerCommand({
+              player: 1,
+              targetCell: {
+                row: 1,
+                column: 0,
+              },
+            })
+            expect(game.move(movePlayerCommand)).toEqual({
+              type: 'PLAYER_MOVE_FAILED',
+              payload: {
+                message:
+                  'Cell at row 1 column 0 cannot be placed as there is no disk in the row below',
+              },
+            })
+            expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot()
           })
         })
       })

@@ -336,7 +336,14 @@ describe('game', () => {
                   'Cell at row 1 column 0 cannot be placed as there is no disk in the row below',
               },
             })
-            expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot()
+            expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(`
+              "
+              |---|---|
+              |   |   |
+              |---|---|
+              |   |   |
+              |---|---|"
+            `)
           })
         })
       })

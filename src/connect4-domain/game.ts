@@ -58,25 +58,31 @@ class GameFactory implements Game {
     this.validRowPlacementsByColumn = new Array(boardDimensions.columns).fill(0)
     this.moveValidationChecks = [
       {
-        predicate: (movePlayerCommand) =>
-          movePlayerCommand.payload.targetCell.row >= 0 &&
-          movePlayerCommand.payload.targetCell.row < this.board.length,
+        predicate: (command) =>
+          command.payload.targetCell.row >= 0 && command.payload.targetCell.row < this.board.length,
         failureMessageFactory: (movePlayerCommand) =>
           `Cell at row ${movePlayerCommand.payload.targetCell.row} column ${movePlayerCommand.payload.targetCell.column} does not exist on the board. The row number must be >= 0 and <= ${this.board.length - 1}`,
       },
       {
-        predicate: (movePlayerCommand) =>
-          movePlayerCommand.payload.targetCell.column >= 0 &&
-          movePlayerCommand.payload.targetCell.column < this.board[0].length,
+        predicate: (command) =>
+          command.payload.targetCell.column >= 0 &&
+          command.payload.targetCell.column < this.board[0].length,
         failureMessageFactory: (movePlayerCommand) =>
           `Cell at row ${movePlayerCommand.payload.targetCell.row} column ${movePlayerCommand.payload.targetCell.column} does not exist on the board. The column number must be >= 0 and <= ${this.board[0].length - 1}`,
       },
       {
-        predicate: (movePlayerCommand) =>
-          this.validRowPlacementsByColumn[movePlayerCommand.payload.targetCell.column] ===
-          movePlayerCommand.payload.targetCell.row,
-        failureMessageFactory: (movePlayerCommand) =>
-          `Cell at row ${movePlayerCommand.payload.targetCell.row} column ${movePlayerCommand.payload.targetCell.column} is already occupied`,
+        predicate: (command) =>
+          this.validRowPlacementsByColumn[command.payload.targetCell.column] <=
+          command.payload.targetCell.row,
+        failureMessageFactory: (command) =>
+          `Cell at row ${command.payload.targetCell.row} column ${command.payload.targetCell.column} is already occupied`,
+      },
+      {
+        predicate: (command) =>
+          this.validRowPlacementsByColumn[command.payload.targetCell.column] >=
+          command.payload.targetCell.row,
+        failureMessageFactory: (command) =>
+          `Cell at row ${command.payload.targetCell.row} column ${command.payload.targetCell.column} cannot be placed as there is no disk in the row below`,
       },
     ]
   }
@@ -140,7 +146,7 @@ class GameFactory implements Game {
 
     this.board[row][column] = {
       player: player,
-    } satisfies BoardCell
+    }
     this.validRowPlacementsByColumn[column] += 1
 
     return createPlayerMovedEvent()

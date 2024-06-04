@@ -50,5 +50,16 @@ describe('parse-ascii-table', () => {
         expect(parseAsciiTable(asciiTable)).toEqual([['1'], ['2']])
       })
     })
+    describe('where all cells hold content of differing length', () => {
+      it('returns a 2x1 grid', () => {
+        const asciiTable = `
+|----|
+| 1  |
+|----|
+| 10 |
+|----|`
+        expect(parseAsciiTable(asciiTable)).toEqual([['1'], ['10']])
+      })
+    })
   })
 })

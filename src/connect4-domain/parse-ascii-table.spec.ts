@@ -89,4 +89,20 @@ describe('parse-ascii-table', () => {
       expect(parseAsciiTable(asciiTable)).toEqual([['1', '2']])
     })
   })
+  describe('given a 2x2 ascii table', () => {
+    describe('where all cells hold content of differing lengths', () => {
+      it('returns a 2x2 grid', () => {
+        const asciiTable = `
+|----|------|
+| 1  | 100  |
+|----|------|
+| 10 | 1000 |
+|----|------|`
+        expect(parseAsciiTable(asciiTable)).toEqual([
+          ['1', '100'],
+          ['10', '1000'],
+        ])
+      })
+    })
+  })
 })

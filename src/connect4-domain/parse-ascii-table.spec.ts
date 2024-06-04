@@ -17,7 +17,7 @@ describe('parse-ascii-table', () => {
 |  |
 |--|
 `
-      expect(parseAsciiTable<undefined>(asciiTable)).toEqual([[]])
+      expect(parseAsciiTable<undefined>(asciiTable)).toEqual([[undefined]])
     })
     describe('with a non-empty cell', () => {
       it('returns a 1x1 grid', () => {
@@ -35,6 +35,19 @@ describe('parse-ascii-table', () => {
         |---|`
           expect(parseAsciiTable(asciiTable, stringToNumberResolver)).toEqual([[1]])
         })
+      })
+    })
+  })
+  describe('given a 2x1 ascii table', () => {
+    describe('where all cells hold content of the same length', () => {
+      it('returns a 2x1 grid', () => {
+        const asciiTable = `
+|---|
+| 1 |
+|---|
+| 2 |
+|---|`
+        expect(parseAsciiTable(asciiTable)).toEqual([['1'], ['2']])
       })
     })
   })

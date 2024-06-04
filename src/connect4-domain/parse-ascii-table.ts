@@ -1,16 +1,17 @@
-type NullableString = string | null
-
-function parseAsciiTable<T>(asciiTable: string): Array<Array<T>> {
+function parseAsciiTable<T>(
+  asciiTable: string,
+  cellResolver: (input: string) => T = ((input) => (input.length === 0 ? undefined : input)) as (
+    input: string,
+  ) => T,
+): T[][] {
   return asciiTable
     .split('\n')
     .filter((_, index, rows) => index % 2 === 0 && index != 0 && index < rows.length - 1)
-    .map((row) => row.match(/(?<=\| )(.*?)(?= \|)/gm) as Array<NullableString>)
-    .reduce((parsedRows: Array<Array<T>>, rowContent: Array<NullableString>): Array<Array<T>> => {
+    .map((row) => row.match(/(?<=\| )(.*?)(?= \|)/gm) as Array<string>)
+    .reduce((parsedRows: T[][], rowContent: Array<string>): Array<Array<T>> => {
       parsedRows.push(
-        rowContent.reduce((parsedCells: Array<T>, cellContent: NullableString): Array<T> => {
-          if (cellContent !== null && cellContent.length > 0) {
-            parsedCells.push(cellContent as T)
-          }
+        rowContent.reduce((parsedCells: Array<T>, cellContent: string): Array<T> => {
+          parsedCells.push(cellResolver(cellContent))
           return parsedCells
         }, []),
       )

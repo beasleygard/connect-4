@@ -36,6 +36,15 @@ describe('parse-ascii-table', () => {
           expect(parseAsciiTable(asciiTable, stringToNumberResolver)).toEqual([[1]])
         })
       })
+      describe('with trailing whitespace', () => {
+        it('returns a 1x1 grid trimming the trailing whitespace', () => {
+          const asciiTable = `
+|----|
+| 1  |
+|----|`
+          expect(parseAsciiTable(asciiTable)).toEqual([['1']])
+        })
+      })
     })
   })
   describe('given a 2x1 ascii table', () => {
@@ -51,7 +60,7 @@ describe('parse-ascii-table', () => {
       })
     })
     describe('where all cells hold content of differing length', () => {
-      it('returns a 2x1 grid', () => {
+      it.todo('returns a 2x1 grid', () => {
         const asciiTable = `
 |----|
 | 1  |

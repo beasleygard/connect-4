@@ -5,7 +5,7 @@ describe('parse-ascii-table', () => {
   describe('given a table with no rows or columns', () => {
     it('returns an empty grid', () => {
       const emptyTable = ''
-      expect(parseAsciiTable(emptyTable)).toEqual([[]])
+      expect(parseAsciiTable(emptyTable)).toEqual([])
     })
   })
 })

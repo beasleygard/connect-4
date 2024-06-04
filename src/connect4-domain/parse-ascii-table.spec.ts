@@ -103,6 +103,20 @@ describe('parse-ascii-table', () => {
           ['10', '1000'],
         ])
       })
+      describe('and given a custom resolver', () => {
+        it('returns a 2x2 grid with resolved values', () => {
+          const asciiTable = `
+            |----|------|
+            | 1  | 100  |
+            |----|------|
+            | 10 | 1000 |
+            |----|------|`
+          expect(parseAsciiTable(asciiTable, stringToNumberResolver)).toEqual([
+            [1, 100],
+            [10, 1000],
+          ])
+        })
+      })
     })
   })
 })

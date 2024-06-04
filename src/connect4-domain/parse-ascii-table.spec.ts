@@ -60,7 +60,7 @@ describe('parse-ascii-table', () => {
       })
     })
     describe('where all cells hold content of differing length', () => {
-      it.todo('returns a 2x1 grid', () => {
+      it('returns a 2x1 grid', () => {
         const asciiTable = `
 |----|
 | 1  |

@@ -111,7 +111,7 @@ describe('parse-ascii-table', () => {
             |----|------|
             | 10 | 1000 |
             |----|------|`
-          expect(parseAsciiTable(asciiTable, stringToNumberResolver)).toEqual([
+          expect(parseAsciiTable<number>(asciiTable, stringToNumberResolver)).toEqual([
             [1, 100],
             [10, 1000],
           ])

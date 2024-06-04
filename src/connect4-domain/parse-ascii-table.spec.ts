@@ -80,4 +80,13 @@ describe('parse-ascii-table', () => {
       })
     })
   })
+  describe('given a 1x2 ascii table', () => {
+    it('returns a 1x2 grid', () => {
+      const asciiTable = `
+|---|---|
+| 1 | 2 |
+|---|---|`
+      expect(parseAsciiTable(asciiTable)).toEqual([['1', '2']])
+    })
+  })
 })

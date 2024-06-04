@@ -10,14 +10,13 @@ describe('parse-ascii-table', () => {
     })
   })
   describe('given a 1x1 ascii table', () => {
-    it('returns a 1x1 grid', () => {
+it('returns a 1x1 grid', () => {
       const asciiTable = `
-        "
-        |---|
-        |   |
-        |---|"
-      `
-      expect(parseAsciiTable(asciiTable)).toEqual([[]])
+|--|
+|  |
+|--|
+`
+      expect(parseAsciiTable<undefined>(asciiTable)).toEqual([[]])
     })
   })
 })

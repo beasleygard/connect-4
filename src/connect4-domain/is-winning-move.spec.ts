@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { Board, BoardCell } from '@/connect4-domain/game'
 import isWinningMove from '@/connect4-domain/is-winning-move'
 import parseAsciiTable from '@/connect4-domain/parse-ascii-table'
 
@@ -10,14 +11,14 @@ type PlayerMove = {
   }
 }
 
-const resolveToBoardCell = (input: string) => ({
-  player: Number.parseInt(input),
+const resolveToBoardCell = (input: string): BoardCell => ({
+  player: Number.parseInt(input) as 1 | 2,
 })
 
 describe('is-winning-move', () => {
   describe('given a board and a move that would result in a vertical win', () => {
     it('detects the win', () => {
-      const board = parseAsciiTable(
+      const board: Board = parseAsciiTable(
         `
 |---|
 | 1 |
@@ -42,6 +43,42 @@ describe('is-winning-move', () => {
           isWinningMove: true,
         }),
       )
+    })
+  })
+  describe('given a board and a move that would result in a horizontal win', () => {
+    describe('and there are 3 of the active players tokens to the left of the target cell', () => {
+      it('detects the win', () => {
+        const asciiTable = `
+  |---|---|---|---|
+  | 1 | 1 | 1 |   |
+  |---|---|---|---|`
+        const board = parseAsciiTable(asciiTable, resolveToBoardCell)
+        const move: PlayerMove = {
+          player: 1,
+          targetCell: {
+            row: 0,
+            column: 3,
+          },
+        }
+        expect(isWinningMove(board, move)).toEqual(expect.objectContaining({ isWinningMove: true }))
+      })
+    })
+    describe('and there are 3 of the active players tokens to the right of the target cell', () => {
+      it('detects the win', () => {
+        const asciiTable = `
+  |---|---|---|---|
+  |   | 1 | 1 | 1 |
+  |---|---|---|---|`
+        const board = parseAsciiTable(asciiTable, resolveToBoardCell)
+        const move: PlayerMove = {
+          player: 1,
+          targetCell: {
+            row: 0,
+            column: 0,
+          },
+        }
+        expect(isWinningMove(board, move)).toEqual(expect.objectContaining({ isWinningMove: true }))
+      })
     })
   })
 })

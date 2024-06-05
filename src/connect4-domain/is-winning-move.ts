@@ -57,8 +57,7 @@ const isHorizontalWinningMove = (
   const targetColumnToCellsAroundTheMove = R.compose(
     R.map((x: Array<number>) => R.map((columnIndex) => [targetRow, columnIndex], x)),
     R.partition((columnIndex: number) => columnIndex <= targetColumn),
-    //@ts-ignore
-    R.filter(R.__, R.range(0, board[0].length)),
+    R.filter(R.__ as unknown as (val: number) => boolean, R.range(0, board[0].length)),
     (x: number) => (columnIndex: number) => columnIndex !== x,
   )
 

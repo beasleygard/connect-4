@@ -80,5 +80,22 @@ describe('is-winning-move', () => {
         expect(isWinningMove(board, move)).toEqual(expect.objectContaining({ isWinningMove: true }))
       })
     })
+    describe('and there are 2 of the moving players tokens to the left and 1 to the right of the target cell', () => {
+      it('detects the win', () => {
+        const asciiTable = `
+    |---|---|---|---|
+    | 1 | 1 |   | 1 |
+    |---|---|---|---|`
+        const board = parseAsciiTable(asciiTable, resolveToBoardCell)
+        const move: PlayerMove = {
+          player: 1,
+          targetCell: {
+            row: 0,
+            column: 2,
+          },
+        }
+        expect(isWinningMove(board, move)).toEqual(expect.objectContaining({ isWinningMove: true }))
+      })
+    })
   })
 })

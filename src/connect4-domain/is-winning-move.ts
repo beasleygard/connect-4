@@ -53,12 +53,19 @@ const isHorizontalWinningMove = (
   board: Array<Array<BoardCell>>,
   { player, targetCell: { row: targetRow, column: targetColumn } }: MovePlayerCommandPayload,
 ) => {
-  //@ts-ignore
-  const targetColumnToCellsAroundTheMove = R.compose(
-    R.map((x: Array<number>) => R.map((columnIndex) => [targetRow, columnIndex], x)),
+  const targetColumnToCellsAroundTheMove = R.compose<
+    [number],
+    (val: number) => boolean,
+    Array<number>,
+    Array<Array<number>>,
+    Array<Array<Array<number>>>
+  >(
+    R.map((columnIndexes) =>
+      R.map<number, number[]>((columnIndex) => [targetRow, columnIndex], columnIndexes),
+    ),
     R.partition((columnIndex: number) => columnIndex <= targetColumn),
-    R.filter(R.__ as unknown as (val: number) => boolean, R.range(0, board[0].length)),
-    (x: number) => (columnIndex: number) => columnIndex !== x,
+    R.flip(R.reject<number, any>)(R.range(0, board[0].length)),
+    (val1: number) => (val2: number) => val1 === val2,
   )
 
   const [cellsLeftOfMove, cellsRightOfMove] = targetColumnToCellsAroundTheMove(targetColumn)

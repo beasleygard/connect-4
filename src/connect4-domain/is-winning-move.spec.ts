@@ -46,7 +46,7 @@ describe('is-winning-move', () => {
     })
   })
   describe('given a board and a move that would result in a horizontal win', () => {
-    describe('and there are 3 of the active players tokens to the left of the target cell', () => {
+    describe('and there are 3 of the moving players tokens to the left of the target cell', () => {
       it('detects the win', () => {
         const asciiTable = `
   |---|---|---|---|
@@ -63,7 +63,7 @@ describe('is-winning-move', () => {
         expect(isWinningMove(board, move)).toEqual(expect.objectContaining({ isWinningMove: true }))
       })
     })
-    describe('and there are 3 of the active players tokens to the right of the target cell', () => {
+    describe('and there are 3 of the moving players tokens to the right of the target cell', () => {
       it('detects the win', () => {
         const asciiTable = `
   |---|---|---|---|

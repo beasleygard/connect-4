@@ -1,3 +1,4 @@
+import { MovePlayerCommandPayload } from '@/connect4-domain/commands'
 import { Board, BoardCell } from '@/connect4-domain/game'
 import isWinningMove from '@/connect4-domain/is-winning-move'
 import parseAsciiTable from '@/connect4-domain/parse-ascii-table'
@@ -245,6 +246,37 @@ describe('is-winning-move', () => {
           }
           expect(isWinningMove(board, move)).toEqual(
             expect.objectContaining({ isWinningMove: false }),
+          )
+        })
+      })
+    })
+  })
+  describe('bottom-left to top-right (BL-TR) diagonal win condition checking', () => {
+    describe('given a board and a move that would result in a BL-TR win', () => {
+      describe('where 3 of the moving players tokens are on a BL-TR line ending at the target cell', () => {
+        it('detects the win', () => {
+          const asciiTable = `
+          |---|---|---|---|
+          | 1 |   |   |   |
+          |---|---|---|---|
+          |   | 1 |   |   |
+          |---|---|---|---|
+          |   |   | 1 |   |
+          |---|---|---|---|
+          |   |   |   |   |
+          |---|---|---|---|`
+          const board = parseAsciiTable(asciiTable, resolveToBoardCell)
+          const move = {
+            player: 1,
+            targetCell: {
+              row: 3,
+              column: 3,
+            },
+          } satisfies MovePlayerCommandPayload
+          expect(isWinningMove(board, move)).toEqual(
+            expect.objectContaining({
+              isWinningMove: true,
+            }),
           )
         })
       })

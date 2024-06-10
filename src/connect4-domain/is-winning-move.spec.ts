@@ -97,5 +97,81 @@ describe('is-winning-move', () => {
         expect(isWinningMove(board, move)).toEqual(expect.objectContaining({ isWinningMove: true }))
       })
     })
+    describe('and there is 1 of the moving players tokens to the left and 2 to the right of the target cell', () => {
+      it('detects the win', () => {
+        const asciiTable = `
+    |---|---|---|---|
+    | 1 |   | 1 | 1 |
+    |---|---|---|---|`
+        const board = parseAsciiTable(asciiTable, resolveToBoardCell)
+        const move: PlayerMove = {
+          player: 1,
+          targetCell: {
+            row: 0,
+            column: 1,
+          },
+        }
+        expect(isWinningMove(board, move)).toEqual(expect.objectContaining({ isWinningMove: true }))
+      })
+    })
+  })
+  describe('given a board and a move that would not result in a horizontal win', () => {
+    describe('and there are less than 3 of the active players tokens to the left of the target cell', () => {
+      it('does not detect a win', () => {
+        const asciiTable = `
+        |---|---|---|---|
+        | 1 |   |   |   |
+        |---|---|---|---|`
+        const board = parseAsciiTable(asciiTable, resolveToBoardCell)
+        const move: PlayerMove = {
+          player: 1,
+          targetCell: {
+            row: 0,
+            column: 3,
+          },
+        }
+        expect(isWinningMove(board, move)).toEqual(
+          expect.objectContaining({ isWinningMove: false }),
+        )
+      })
+    })
+    describe('and there are less that 3 of the active players tokens to the right of the target cell', () => {
+      it('does not detect a win', () => {
+        const asciiTable = `
+    |---|---|---|---|
+    |   | 1 |   |   |
+    |---|---|---|---|`
+        const board = parseAsciiTable(asciiTable, resolveToBoardCell)
+        const move: PlayerMove = {
+          player: 1,
+          targetCell: {
+            row: 0,
+            column: 0,
+          },
+        }
+        expect(isWinningMove(board, move)).toEqual(
+          expect.objectContaining({ isWinningMove: false }),
+        )
+      })
+    })
+    describe('and there are 3 of the active players tokens in a row not successive with the target cell', () => {
+      it('does not detect a win', () => {
+        const asciiTable = `
+    |---|---|---|---|---|
+    | 1 | 1 | 1 | 2 |   |
+    |---|---|---|---|---|`
+        const board = parseAsciiTable(asciiTable, resolveToBoardCell)
+        const move: PlayerMove = {
+          player: 1,
+          targetCell: {
+            row: 0,
+            column: 4,
+          },
+        }
+        expect(isWinningMove(board, move)).toEqual(
+          expect.objectContaining({ isWinningMove: false }),
+        )
+      })
+    })
   })
 })

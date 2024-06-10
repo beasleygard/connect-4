@@ -1,7 +1,7 @@
-import { describe, expect, it } from 'vitest'
 import { Board, BoardCell } from '@/connect4-domain/game'
 import isWinningMove from '@/connect4-domain/is-winning-move'
 import parseAsciiTable from '@/connect4-domain/parse-ascii-table'
+import { describe, expect, it } from 'vitest'
 
 type PlayerMove = {
   player: 1 | 2

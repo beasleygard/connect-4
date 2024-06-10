@@ -1,6 +1,6 @@
-import * as R from 'ramda'
 import { MovePlayerCommandPayload } from '@/connect4-domain/commands'
 import { Board, BoardCell } from '@/connect4-domain/game'
+import * as R from 'ramda'
 
 const getSuccessivePlayerDiscCountFromCells = (
   player: 1 | 2,
@@ -18,6 +18,50 @@ const getSuccessivePlayerDiscCountFromCells = (
   return playerDiscLineLength
 }
 
+const targetColumnToColumnsAroundTheMove = (board: Board, targetColumn: number) =>
+  R.compose<[number], (val: number) => boolean, Array<number>, Array<Array<number>>>(
+    R.partition((columnIndex: number) => columnIndex <= targetColumn),
+    R.flip(R.reject<number, any>)(R.range(0, board[0].length)),
+    (val1: number) => (val2: number) => val1 === val2,
+  )(targetColumn)
+
+const getBoardCellsOnSlopeFromCellCoordinates = (
+  board: Board,
+  rowStartIndex: number,
+  rowEndIndex: number,
+  columns: number[],
+  step: (input: number) => number,
+) => {
+  const cells = []
+  let rowIndex = rowStartIndex
+  for (const columnIndex of columns) {
+    if (rowIndex === rowEndIndex) {
+      break
+    }
+
+    cells.push(board[rowIndex][columnIndex])
+    rowIndex = step(rowIndex)
+  }
+
+  return cells
+}
+
+const getBoardCellsOnDownardSlope = R.curry(getBoardCellsOnSlopeFromCellCoordinates)(
+  R.__,
+  R.__,
+  R.__,
+  R.__,
+  (input: number) => input - 1,
+)
+
+const getBoardCellsOnUpwardSlope = R.curry(getBoardCellsOnSlopeFromCellCoordinates)(
+  R.__,
+  R.__,
+  R.__,
+  R.__,
+  (input: number) => input + 1,
+)
+
 const isVerticalWinningMove = (
   board: Board,
   { player, targetCell: { row: targetRow, column: targetColumn } }: MovePlayerCommandPayload,
@@ -28,7 +72,7 @@ const isVerticalWinningMove = (
     R.range(0),
   )
 
-  const cellsToCheck = targetRowToCellsToCheck(targetRow) as Array<BoardCell>
+  const cellsToCheck = targetRowToCellsToCheck(targetRow)
   const playerDiscLineLength = 1 + getSuccessivePlayerDiscCountFromCells(player, cellsToCheck)
 
   return {
@@ -37,22 +81,18 @@ const isVerticalWinningMove = (
 }
 
 const isHorizontalWinningMove = (
-  board: Array<Array<BoardCell>>,
+  board: Board,
   { player, targetCell: { row: targetRow, column: targetColumn } }: MovePlayerCommandPayload,
 ) => {
   const targetColumnToCellsAroundTheMove = R.compose<
     [number],
-    (val: number) => boolean,
-    Array<number>,
     Array<Array<number>>,
     Array<Array<BoardCell>>
   >(
     R.map((columnIndexes: Array<number>) =>
       R.map((columnIndex) => board[targetRow][columnIndex], columnIndexes),
     ),
-    R.partition((columnIndex: number) => columnIndex <= targetColumn),
-    R.flip(R.reject<number, any>)(R.range(0, board[0].length)),
-    (val1: number) => (val2: number) => val1 === val2,
+    R.curry(targetColumnToColumnsAroundTheMove)(board),
   )
 
   const [cellsLeftOfMove, cellsRightOfMove] = targetColumnToCellsAroundTheMove(targetColumn)
@@ -66,7 +106,53 @@ const isHorizontalWinningMove = (
   }
 }
 
-const winConditionChecks = [isVerticalWinningMove, isHorizontalWinningMove]
+const isBLTRDiagonalWinningMove = (
+  board: Board,
+  { player, targetCell: { row: targetRow, column: targetColumn } }: MovePlayerCommandPayload,
+) => {
+  const [columnsLeftOfMove, columnsRightOfMove] = targetColumnToColumnsAroundTheMove(
+    board,
+    targetColumn,
+  )
+  const cellsLeftOfMove = getBoardCellsOnDownardSlope(
+    board,
+    targetRow - 1,
+    -1,
+    R.reverse(columnsLeftOfMove),
+  )
+  const cellsRightOfMove = getBoardCellsOnUpwardSlope(
+    board,
+    targetRow + 1,
+    board.length,
+    columnsRightOfMove,
+  )
+  for (const [distanceFromTargetCell, columnIndex] of columnsRightOfMove.entries()) {
+    const rowIndex = targetRow + distanceFromTargetCell + 1
+    if (rowIndex < board.length) {
+      cellsRightOfMove.push(board[rowIndex][columnIndex])
+    } else {
+      break
+    }
+  }
+
+  console.log(cellsLeftOfMove)
+  console.log(cellsRightOfMove)
+
+  const discLineLength =
+    1 +
+    getSuccessivePlayerDiscCountFromCells(player, cellsLeftOfMove) +
+    getSuccessivePlayerDiscCountFromCells(player, cellsRightOfMove)
+
+  return {
+    isWinningMove: discLineLength >= 4,
+  }
+}
+
+const winConditionChecks = [
+  isVerticalWinningMove,
+  isHorizontalWinningMove,
+  isBLTRDiagonalWinningMove,
+]
 
 const isWinningMove = (board: Array<Array<BoardCell>>, move: MovePlayerCommandPayload) => {
   for (const checkWinCondition of winConditionChecks) {

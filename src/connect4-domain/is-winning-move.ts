@@ -21,7 +21,7 @@ const getSuccessivePlayerDiscCountFromCells = (
 const targetColumnToColumnsAroundTheMove = (board: Board, targetColumn: number) =>
   R.compose<[number], (val: number) => boolean, Array<number>, Array<Array<number>>>(
     R.partition((columnIndex: number) => columnIndex <= targetColumn),
-    R.flip(R.reject<number, any>)(R.range(0, board[0].length)),
+    R.curry(R.reject<number, any>)(R.__, R.range(0, board[0].length)),
     (val1: number) => (val2: number) => val1 === val2,
   )(targetColumn)
 
@@ -152,7 +152,6 @@ const isTLBRDiagonalWinningMove = (
     board.length,
     R.reverse(columnsLeftOfMove),
   )
-  console.log(cellsLeftOfMove)
   const cellsRightOfMove = getBoardCellsOnDownwardSlope(
     board,
     targetRow - 1,

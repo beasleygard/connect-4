@@ -511,9 +511,10 @@ describe('is-winning-move', () => {
             }),
           )
         })
-        describe('where 3 of the moving players tokens are to the right of the target cell', () => {
-          it('detects the win', () => {
-            const asciiTable = `
+      })
+      describe('where 3 of the moving players tokens are to the right of the target cell', () => {
+        it('detects the win', () => {
+          const asciiTable = `
           |---|---|---|---|
           |   |   |   | 1 |
           |---|---|---|---|
@@ -523,24 +524,24 @@ describe('is-winning-move', () => {
           |---|---|---|---|
           |   |   |   |   |
           |---|---|---|---|`
-            const board = parseAsciiTable(asciiTable, resolveToBoardCell)
-            const move = {
-              player: 1,
-              targetCell: {
-                row: 3,
-                column: 0,
-              },
-            } satisfies MovePlayerCommandPayload
-            expect(isWinningMove(board, move)).toEqual(
-              expect.objectContaining({
-                isWinningMove: true,
-              }),
-            )
-          })
+          const board = parseAsciiTable(asciiTable, resolveToBoardCell)
+          const move = {
+            player: 1,
+            targetCell: {
+              row: 3,
+              column: 0,
+            },
+          } satisfies MovePlayerCommandPayload
+          expect(isWinningMove(board, move)).toEqual(
+            expect.objectContaining({
+              isWinningMove: true,
+            }),
+          )
         })
-        describe('where 2 of the moving players tokens are to the left of the target cell and 1 is on the right', () => {
-          it('detects the win', () => {
-            const asciiTable = `
+      })
+      describe('where 2 of the moving players tokens are to the left of the target cell and 1 is on the right', () => {
+        it('detects the win', () => {
+          const asciiTable = `
           |---|---|---|---|
           |   |   |   | 1 |
           |---|---|---|---|
@@ -550,24 +551,24 @@ describe('is-winning-move', () => {
           |---|---|---|---|
           | 1 |   |   |   |
           |---|---|---|---|`
-            const board = parseAsciiTable(asciiTable, resolveToBoardCell)
-            const move = {
-              player: 1,
-              targetCell: {
-                row: 1,
-                column: 2,
-              },
-            } satisfies MovePlayerCommandPayload
-            expect(isWinningMove(board, move)).toEqual(
-              expect.objectContaining({
-                isWinningMove: true,
-              }),
-            )
-          })
+          const board = parseAsciiTable(asciiTable, resolveToBoardCell)
+          const move = {
+            player: 1,
+            targetCell: {
+              row: 1,
+              column: 2,
+            },
+          } satisfies MovePlayerCommandPayload
+          expect(isWinningMove(board, move)).toEqual(
+            expect.objectContaining({
+              isWinningMove: true,
+            }),
+          )
         })
-        describe('where 1 of the moving players tokens are to the left of the target cell and 2 are on the right', () => {
-          it('detects the win', () => {
-            const asciiTable = `
+      })
+      describe('where 1 of the moving players tokens are to the left of the target cell and 2 are on the right', () => {
+        it('detects the win', () => {
+          const asciiTable = `
           |---|---|---|---|
           |   |   |   | 1 |
           |---|---|---|---|
@@ -577,24 +578,24 @@ describe('is-winning-move', () => {
           |---|---|---|---|
           | 1 |   |   |   |
           |---|---|---|---|`
-            const board = parseAsciiTable(asciiTable, resolveToBoardCell)
-            const move = {
-              player: 1,
-              targetCell: {
-                row: 2,
-                column: 1,
-              },
-            } satisfies MovePlayerCommandPayload
-            expect(isWinningMove(board, move)).toEqual(
-              expect.objectContaining({
-                isWinningMove: true,
-              }),
-            )
-          })
+          const board = parseAsciiTable(asciiTable, resolveToBoardCell)
+          const move = {
+            player: 1,
+            targetCell: {
+              row: 2,
+              column: 1,
+            },
+          } satisfies MovePlayerCommandPayload
+          expect(isWinningMove(board, move)).toEqual(
+            expect.objectContaining({
+              isWinningMove: true,
+            }),
+          )
         })
-        describe('and the player move results in a diagonal win under the main diagonal', () => {
-          it('detects the win', () => {
-            const table = `
+      })
+      describe('and the player move results in a diagonal win under the main diagonal', () => {
+        it('detects the win', () => {
+          const table = `
       |---|---|---|---|---|
       |   |   |   |   |   |
       |---|---|---|---|---|
@@ -606,24 +607,24 @@ describe('is-winning-move', () => {
       |---|---|---|---|---|
       |   | 1 |   |   |   |
       |---|---|---|---|---|`
-            const board = parseAsciiTable(table, resolveToBoardCell)
-            const playerMove = {
-              player: 1,
-              targetCell: {
-                row: 1,
-                column: 4,
-              },
-            } as PlayerMove
-            expect(isWinningMove(board, playerMove)).toEqual(
-              expect.objectContaining({
-                isWinningMove: true,
-              }),
-            )
-          })
+          const board = parseAsciiTable(table, resolveToBoardCell)
+          const playerMove = {
+            player: 1,
+            targetCell: {
+              row: 1,
+              column: 4,
+            },
+          } as PlayerMove
+          expect(isWinningMove(board, playerMove)).toEqual(
+            expect.objectContaining({
+              isWinningMove: true,
+            }),
+          )
         })
-        describe('and the player move results in a diagonal win above the main diagonal', () => {
-          it.skip('detects the win', () => {
-            const table = `
+      })
+      describe('and the player move results in a diagonal win above the main diagonal', () => {
+        it('detects the win', () => {
+          const table = `
       |---|---|---|---|---|
       |   |   |   |   |   |
       |---|---|---|---|---|
@@ -635,24 +636,24 @@ describe('is-winning-move', () => {
       |---|---|---|---|---|
       |   |   |   |   |   |
       |---|---|---|---|---|`
-            const board = parseAsciiTable(table, resolveToBoardCell)
-            const playerMove = {
-              player: 1,
-              targetCell: {
-                row: 0,
-                column: 3,
-              },
-            } as PlayerMove
-            expect(isWinningMove(board, playerMove)).toEqual(
-              expect.objectContaining({
-                isWinningMoven: true,
-              }),
-            )
-          })
+          const board = parseAsciiTable(table, resolveToBoardCell)
+          const playerMove = {
+            player: 1,
+            targetCell: {
+              row: 0,
+              column: 3,
+            },
+          } as PlayerMove
+          expect(isWinningMove(board, playerMove)).toEqual(
+            expect.objectContaining({
+              isWinningMove: true,
+            }),
+          )
         })
-        describe('and the winning diagonal does not touch the board', () => {
-          it.skip('detects the win', () => {
-            const table = `
+      })
+      describe('and the winning diagonal does not touch edges of the board', () => {
+        it('detects the win', () => {
+          const table = `
       |---|---|---|---|---|---|
       |   |   |   |   |   |   |
       |---|---|---|---|---|---|
@@ -666,25 +667,50 @@ describe('is-winning-move', () => {
       |---|---|---|---|---|---|
       |   |   |   |   |   |   |
       |---|---|---|---|---|---|`
-            const board = parseAsciiTable(table, resolveToBoardCell)
-            const playerMove = {
-              player: 1,
-              targetCell: {
-                row: 0,
-                column: 4,
-              },
-            } as PlayerMove
-            expect(isWinningMove(board, playerMove)).toEqual(
-              expect.objectContaining({
-                isWinningMove: true,
-              }),
-            )
-          })
+          const board = parseAsciiTable(table, resolveToBoardCell)
+          const playerMove = {
+            player: 1,
+            targetCell: {
+              row: 1,
+              column: 4,
+            },
+          } as PlayerMove
+          expect(isWinningMove(board, playerMove)).toEqual(
+            expect.objectContaining({
+              isWinningMove: true,
+            }),
+          )
         })
       })
-      describe('given a board and a move that would not result in a TL-BR win', () => {
-        describe('where the moving player has 3 discs on a TL-BR line not successive with the target cell', () => {
-          it.todo('does not detect a win')
+    })
+    describe('given a board and a move that would not result in a TL-BR win', () => {
+      describe('where the moving player has 3 discs on a TL-BR line not successive with the target cell', () => {
+        it('does not detect a win', () => {
+          const table = `
+      |---|---|---|---|---|
+      |   |   |   |   |   |
+      |---|---|---|---|---|
+      |   |   |   |   |   |
+      |---|---|---|---|---|
+      |   |   | 1 |   |   |
+      |---|---|---|---|---|
+      |   | 1 |   |   |   |
+      |---|---|---|---|---|
+      | 1 |   |   |   |   |
+      |---|---|---|---|---|`
+          const board = parseAsciiTable(table, resolveToBoardCell)
+          const move = {
+            player: 1,
+            targetCell: {
+              row: 0,
+              column: 4,
+            },
+          } satisfies MovePlayerCommandPayload
+          expect(isWinningMove(board, move)).toEqual(
+            expect.objectContaining({
+              isWinningMove: false,
+            }),
+          )
         })
       })
     })

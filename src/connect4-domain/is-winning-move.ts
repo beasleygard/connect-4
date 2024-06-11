@@ -46,7 +46,7 @@ const getBoardCellsOnSlopeFromCellCoordinates = (
   return cells
 }
 
-const getBoardCellsOnDownardSlope = R.curry(getBoardCellsOnSlopeFromCellCoordinates)(
+const getBoardCellsOnDownwardSlope = R.curry(getBoardCellsOnSlopeFromCellCoordinates)(
   R.__,
   R.__,
   R.__,
@@ -114,7 +114,7 @@ const isBLTRDiagonalWinningMove = (
     board,
     targetColumn,
   )
-  const cellsLeftOfMove = getBoardCellsOnDownardSlope(
+  const cellsLeftOfMove = getBoardCellsOnDownwardSlope(
     board,
     targetRow - 1,
     -1,
@@ -134,9 +134,6 @@ const isBLTRDiagonalWinningMove = (
       break
     }
   }
-
-  console.log(cellsLeftOfMove)
-  console.log(cellsRightOfMove)
 
   const discLineLength =
     1 +

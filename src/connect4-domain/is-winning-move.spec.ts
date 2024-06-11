@@ -253,7 +253,7 @@ describe('is-winning-move', () => {
   })
   describe('bottom-left to top-right (BL-TR) diagonal win condition checking', () => {
     describe('given a board and a move that would result in a BL-TR win', () => {
-      describe('where 3 of the moving players tokens are on a BL-TR line ending at the target cell', () => {
+      describe('where 3 of the moving players tokens are to the left of the target cell', () => {
         it('detects the win', () => {
           const asciiTable = `
           |---|---|---|---|
@@ -280,7 +280,34 @@ describe('is-winning-move', () => {
           )
         })
       })
-      describe('where 2 of the moving players tokens are on a BL-TR line to the left of the target cell and 1 of the moving players tokens continue the line', () => {
+      describe('where 3 of the moving players tokens are to the right of the target cell', () => {
+        it('detects the win', () => {
+          const asciiTable = `
+          |---|---|---|---|
+          | 1 |   |   |   |
+          |---|---|---|---|
+          |   | 1 |   |   |
+          |---|---|---|---|
+          |   |   | 1 |   |
+          |---|---|---|---|
+          |   |   |   |   |
+          |---|---|---|---|`
+          const board = parseAsciiTable(asciiTable, resolveToBoardCell)
+          const move = {
+            player: 1,
+            targetCell: {
+              row: 3,
+              column: 3,
+            },
+          } satisfies MovePlayerCommandPayload
+          expect(isWinningMove(board, move)).toEqual(
+            expect.objectContaining({
+              isWinningMove: true,
+            }),
+          )
+        })
+      })
+      describe('where 2 of the moving players tokens are to the left of the target cell and 1 is on the right', () => {
         it('detects the win', () => {
           const asciiTable = `
           |---|---|---|---|
@@ -307,6 +334,263 @@ describe('is-winning-move', () => {
           )
         })
       })
+      describe('where 1 of the moving players tokens are to the left of the target cell and 2 are on the right', () => {
+        it('detects the win', () => {
+          const asciiTable = `
+          |---|---|---|---|
+          | 1 |   |   |   |
+          |---|---|---|---|
+          |   |   |   |   |
+          |---|---|---|---|
+          |   |   | 1 |   |
+          |---|---|---|---|
+          |   |   |   | 1 |
+          |---|---|---|---|`
+          const board = parseAsciiTable(asciiTable, resolveToBoardCell)
+          const move = {
+            player: 1,
+            targetCell: {
+              row: 1,
+              column: 1,
+            },
+          } satisfies MovePlayerCommandPayload
+          expect(isWinningMove(board, move)).toEqual(
+            expect.objectContaining({
+              isWinningMove: true,
+            }),
+          )
+        })
+      })
+      describe('and the player move results in a diagonal win under the main diagonal', () => {
+        it('detects the win', () => {
+          const table = `
+    |---|---|---|---|---|
+    |   | 1 |   |   |   |
+    |---|---|---|---|---|
+    |   |   | 1 |   |   |
+    |---|---|---|---|---|
+    |   |   |   | 1 |   |
+    |---|---|---|---|---|
+    |   |   |   |   |   |
+    |---|---|---|---|---|
+    |   |   |   |   |   |
+    |---|---|---|---|---|`
+          const board = parseAsciiTable(table, resolveToBoardCell)
+          const playerMove = {
+            player: 1,
+            targetCell: {
+              row: 3,
+              column: 4,
+            },
+          } as PlayerMove
+          expect(isWinningMove(board, playerMove)).toEqual(
+            expect.objectContaining({
+              isWinningMove: true,
+            }),
+          )
+        })
+      })
+      describe('and the player move results in a diagonal win above the main diagonal', () => {
+        it('detects the win', () => {
+          const table = `
+    |---|---|---|---|---|
+    |   |   |   |   |   |
+    |---|---|---|---|---|
+    | 1 |   |   |   |   |
+    |---|---|---|---|---|
+    |   | 1 |   |   |   |
+    |---|---|---|---|---|
+    |   |   | 1 |   |   |
+    |---|---|---|---|---|
+    |   |   |   |   |   |
+    |---|---|---|---|---|`
+          const board = parseAsciiTable(table, resolveToBoardCell)
+          const playerMove = {
+            player: 1,
+            targetCell: {
+              row: 4,
+              column: 3,
+            },
+          } as PlayerMove
+          expect(isWinningMove(board, playerMove)).toEqual(
+            expect.objectContaining({
+              isWinningMove: true,
+            }),
+          )
+        })
+      })
+      describe('and the winning diagonal does not touch the board', () => {
+        it('detects the win', () => {
+          const table = `
+    |---|---|---|---|---|---|
+    |   |   |   |   |   |   |
+    |---|---|---|---|---|---|
+    |   | 1 |   |   |   |   |
+    |---|---|---|---|---|---|
+    |   |   | 1 |   |   |   |
+    |---|---|---|---|---|---|
+    |   |   |   | 1 |   |   |
+    |---|---|---|---|---|---|
+    |   |   |   |   |   |   |
+    |---|---|---|---|---|---|
+    |   |   |   |   |   |   |
+    |---|---|---|---|---|---|`
+          const board = parseAsciiTable(table, resolveToBoardCell)
+          const playerMove = {
+            player: 1,
+            targetCell: {
+              row: 4,
+              column: 4,
+            },
+          } as PlayerMove
+          expect(isWinningMove(board, playerMove)).toEqual(
+            expect.objectContaining({
+              isWinningMove: true,
+            }),
+          )
+        })
+      })
+    })
+    describe('given a board and a move that would not result in a BL-TR win', () => {
+      describe('where the moving player has 3 discs on a BL-TR line not successive with the target cell', () => {
+        it('does not detect a win', () => {
+          const asciiTable = `
+            |---|---|---|---|---|
+            | 1 |   |   |   |   |
+            |---|---|---|---|---|
+            |   | 1 |   |   |   |
+            |---|---|---|---|---|
+            |   |   | 1 |   |   |
+            |---|---|---|---|---|
+            |   |   |   |   |   |
+            |---|---|---|---|---|
+            |   |   |   |   |   |
+            |---|---|---|---|---|`
+          const board = parseAsciiTable(asciiTable, resolveToBoardCell)
+          const move = {
+            player: 1,
+            targetCell: {
+              row: 4,
+              column: 4,
+            },
+          } satisfies MovePlayerCommandPayload
+          expect(isWinningMove(board, move)).toEqual(
+            expect.objectContaining({
+              isWinningMove: false,
+            }),
+          )
+        })
+      })
+    })
+    describe('top-left to bottom-right (TL-BR) diagonal win condition checking', () => {
+      describe('given a board that would result in a TL-BR win', () => {
+        describe('where 3 of the moving players tokens are to the left of the target cell', () => {
+          it.todo('detects the win')
+        })
+        describe('where 3 of the moving players tokens are to the right of the target cell', () => {
+          it.todo('detects the win')
+        })
+        describe('where 2 of the moving players tokens are to the left of the target cell and 1 is on the right', () => {
+          it.todo('detects the win')
+        })
+        describe('where 1 of the moving players tokens are to the left of the target cell and 2 are on the right', () => {
+          it.todo('detects the win')
+        })
+        describe('and the player move results in a diagonal win under the main diagonal', () => {
+          it.skip('detects the win', () => {
+            const table = `
+    |---|---|---|---|---|
+    |   |   |   |   |   |
+    |---|---|---|---|---|
+    |   |   |   |   |   |
+    |---|---|---|---|---|
+    |   |   |   | 1 |   |
+    |---|---|---|---|---|
+    |   |   | 1 |   |   |
+    |---|---|---|---|---|
+    |   | 1 |   |   |   |
+    |---|---|---|---|---|`
+            const board = parseAsciiTable(table, resolveToBoardCell)
+            const playerMove = {
+              player: 1,
+              targetCell: {
+                row: 1,
+                column: 4,
+              },
+            } as PlayerMove
+            expect(isWinningMove(board, playerMove)).toEqual(
+              expect.objectContaining({
+                isWinningMove: true,
+              }),
+            )
+          })
+        })
+        describe('and the player move results in a diagonal win above the main diagonal', () => {
+          it.skip('detects the win', () => {
+            const table = `
+    |---|---|---|---|---|
+    |   |   |   |   |   |
+    |---|---|---|---|---|
+    |   |   | 1 |   |   |
+    |---|---|---|---|---|
+    |   | 1 |   |   |   |
+    |---|---|---|---|---|
+    | 1 |   |   |   |   |
+    |---|---|---|---|---|
+    |   |   |   |   |   |
+    |---|---|---|---|---|`
+            const board = parseAsciiTable(table, resolveToBoardCell)
+            const playerMove = {
+              player: 1,
+              targetCell: {
+                row: 0,
+                column: 3,
+              },
+            } as PlayerMove
+            expect(isWinningMove(board, playerMove)).toEqual(
+              expect.objectContaining({
+                isWinningMoven: true,
+              }),
+            )
+          })
+        })
+        describe('and the winning diagonal does not touch the board', () => {
+          it.skip('detects the win', () => {
+            const table = `
+    |---|---|---|---|---|---|
+    |   |   |   |   |   |   |
+    |---|---|---|---|---|---|
+    |   |   |   |   |   |   |
+    |---|---|---|---|---|---|
+    |   |   |   | 1 |   |   |
+    |---|---|---|---|---|---|
+    |   |   | 1 |   |   |   |
+    |---|---|---|---|---|---|
+    |   | 1 |   |   |   |   |
+    |---|---|---|---|---|---|
+    |   |   |   |   |   |   |
+    |---|---|---|---|---|---|`
+            const board = parseAsciiTable(table, resolveToBoardCell)
+            const playerMove = {
+              player: 1,
+              targetCell: {
+                row: 0,
+                column: 4,
+              },
+            } as PlayerMove
+            expect(isWinningMove(board, playerMove)).toEqual(
+              expect.objectContaining({
+                isWinningMove: true,
+              }),
+            )
+          })
+        })
+      })
+    })
+  })
+  describe('given a board and a move that would not result in a TL-BR win', () => {
+    describe('where the moving player has 3 discs on a TL-BR line not successive with the target cell', () => {
+      it.todo('does not detect a win')
     })
   })
 })

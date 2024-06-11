@@ -566,7 +566,31 @@ describe('is-winning-move', () => {
           })
         })
         describe('where 1 of the moving players tokens are to the left of the target cell and 2 are on the right', () => {
-          it.todo('detects the win')
+          it('detects the win', () => {
+            const asciiTable = `
+          |---|---|---|---|
+          |   |   |   | 1 |
+          |---|---|---|---|
+          |   |   | 1 |   |
+          |---|---|---|---|
+          |   |   |   |   |
+          |---|---|---|---|
+          | 1 |   |   |   |
+          |---|---|---|---|`
+            const board = parseAsciiTable(asciiTable, resolveToBoardCell)
+            const move = {
+              player: 1,
+              targetCell: {
+                row: 2,
+                column: 1,
+              },
+            } satisfies MovePlayerCommandPayload
+            expect(isWinningMove(board, move)).toEqual(
+              expect.objectContaining({
+                isWinningMove: true,
+              }),
+            )
+          })
         })
         describe('and the player move results in a diagonal win under the main diagonal', () => {
           it('detects the win', () => {

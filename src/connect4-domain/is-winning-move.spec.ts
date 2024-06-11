@@ -482,13 +482,61 @@ describe('is-winning-move', () => {
         })
       })
     })
-    describe('top-left to bottom-right (TL-BR) diagonal win condition checking', () => {
-      describe('given a board that would result in a TL-BR win', () => {
-        describe('where 3 of the moving players tokens are to the left of the target cell', () => {
-          it.todo('detects the win')
+  })
+  describe('top-left to bottom-right (TL-BR) diagonal win condition checking', () => {
+    describe('given a board that would result in a TL-BR win', () => {
+      describe('where 3 of the moving players tokens are to the left of the target cell', () => {
+        it('detects the win', () => {
+          const asciiTable = `
+          |---|---|---|---|
+          |   |   |   |   |
+          |---|---|---|---|
+          |   |   | 1 |   |
+          |---|---|---|---|
+          |   | 1 |   |   |
+          |---|---|---|---|
+          | 1 |   |   |   |
+          |---|---|---|---|`
+          const board = parseAsciiTable(asciiTable, resolveToBoardCell)
+          const move = {
+            player: 1,
+            targetCell: {
+              row: 0,
+              column: 3,
+            },
+          } satisfies MovePlayerCommandPayload
+          expect(isWinningMove(board, move)).toEqual(
+            expect.objectContaining({
+              isWinningMove: true,
+            }),
+          )
         })
         describe('where 3 of the moving players tokens are to the right of the target cell', () => {
-          it.todo('detects the win')
+          it('detects the win', () => {
+            const asciiTable = `
+          |---|---|---|---|
+          |   |   |   | 1 |
+          |---|---|---|---|
+          |   |   | 1 |   |
+          |---|---|---|---|
+          |   | 1 |   |   |
+          |---|---|---|---|
+          |   |   |   |   |
+          |---|---|---|---|`
+            const board = parseAsciiTable(asciiTable, resolveToBoardCell)
+            const move = {
+              player: 1,
+              targetCell: {
+                row: 3,
+                column: 0,
+              },
+            } satisfies MovePlayerCommandPayload
+            expect(isWinningMove(board, move)).toEqual(
+              expect.objectContaining({
+                isWinningMove: true,
+              }),
+            )
+          })
         })
         describe('where 2 of the moving players tokens are to the left of the target cell and 1 is on the right', () => {
           it.todo('detects the win')
@@ -497,19 +545,19 @@ describe('is-winning-move', () => {
           it.todo('detects the win')
         })
         describe('and the player move results in a diagonal win under the main diagonal', () => {
-          it.skip('detects the win', () => {
+          it('detects the win', () => {
             const table = `
-    |---|---|---|---|---|
-    |   |   |   |   |   |
-    |---|---|---|---|---|
-    |   |   |   |   |   |
-    |---|---|---|---|---|
-    |   |   |   | 1 |   |
-    |---|---|---|---|---|
-    |   |   | 1 |   |   |
-    |---|---|---|---|---|
-    |   | 1 |   |   |   |
-    |---|---|---|---|---|`
+      |---|---|---|---|---|
+      |   |   |   |   |   |
+      |---|---|---|---|---|
+      |   |   |   |   |   |
+      |---|---|---|---|---|
+      |   |   |   | 1 |   |
+      |---|---|---|---|---|
+      |   |   | 1 |   |   |
+      |---|---|---|---|---|
+      |   | 1 |   |   |   |
+      |---|---|---|---|---|`
             const board = parseAsciiTable(table, resolveToBoardCell)
             const playerMove = {
               player: 1,
@@ -528,17 +576,17 @@ describe('is-winning-move', () => {
         describe('and the player move results in a diagonal win above the main diagonal', () => {
           it.skip('detects the win', () => {
             const table = `
-    |---|---|---|---|---|
-    |   |   |   |   |   |
-    |---|---|---|---|---|
-    |   |   | 1 |   |   |
-    |---|---|---|---|---|
-    |   | 1 |   |   |   |
-    |---|---|---|---|---|
-    | 1 |   |   |   |   |
-    |---|---|---|---|---|
-    |   |   |   |   |   |
-    |---|---|---|---|---|`
+      |---|---|---|---|---|
+      |   |   |   |   |   |
+      |---|---|---|---|---|
+      |   |   | 1 |   |   |
+      |---|---|---|---|---|
+      |   | 1 |   |   |   |
+      |---|---|---|---|---|
+      | 1 |   |   |   |   |
+      |---|---|---|---|---|
+      |   |   |   |   |   |
+      |---|---|---|---|---|`
             const board = parseAsciiTable(table, resolveToBoardCell)
             const playerMove = {
               player: 1,
@@ -557,19 +605,19 @@ describe('is-winning-move', () => {
         describe('and the winning diagonal does not touch the board', () => {
           it.skip('detects the win', () => {
             const table = `
-    |---|---|---|---|---|---|
-    |   |   |   |   |   |   |
-    |---|---|---|---|---|---|
-    |   |   |   |   |   |   |
-    |---|---|---|---|---|---|
-    |   |   |   | 1 |   |   |
-    |---|---|---|---|---|---|
-    |   |   | 1 |   |   |   |
-    |---|---|---|---|---|---|
-    |   | 1 |   |   |   |   |
-    |---|---|---|---|---|---|
-    |   |   |   |   |   |   |
-    |---|---|---|---|---|---|`
+      |---|---|---|---|---|---|
+      |   |   |   |   |   |   |
+      |---|---|---|---|---|---|
+      |   |   |   |   |   |   |
+      |---|---|---|---|---|---|
+      |   |   |   | 1 |   |   |
+      |---|---|---|---|---|---|
+      |   |   | 1 |   |   |   |
+      |---|---|---|---|---|---|
+      |   | 1 |   |   |   |   |
+      |---|---|---|---|---|---|
+      |   |   |   |   |   |   |
+      |---|---|---|---|---|---|`
             const board = parseAsciiTable(table, resolveToBoardCell)
             const playerMove = {
               player: 1,
@@ -586,11 +634,11 @@ describe('is-winning-move', () => {
           })
         })
       })
-    })
-  })
-  describe('given a board and a move that would not result in a TL-BR win', () => {
-    describe('where the moving player has 3 discs on a TL-BR line not successive with the target cell', () => {
-      it.todo('does not detect a win')
+      describe('given a board and a move that would not result in a TL-BR win', () => {
+        describe('where the moving player has 3 discs on a TL-BR line not successive with the target cell', () => {
+          it.todo('does not detect a win')
+        })
+      })
     })
   })
 })

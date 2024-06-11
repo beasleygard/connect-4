@@ -33,6 +33,7 @@ const getBoardCellsOnSlopeFromCellCoordinates = (
   step: (input: number) => number,
 ) => {
   const cells = []
+
   let rowIndex = rowStartIndex
   for (const columnIndex of columns) {
     if (rowIndex === rowEndIndex) {
@@ -126,14 +127,38 @@ const isBLTRDiagonalWinningMove = (
     board.length,
     columnsRightOfMove,
   )
-  for (const [distanceFromTargetCell, columnIndex] of columnsRightOfMove.entries()) {
-    const rowIndex = targetRow + distanceFromTargetCell + 1
-    if (rowIndex < board.length) {
-      cellsRightOfMove.push(board[rowIndex][columnIndex])
-    } else {
-      break
-    }
+
+  const discLineLength =
+    1 +
+    getSuccessivePlayerDiscCountFromCells(player, cellsLeftOfMove) +
+    getSuccessivePlayerDiscCountFromCells(player, cellsRightOfMove)
+
+  return {
+    isWinningMove: discLineLength >= 4,
   }
+}
+
+const isTLBRDiagonalWinningMove = (
+  board: Board,
+  { player, targetCell: { row: targetRow, column: targetColumn } }: MovePlayerCommandPayload,
+) => {
+  const [columnsLeftOfMove, columnsRightOfMove] = targetColumnToColumnsAroundTheMove(
+    board,
+    targetColumn,
+  )
+  const cellsLeftOfMove = getBoardCellsOnUpwardSlope(
+    board,
+    targetRow + 1,
+    board.length,
+    R.reverse(columnsLeftOfMove),
+  )
+  console.log(cellsLeftOfMove)
+  const cellsRightOfMove = getBoardCellsOnDownwardSlope(
+    board,
+    targetRow - 1,
+    -1,
+    columnsRightOfMove,
+  )
 
   const discLineLength =
     1 +
@@ -149,6 +174,7 @@ const winConditionChecks = [
   isVerticalWinningMove,
   isHorizontalWinningMove,
   isBLTRDiagonalWinningMove,
+  isTLBRDiagonalWinningMove,
 ]
 
 const isWinningMove = (board: Array<Array<BoardCell>>, move: MovePlayerCommandPayload) => {

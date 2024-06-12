@@ -370,7 +370,7 @@ describe('game', () => {
     })
     describe('given player 1 has won the game', () => {
       it('reports the status of the game as a win for player 1', () => {
-        const game = new GameFactory({ boardDimensions: { rows: 6, columns: 5 } })
+        const game = new GameFactory({ boardDimensions: { rows: 2, columns: 5 } })
         R.pipe<[number[]], Array<MovePlayerCommandPayload>, any>(
           R.reduce((acc, column) => {
             return [
@@ -385,6 +385,33 @@ describe('game', () => {
         )(R.range(0, 5))
         expect(toAsciiTable(game.getBoard()))
         expect(game.getGameStatus()).toBe('PLAYER_ONE_WIN')
+      })
+    })
+    describe('given player 2 has won the game', () => {
+      it('reports the status of the game as a win for player 2', () => {
+        const game = new GameFactory({ boardDimensions: { rows: 1, columns: 10 } })
+        R.pipe<[number[]], Array<MovePlayerCommandPayload>, any>(
+          R.reduce(
+            (acc, column) => {
+              return [
+                ...acc,
+                { player: 2, targetCell: { column: column, row: 0 } },
+                { player: 1, targetCell: { column: 9 - column, row: 0 } },
+              ]
+            },
+            [{ player: 1, targetCell: { row: 0, column: 5 } }] as Array<MovePlayerCommandPayload>,
+          ),
+          R.forEach((commandPayload: MovePlayerCommandPayload) =>
+            game.move(createMovePlayerCommand(commandPayload)),
+          ),
+        )(R.range(0, 4))
+        expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(`
+          "
+          |---|---|---|---|---|---|---|---|---|---|
+          | 2 | 2 | 2 | 2 |   | 1 |   | 1 | 1 | 1 |
+          |---|---|---|---|---|---|---|---|---|---|"
+        `)
+        expect(game.getGameStatus()).toBe('PLAYER_TWO_WIN')
       })
     })
   })

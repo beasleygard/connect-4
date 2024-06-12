@@ -1,8 +1,7 @@
-import { MovePlayerCommandPayload, createMovePlayerCommand } from '@/connect4-domain/commands'
+import { createMovePlayerCommand } from '@/connect4-domain/commands'
 import { PlayerMoveFailedEvent, PlayerMovedEvent } from '@/connect4-domain/events'
 import GameFactory, { BoardCell, InvalidBoardDimensionsError } from '@/connect4-domain/game'
 import _toAsciiTable from '@/connect4-domain/to-ascii-table'
-import * as R from 'ramda'
 import { describe, expect, it } from 'vitest'
 
 const toAsciiTable = (board: Array<Array<BoardCell>>): string =>
@@ -381,19 +380,11 @@ describe('game', () => {
       describe('as a player has won', () => {
         it('returns a move failed event', () => {
           const game = new GameFactory()
-          R.pipe<[number[]], Array<MovePlayerCommandPayload>, Array<MovePlayerCommandPayload>, any>(
-            R.reduce((acc, column) => {
-              return [
-                ...acc,
-                { player: 1, targetCell: { column: column, row: 0 } },
-                { player: 2, targetCell: { column: column, row: 1 } },
-              ]
-            }, [] as Array<MovePlayerCommandPayload>),
-            (arr) => arr.slice(0, arr.length - 1),
-            R.forEach((commandPayload: MovePlayerCommandPayload) =>
-              game.move(createMovePlayerCommand(commandPayload)),
-            ),
-          )(R.range(0, 4))
+          ;[...Array(3).keys()].forEach((column) => {
+            game.move(createMovePlayerCommand({ player: 1, targetCell: { column, row: 0 } }))
+            game.move(createMovePlayerCommand({ player: 2, targetCell: { column, row: 1 } }))
+          })
+          game.move(createMovePlayerCommand({ player: 1, targetCell: { column: 3, row: 0 } }))
           expect(game.getGameStatus()).toBe('PLAYER_ONE_WIN')
           const movePlayerCommand = createMovePlayerCommand({
             player: 2,
@@ -414,18 +405,12 @@ describe('game', () => {
       describe('as a tie has been reached', () => {
         it('returns a move failed event', () => {
           const game = new GameFactory({ boardDimensions: { rows: 1, columns: 4 } })
-          R.pipe<[number[]], Array<MovePlayerCommandPayload>, any>(
-            R.reduce((acc, column) => {
-              return [
-                ...acc,
-                { player: 1, targetCell: { column: column, row: 0 } },
-                { player: 2, targetCell: { column: 3 - column, row: 0 } },
-              ]
-            }, [] as Array<MovePlayerCommandPayload>),
-            R.forEach((commandPayload: MovePlayerCommandPayload) =>
-              game.move(createMovePlayerCommand(commandPayload)),
-            ),
-          )(R.range(0, 3))
+          ;[...Array(3).keys()].forEach((column) => {
+            game.move(createMovePlayerCommand({ player: 1, targetCell: { column, row: 0 } }))
+            game.move(
+              createMovePlayerCommand({ player: 2, targetCell: { column: 3 - column, row: 0 } }),
+            )
+          })
           expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(`
           "
           |---|---|---|---|
@@ -460,59 +445,50 @@ describe('game', () => {
     })
     describe('given player 1 has won the game', () => {
       it('reports the status of the game as a win for player 1', () => {
-        const game = new GameFactory({ boardDimensions: { rows: 2, columns: 5 } })
-        R.pipe<[number[]], Array<MovePlayerCommandPayload>, any>(
-          R.reduce((acc, column) => {
-            return [
-              ...acc,
-              { player: 1, targetCell: { column: column, row: 0 } },
-              { player: 2, targetCell: { column: column, row: 1 } },
-            ]
-          }, [] as Array<MovePlayerCommandPayload>),
-          R.forEach((commandPayload: MovePlayerCommandPayload) =>
-            game.move(createMovePlayerCommand(commandPayload)),
-          ),
-        )(R.range(0, 5))
-        expect(toAsciiTable(game.getBoard()))
+        const game = new GameFactory({ boardDimensions: { rows: 2, columns: 4 } })
+        ;[...Array(4).keys()].forEach((column) => {
+          game.move(createMovePlayerCommand({ player: 1, targetCell: { column, row: 0 } }))
+          game.move(createMovePlayerCommand({ player: 2, targetCell: { column, row: 1 } }))
+        })
+        expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(`
+          "
+          |---|---|---|---|
+          | 1 | 1 | 1 | 1 |
+          |---|---|---|---|
+          | 2 | 2 | 2 |   |
+          |---|---|---|---|"
+        `)
         expect(game.getGameStatus()).toBe('PLAYER_ONE_WIN')
       })
     })
     describe('given player 2 has won the game', () => {
       it('reports the status of the game as a win for player 2', () => {
         const game = new GameFactory({ boardDimensions: { rows: 1, columns: 10 } })
-        R.pipe<[number[]], Array<MovePlayerCommandPayload>, any>(
-          R.reduce(
-            (acc, column) => {
-              return [
-                ...acc,
-                { player: 2, targetCell: { column: column, row: 0 } },
-                { player: 1, targetCell: { column: 9 - column, row: 0 } },
-              ]
-            },
-            [{ player: 1, targetCell: { row: 0, column: 5 } }] as Array<MovePlayerCommandPayload>,
-          ),
-          R.forEach((commandPayload: MovePlayerCommandPayload) =>
-            game.move(createMovePlayerCommand(commandPayload)),
-          ),
-        )(R.range(0, 4))
+        game.move(createMovePlayerCommand({ player: 1, targetCell: { row: 0, column: 5 } }))
+        ;[...Array(4).keys()].forEach((column) => {
+          game.move(createMovePlayerCommand({ player: 2, targetCell: { column, row: 0 } }))
+          game.move(
+            createMovePlayerCommand({ player: 1, targetCell: { column: 9 - column, row: 0 } }),
+          )
+        })
+        expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(`
+          "
+          |---|---|---|---|---|---|---|---|---|---|
+          | 2 | 2 | 2 | 2 |   | 1 |   | 1 | 1 | 1 |
+          |---|---|---|---|---|---|---|---|---|---|"
+        `)
         expect(game.getGameStatus()).toBe('PLAYER_TWO_WIN')
       })
     })
     describe('given the game has come to a draw', () => {
       it('reports the status of the game as a draw', () => {
         const game = new GameFactory({ boardDimensions: { rows: 1, columns: 4 } })
-        R.pipe<[number[]], Array<MovePlayerCommandPayload>, any>(
-          R.reduce((acc, column) => {
-            return [
-              ...acc,
-              { player: 1, targetCell: { column: column, row: 0 } },
-              { player: 2, targetCell: { column: 3 - column, row: 0 } },
-            ]
-          }, [] as Array<MovePlayerCommandPayload>),
-          R.forEach((commandPayload: MovePlayerCommandPayload) =>
-            game.move(createMovePlayerCommand(commandPayload)),
-          ),
-        )(R.range(0, 3))
+        ;[...Array(3).keys()].forEach((column) => {
+          game.move(createMovePlayerCommand({ player: 1, targetCell: { column, row: 0 } }))
+          game.move(
+            createMovePlayerCommand({ player: 2, targetCell: { column: 3 - column, row: 0 } }),
+          )
+        })
         expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(`
           "
           |---|---|---|---|

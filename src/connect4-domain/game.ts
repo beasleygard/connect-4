@@ -6,6 +6,7 @@ import {
   createPlayerMoveFailedEvent,
   createPlayerMovedEvent,
 } from '@/connect4-domain/events'
+import isWinningMove from '@/connect4-domain/is-winning-move'
 
 type PlayerNumber = 1 | 2
 type PlayerStats = {
@@ -26,6 +27,7 @@ export type GameParameters = {
 }
 enum GameStatus {
   IN_PROGRESS = 'IN_PROGRESS',
+  PLAYER_ONE_WIN = 'PLAYER_ONE_WIN',
 }
 
 export class InvalidBoardDimensionsError extends RangeError {}
@@ -150,12 +152,16 @@ class GameFactory implements Game {
         targetCell: { row, column },
       },
     } = movePlayerCommand
+    if (isWinningMove(this.board, movePlayerCommand.payload).isWinningMove) {
+      this.gameStatus = GameStatus.PLAYER_ONE_WIN
+    } else {
+      this.validRowPlacementsByColumn[column] += 1
+      this.activePlayer = this.activePlayer == 1 ? 2 : 1
+    }
 
     this.board[row][column] = {
       player: player,
     }
-    this.validRowPlacementsByColumn[column] += 1
-    this.activePlayer = this.activePlayer == 1 ? 2 : 1
 
     return createPlayerMovedEvent()
   }

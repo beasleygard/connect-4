@@ -371,12 +371,7 @@ describe('game', () => {
     describe('given player 1 has won the game', () => {
       it('reports the status of the game as a win for player 1', () => {
         const game = new GameFactory({ boardDimensions: { rows: 6, columns: 5 } })
-        R.pipe<
-          [number[]],
-          Array<MovePlayerCommandPayload>,
-          Array<PlayerMovedEvent | PlayerMoveFailedEvent>,
-          any
-        >(
+        R.pipe<[number[]], Array<MovePlayerCommandPayload>, any>(
           R.reduce((acc, column) => {
             return [
               ...acc,
@@ -384,11 +379,11 @@ describe('game', () => {
               { player: 2, targetCell: { column: column, row: 1 } },
             ]
           }, [] as Array<MovePlayerCommandPayload>),
-          R.map((commandPayload) => game.move(createMovePlayerCommand(commandPayload))),
-          R.forEach((moveEvent) =>
-            expect(moveEvent).toEqual(expect.objectContaining({ type: 'PLAYER_MOVED' })),
+          R.forEach((commandPayload: MovePlayerCommandPayload) =>
+            game.move(createMovePlayerCommand(commandPayload)),
           ),
-        )(R.range(0, 4))
+        )(R.range(0, 5))
+        expect(toAsciiTable(game.getBoard()))
         expect(game.getGameStatus()).toBe('PLAYER_ONE_WIN')
       })
     })

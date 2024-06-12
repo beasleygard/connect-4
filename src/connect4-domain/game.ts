@@ -7,6 +7,7 @@ import {
   createPlayerMovedEvent,
 } from '@/connect4-domain/events'
 import isWinningMove from '@/connect4-domain/is-winning-move'
+import * as R from 'ramda'
 
 type PlayerNumber = 1 | 2
 type PlayerStats = {
@@ -52,11 +53,11 @@ interface Game {
 }
 
 class GameFactory implements Game {
-  private board: Board
-  private playerStats: Record<PlayerNumber, PlayerStats>
+  private readonly board: Board
+  private readonly playerStats: Record<PlayerNumber, PlayerStats>
+  private readonly validRowPlacementsByColumn: number[]
+  private readonly moveValidationChecks: MoveValidationCheck[]
   private activePlayer: PlayerNumber
-  private validRowPlacementsByColumn: number[]
-  private moveValidationChecks: MoveValidationCheck[]
   private gameStatus: GameStatus
 
   constructor({ boardDimensions }: GameParameters = { boardDimensions: { rows: 6, columns: 7 } }) {
@@ -106,32 +107,24 @@ class GameFactory implements Game {
     ]
   }
 
-  #validateBoardDimensions(boardDimensions: BoardDimensions) {
-    if (boardDimensions.rows < 1) {
+  #validateBoardDimensions({ rows, columns }: BoardDimensions) {
+    if (rows < 1) {
       throw new InvalidBoardDimensionsError('Number of rows must be greater than or equal to 1')
-    } else if (boardDimensions.columns < 1) {
+    } else if (columns < 1) {
       throw new InvalidBoardDimensionsError('Number of columns must be greater than or equal to 1')
-    } else if ((boardDimensions.rows * boardDimensions.columns) % 2 !== 0) {
+    } else if ((rows * columns) % 2 !== 0) {
       throw new InvalidBoardDimensionsError(
-        `Total number of cells on a board must be even. Supplied board dimensions (${boardDimensions.rows} rows x ${boardDimensions.columns} columns) results in an odd number of cells (${boardDimensions.rows * boardDimensions.columns})`,
+        `Total number of cells on a board must be even. Supplied board dimensions (${rows} rows x ${columns} columns) results in an odd number of cells (${rows * columns})`,
       )
     }
   }
 
-  #createBoard({ rows, columns }: BoardDimensions): Board {
-    return Array(rows)
-      .fill(undefined)
-      .map(
-        (): Array<BoardCell> =>
-          Array(columns)
-            .fill(undefined)
-            .map(
-              (): BoardCell => ({
-                player: undefined,
-              }),
-            ),
-      )
-  }
+  #createBoard = ({ rows, columns }: BoardDimensions): Board =>
+    R.range(0, rows).map(() =>
+      R.range(0, columns).map(() => ({
+        player: undefined,
+      })),
+    )
 
   #createPlayerStatsRecord({ rows, columns }: BoardDimensions): Record<PlayerNumber, PlayerStats> {
     const playerMovesLeft = (rows * columns) / 2
@@ -141,65 +134,59 @@ class GameFactory implements Game {
     }
   }
 
-  getBoard = (): Board => deepClone(this.board)
+  getBoard = () => deepClone(this.board)
 
-  getGameStatus = (): GameStatus => this.gameStatus
+  getGameStatus = () => this.gameStatus
 
-  getStatsForPlayer = (playerNumber: PlayerNumber): PlayerStats => this.playerStats[playerNumber]
+  getStatsForPlayer = (playerNumber: PlayerNumber) => this.playerStats[playerNumber]
 
-  getActivePlayer = (): PlayerNumber => this.activePlayer
+  getActivePlayer = () => this.activePlayer
 
   move = this.#createValidatedMove(this.#move.bind(this))
 
   #move(movePlayerCommand: MovePlayerCommand): PlayerMovedEvent {
-    const {
-      payload: {
-        player,
-        targetCell: { row, column },
-      },
-    } = movePlayerCommand
-    if (isWinningMove(this.board, movePlayerCommand.payload).isWinningMove) {
-      this.gameStatus =
-        this.activePlayer === 1 ? GameStatus.PLAYER_ONE_WIN : GameStatus.PLAYER_TWO_WIN
-    } else {
-      this.validRowPlacementsByColumn[column] += 1
-      this.playerStats[this.activePlayer].discsLeft -= 1
-      this.activePlayer = this.activePlayer == 1 ? 2 : 1
-    }
-
-    if (this.playerStats[1].discsLeft === 0 && this.playerStats[2].discsLeft === 0) {
-      this.gameStatus = GameStatus.DRAW
-    }
-
+    const { row, column } = movePlayerCommand.payload.targetCell
     this.board[row][column] = {
-      player: player,
+      player: movePlayerCommand.payload.player,
     }
+    this.#updateGameBasedOnMoveCommand(movePlayerCommand)
 
     return createPlayerMovedEvent()
   }
 
+  #updateGameBasedOnMoveCommand(movePlayerCommand: MovePlayerCommand) {
+    this.validRowPlacementsByColumn[movePlayerCommand.payload.targetCell.column] += 1
+    this.playerStats[this.activePlayer].discsLeft -= 1
+    this.#updateGameStatusBasedOnMoveCommand(movePlayerCommand)
+    this.activePlayer = this.activePlayer == 1 ? 2 : 1
+  }
+
+  #updateGameStatusBasedOnMoveCommand({ payload }: MovePlayerCommand) {
+    if (isWinningMove(this.board, payload).isWinningMove) {
+      this.gameStatus = payload.player === 1 ? GameStatus.PLAYER_ONE_WIN : GameStatus.PLAYER_TWO_WIN
+    } else if (this.playerStats[1].discsLeft === 0 && this.playerStats[2].discsLeft === 0) {
+      this.gameStatus = GameStatus.DRAW
+    }
+  }
+
   #validateMove(movePlayerCommand: MovePlayerCommand): MoveValidationResult {
-    for (const moveValidationCheck of this.moveValidationChecks) {
-      const moveValidationCheckFailed = !moveValidationCheck.predicate(movePlayerCommand)
+    for (const { predicate, failureMessageFactory } of this.moveValidationChecks) {
+      const moveValidationCheckFailed = !predicate(movePlayerCommand)
       if (moveValidationCheckFailed)
         return {
           isValid: false,
-          message: moveValidationCheck.failureMessageFactory(movePlayerCommand),
+          message: failureMessageFactory(movePlayerCommand),
         }
     }
     return { isValid: true }
   }
 
-  #createValidatedMove(
-    moveFunction: (movePlayerCommand: MovePlayerCommand) => PlayerMovedEvent,
-  ): (movePlayerCommand: MovePlayerCommand) => Event {
+  #createValidatedMove(moveFunction: Game['move']) {
     return (movePlayerCommand: MovePlayerCommand) => {
       const moveValidationResult = this.#validateMove(movePlayerCommand)
-      if (moveValidationResult.isValid) {
-        return moveFunction(movePlayerCommand)
-      } else {
-        return createPlayerMoveFailedEvent({ message: moveValidationResult.message })
-      }
+      return moveValidationResult.isValid
+        ? moveFunction(movePlayerCommand)
+        : createPlayerMoveFailedEvent({ message: moveValidationResult.message })
     }
   }
 }

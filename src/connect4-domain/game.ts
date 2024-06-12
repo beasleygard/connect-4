@@ -7,7 +7,6 @@ import {
   createPlayerMovedEvent,
 } from '@/connect4-domain/events'
 import isWinningMove from '@/connect4-domain/is-winning-move'
-import * as R from 'ramda'
 
 type PlayerNumber = 1 | 2
 type PlayerStats = {
@@ -120,11 +119,15 @@ class GameFactory implements Game {
   }
 
   #createBoard = ({ rows, columns }: BoardDimensions): Board =>
-    R.range(0, rows).map(() =>
-      R.range(0, columns).map(() => ({
-        player: undefined,
-      })),
-    )
+    Array(rows)
+      .fill(undefined)
+      .map(() =>
+        Array(columns)
+          .fill(undefined)
+          .map(() => ({
+            player: undefined,
+          })),
+      )
 
   #createPlayerStatsRecord({ rows, columns }: BoardDimensions): Record<PlayerNumber, PlayerStats> {
     const playerMovesLeft = (rows * columns) / 2

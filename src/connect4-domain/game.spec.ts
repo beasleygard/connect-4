@@ -408,6 +408,30 @@ describe('game', () => {
         expect(game.getGameStatus()).toBe('PLAYER_TWO_WIN')
       })
     })
+    describe('given the game has come to a draw', () => {
+      it('reports the status of the game as a draw', () => {
+        const game = new GameFactory({ boardDimensions: { rows: 1, columns: 4 } })
+        R.pipe<[number[]], Array<MovePlayerCommandPayload>, any>(
+          R.reduce((acc, column) => {
+            return [
+              ...acc,
+              { player: 1, targetCell: { column: column, row: 0 } },
+              { player: 2, targetCell: { column: 3 - column, row: 0 } },
+            ]
+          }, [] as Array<MovePlayerCommandPayload>),
+          R.forEach((commandPayload: MovePlayerCommandPayload) =>
+            game.move(createMovePlayerCommand(commandPayload)),
+          ),
+        )(R.range(0, 3))
+        expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(`
+          "
+          |---|---|---|---|
+          | 1 | 1 | 2 | 2 |
+          |---|---|---|---|"
+        `)
+        expect(game.getGameStatus()).toBe('DRAW')
+      })
+    })
   })
   it('changes made to the game after a getBoard call do not affect prior copies of the board', () => {
     const game = create2x2Board()

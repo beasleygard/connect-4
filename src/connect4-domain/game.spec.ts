@@ -360,6 +360,14 @@ describe('game', () => {
       })
     })
   })
+  describe('getting the status of the game', () => {
+    describe('given neither player has won yet', () => {
+      it('reports the status as "in progress"', () => {
+        const game = create2x2Board()
+        expect(game.getGameStatus()).toBe('IN_PROGRESS')
+      })
+    })
+  })
   it('changes made to the game after a getBoard call do not affect prior copies of the board', () => {
     const game = create2x2Board()
     const originalBoard = game.getBoard()

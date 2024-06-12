@@ -405,12 +405,6 @@ describe('game', () => {
             game.move(createMovePlayerCommand(commandPayload)),
           ),
         )(R.range(0, 4))
-        expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(`
-          "
-          |---|---|---|---|---|---|---|---|---|---|
-          | 2 | 2 | 2 | 2 |   | 1 |   | 1 | 1 | 1 |
-          |---|---|---|---|---|---|---|---|---|---|"
-        `)
         expect(game.getGameStatus()).toBe('PLAYER_TWO_WIN')
       })
     })

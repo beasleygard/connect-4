@@ -28,6 +28,7 @@ export type GameParameters = {
 enum GameStatus {
   IN_PROGRESS = 'IN_PROGRESS',
   PLAYER_ONE_WIN = 'PLAYER_ONE_WIN',
+  PLAYER_TWO_WIN = 'PLAYER_TWO_WIN',
 }
 
 export class InvalidBoardDimensionsError extends RangeError {}
@@ -153,7 +154,8 @@ class GameFactory implements Game {
       },
     } = movePlayerCommand
     if (isWinningMove(this.board, movePlayerCommand.payload).isWinningMove) {
-      this.gameStatus = GameStatus.PLAYER_ONE_WIN
+      this.gameStatus =
+        this.activePlayer === 1 ? GameStatus.PLAYER_ONE_WIN : GameStatus.PLAYER_TWO_WIN
     } else {
       this.validRowPlacementsByColumn[column] += 1
       this.activePlayer = this.activePlayer == 1 ? 2 : 1

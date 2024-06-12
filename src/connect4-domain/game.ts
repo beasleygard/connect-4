@@ -131,8 +131,8 @@ class GameFactory implements Game {
   #createPlayerStatsRecord({ rows, columns }: BoardDimensions): Record<PlayerNumber, PlayerStats> {
     const playerMovesLeft = (rows * columns) / 2
     return {
-      1: { player: 1, discsLeft: Math.ceil(playerMovesLeft) },
-      2: { player: 2, discsLeft: Math.floor(playerMovesLeft) },
+      1: { player: 1, discsLeft: playerMovesLeft },
+      2: { player: 2, discsLeft: playerMovesLeft },
     }
   }
 
@@ -158,6 +158,7 @@ class GameFactory implements Game {
         this.activePlayer === 1 ? GameStatus.PLAYER_ONE_WIN : GameStatus.PLAYER_TWO_WIN
     } else {
       this.validRowPlacementsByColumn[column] += 1
+      this.playerStats[this.activePlayer].discsLeft -= 1
       this.activePlayer = this.activePlayer == 1 ? 2 : 1
     }
 

@@ -21,16 +21,19 @@ export type BoardDimensions = {
   rows: number
   columns: number
 }
-export class InvalidBoardDimensionsError extends RangeError {}
 export type GameParameters = {
   boardDimensions: BoardDimensions
 }
+enum GameStatus {
+  IN_PROGRESS = 'IN_PROGRESS',
+}
+
+export class InvalidBoardDimensionsError extends RangeError {}
 
 type MoveValidationCheck = {
   predicate: (movePlayerCommand: MovePlayerCommand) => boolean
   failureMessageFactory: (movePlayerCommand: MovePlayerCommand) => string
 }
-
 type MoveValidationResult = {
   isValid: boolean
   message?: string
@@ -38,6 +41,7 @@ type MoveValidationResult = {
 
 interface Game {
   getBoard: () => Board
+  getGameStatus: () => GameStatus
   getStatsForPlayer: (playerNumber: PlayerNumber) => PlayerStats
   getActivePlayer: () => PlayerNumber
   move: (movePlayerCommand: MovePlayerCommand) => Event
@@ -49,6 +53,7 @@ class GameFactory implements Game {
   private activePlayer: PlayerNumber
   private validRowPlacementsByColumn: number[]
   private moveValidationChecks: MoveValidationCheck[]
+  private gameStatus: GameStatus
 
   constructor({ boardDimensions }: GameParameters = { boardDimensions: { rows: 6, columns: 7 } }) {
     this.#validateBoardDimensions(boardDimensions)
@@ -56,6 +61,7 @@ class GameFactory implements Game {
     this.playerStats = this.#createPlayerStatsRecord(boardDimensions)
     this.activePlayer = 1
     this.validRowPlacementsByColumn = new Array(boardDimensions.columns).fill(0)
+    this.gameStatus = GameStatus.IN_PROGRESS
     this.moveValidationChecks = [
       {
         predicate: ({ payload: { player } }) => player === this.activePlayer,
@@ -128,6 +134,8 @@ class GameFactory implements Game {
   }
 
   getBoard = (): Board => deepClone(this.board)
+
+  getGameStatus = (): GameStatus => this.gameStatus
 
   getStatsForPlayer = (playerNumber: PlayerNumber): PlayerStats => this.playerStats[playerNumber]
 

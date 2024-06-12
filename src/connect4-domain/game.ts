@@ -29,6 +29,7 @@ enum GameStatus {
   IN_PROGRESS = 'IN_PROGRESS',
   PLAYER_ONE_WIN = 'PLAYER_ONE_WIN',
   PLAYER_TWO_WIN = 'PLAYER_TWO_WIN',
+  DRAW = 'DRAW',
 }
 
 export class InvalidBoardDimensionsError extends RangeError {}
@@ -160,6 +161,10 @@ class GameFactory implements Game {
       this.validRowPlacementsByColumn[column] += 1
       this.playerStats[this.activePlayer].discsLeft -= 1
       this.activePlayer = this.activePlayer == 1 ? 2 : 1
+    }
+
+    if (this.playerStats[1].discsLeft === 0 && this.playerStats[2].discsLeft === 0) {
+      this.gameStatus = GameStatus.DRAW
     }
 
     this.board[row][column] = {

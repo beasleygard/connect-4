@@ -426,7 +426,7 @@ describe('game', () => {
       })
     })
     describe('given the game has come to a draw', () => {
-      it.todo('reports the status of the game as a draw', () => {
+      it('reports the status of the game as a draw', () => {
         const game = new GameFactory({ boardDimensions: { rows: 1, columns: 4 } })
         R.pipe<[number[]], Array<MovePlayerCommandPayload>, any>(
           R.reduce((acc, column) => {

@@ -68,6 +68,10 @@ class GameFactory implements Game {
     this.gameStatus = GameStatus.IN_PROGRESS
     this.moveValidationChecks = [
       {
+        predicate: () => this.gameStatus === GameStatus.IN_PROGRESS,
+        failureMessageFactory: () => 'Moves cannot be made after the game is over',
+      },
+      {
         predicate: ({ payload: { player } }) => player === this.activePlayer,
         failureMessageFactory: ({ payload: { player } }) =>
           `Player ${player} cannot make a move while it is player ${this.activePlayer}'s turn`,

@@ -377,6 +377,44 @@ describe('game', () => {
         expect(game.getStatsForPlayer(1).discsLeft).toBe(20)
       })
     })
+    describe('given the game is over', () => {
+      describe('as a player has won', () => {
+        it('returns a move failed event', () => {
+          const game = new GameFactory()
+          R.pipe<[number[]], Array<MovePlayerCommandPayload>, Array<MovePlayerCommandPayload>, any>(
+            R.reduce((acc, column) => {
+              return [
+                ...acc,
+                { player: 1, targetCell: { column: column, row: 0 } },
+                { player: 2, targetCell: { column: column, row: 1 } },
+              ]
+            }, [] as Array<MovePlayerCommandPayload>),
+            (arr) => arr.slice(0, arr.length - 1),
+            R.forEach((commandPayload: MovePlayerCommandPayload) =>
+              game.move(createMovePlayerCommand(commandPayload)),
+            ),
+          )(R.range(0, 4))
+          expect(game.getGameStatus()).toBe('PLAYER_ONE_WIN')
+          const movePlayerCommand = createMovePlayerCommand({
+            player: 2,
+            targetCell: {
+              row: 2,
+              column: 0,
+            },
+          })
+
+          expect(game.move(movePlayerCommand)).toEqual({
+            type: 'PLAYER_MOVE_FAILED',
+            payload: {
+              message: 'Moves cannot be made after the game is over',
+            },
+          })
+        })
+      })
+      describe('as a tie has been reached', () => {
+        it('returns a move failed event', () => {})
+      })
+    })
   })
   describe('getting the status of the game', () => {
     describe('given neither player has won yet', () => {

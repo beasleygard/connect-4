@@ -1,7 +1,8 @@
-import { createMovePlayerCommand } from '@/connect4-domain/commands'
+import { MovePlayerCommandPayload, createMovePlayerCommand } from '@/connect4-domain/commands'
 import { PlayerMoveFailedEvent, PlayerMovedEvent } from '@/connect4-domain/events'
 import GameFactory, { BoardCell, InvalidBoardDimensionsError } from '@/connect4-domain/game'
 import _toAsciiTable from '@/connect4-domain/to-ascii-table'
+import * as R from 'ramda'
 import { describe, expect, it } from 'vitest'
 
 const toAsciiTable = (board: Array<Array<BoardCell>>): string =>
@@ -365,6 +366,30 @@ describe('game', () => {
       it('reports the status as "in progress"', () => {
         const game = create2x2Board()
         expect(game.getGameStatus()).toBe('IN_PROGRESS')
+      })
+    })
+    describe('given player 1 has won the game', () => {
+      it('reports the status of the game as a win for player 1', () => {
+        const game = new GameFactory({ boardDimensions: { rows: 6, columns: 5 } })
+        R.pipe<
+          [number[]],
+          Array<MovePlayerCommandPayload>,
+          Array<PlayerMovedEvent | PlayerMoveFailedEvent>,
+          any
+        >(
+          R.reduce((acc, column) => {
+            return [
+              ...acc,
+              { player: 1, targetCell: { column: column, row: 0 } },
+              { player: 2, targetCell: { column: column, row: 1 } },
+            ]
+          }, [] as Array<MovePlayerCommandPayload>),
+          R.map((commandPayload) => game.move(createMovePlayerCommand(commandPayload))),
+          R.forEach((moveEvent) =>
+            expect(moveEvent).toEqual(expect.objectContaining({ type: 'PLAYER_MOVED' })),
+          ),
+        )(R.range(0, 4))
+        expect(game.getGameStatus()).toBe('PLAYER_ONE_WIN')
       })
     })
   })

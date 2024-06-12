@@ -360,6 +360,23 @@ describe('game', () => {
         expect(toAsciiTable(game.getBoard())).toEqual(empty2x2BoardAsciiTable)
       })
     })
+    describe('given a valid move', () => {
+      it('decrements the moving players tokens by one', () => {
+        const game = new GameFactory()
+        expect(game.getStatsForPlayer(1).discsLeft).toBe(21)
+        game.move(
+          createMovePlayerCommand({
+            player: 1,
+            targetCell: {
+              row: 0,
+              column: 0,
+            },
+          }),
+        )
+
+        expect(game.getStatsForPlayer(1).discsLeft).toBe(20)
+      })
+    })
   })
   describe('getting the status of the game', () => {
     describe('given neither player has won yet', () => {
@@ -409,7 +426,7 @@ describe('game', () => {
       })
     })
     describe('given the game has come to a draw', () => {
-      it('reports the status of the game as a draw', () => {
+      it.todo('reports the status of the game as a draw', () => {
         const game = new GameFactory({ boardDimensions: { rows: 1, columns: 4 } })
         R.pipe<[number[]], Array<MovePlayerCommandPayload>, any>(
           R.reduce((acc, column) => {

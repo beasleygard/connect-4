@@ -18,28 +18,25 @@ const getSuccessivePlayerDiscCountFromCells = (
   return playerDiscLineLength
 }
 
-const targetColumnToColumnsAroundTheMove = (board: Board, targetColumn: number) =>
-  R.compose<[number], (val: number) => boolean, Array<number>, Array<Array<number>>>(
-    R.partition((columnIndex: number) => columnIndex <= targetColumn),
-    R.curry(R.reject<number, any>)(R.__, R.range(0, board[0].length)),
-    (val1: number) => (val2: number) => val1 === val2,
-  )(targetColumn)
+const targetColumnToColumnsAroundTheMove = (board: Board, targetColumn: number) => {
+  const array = R.range(0, board[0].length)
+  return [array.slice(0, targetColumn), array.slice(targetColumn + 1)]
+}
 
 const getBoardCellsOnSlopeFromCellCoordinates = (
+  step: (input: number) => number,
   board: Board,
   rowStartIndex: number,
   rowEndIndex: number,
   columns: number[],
-  step: (input: number) => number,
 ) => {
   const cells = []
-
   let rowIndex = rowStartIndex
+
   for (const columnIndex of columns) {
     if (rowIndex === rowEndIndex) {
       break
     }
-
     cells.push(board[rowIndex][columnIndex])
     rowIndex = step(rowIndex)
   }
@@ -48,18 +45,10 @@ const getBoardCellsOnSlopeFromCellCoordinates = (
 }
 
 const getBoardCellsOnDownwardSlope = R.curry(getBoardCellsOnSlopeFromCellCoordinates)(
-  R.__,
-  R.__,
-  R.__,
-  R.__,
   (input: number) => input - 1,
 )
 
 const getBoardCellsOnUpwardSlope = R.curry(getBoardCellsOnSlopeFromCellCoordinates)(
-  R.__,
-  R.__,
-  R.__,
-  R.__,
   (input: number) => input + 1,
 )
 
@@ -91,7 +80,7 @@ const isHorizontalWinningMove = (
     Array<Array<BoardCell>>
   >(
     R.map((columnIndexes: Array<number>) =>
-      R.map((columnIndex) => board[targetRow][columnIndex], columnIndexes),
+      columnIndexes.map((columnIndex) => board[targetRow][columnIndex]),
     ),
     R.curry(targetColumnToColumnsAroundTheMove)(board),
   )

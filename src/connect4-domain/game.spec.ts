@@ -1,8 +1,8 @@
-import { describe, expect, it } from 'vitest'
 import { createMovePlayerCommand } from '@/connect4-domain/commands'
 import { PlayerMoveFailedEvent, PlayerMovedEvent } from '@/connect4-domain/events'
 import GameFactory, { BoardCell, InvalidBoardDimensionsError } from '@/connect4-domain/game'
 import _toAsciiTable from '@/connect4-domain/to-ascii-table'
+import { describe, expect, it } from 'vitest'
 
 const toAsciiTable = (board: Array<Array<BoardCell>>): string =>
   _toAsciiTable<BoardCell>(board, (value): string => {
@@ -17,6 +17,13 @@ const toAsciiTable = (board: Array<Array<BoardCell>>): string =>
   })
 
 const create2x2Board = () => new GameFactory({ boardDimensions: { rows: 2, columns: 2 } })
+
+const empty2x2BoardAsciiTable = `
+|---|---|
+|   |   |
+|---|---|
+|   |   |
+|---|---|`
 
 describe('game', () => {
   describe('new game', () => {
@@ -71,7 +78,6 @@ describe('game', () => {
         const secondBoard = game.getBoard()
         expect(secondBoard).toBeDeeplyUnequal(firstBoard)
       })
-      it('changes made to the game after a getBoard call do not affect copies of the board')
     })
     describe('given custom board dimensions', () => {
       describe('with 0 rows', () => {
@@ -141,17 +147,9 @@ describe('game', () => {
   describe('making a move', () => {
     describe('given a player is currently active', () => {
       describe('and a cell location that is not on the board', () => {
-        const empty2x2BoardSnapshot = `
-            "
-            |---|---|
-            |   |   |
-            |---|---|
-            |   |   |
-            |---|---|"
-          `
         it('the player is unable to move to a cell with a row number below the first row', () => {
           const game = new GameFactory({ boardDimensions: { rows: 2, columns: 2 } })
-          expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(empty2x2BoardSnapshot)
+          expect(toAsciiTable(game.getBoard())).toEqual(empty2x2BoardAsciiTable)
           expect(game.getActivePlayer()).toBe(1)
           const movePlayerCommand = createMovePlayerCommand({
             player: 1,
@@ -165,12 +163,12 @@ describe('game', () => {
                 'Cell at row -1 column 0 does not exist on the board. The row number must be >= 0 and <= 1',
             },
           })
-          expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(empty2x2BoardSnapshot)
+          expect(toAsciiTable(game.getBoard())).toEqual(empty2x2BoardAsciiTable)
           expect(game.getActivePlayer()).toBe(1)
         })
         it('the player is unable to move to a cell with a row number above the last row', () => {
           const game = new GameFactory({ boardDimensions: { rows: 2, columns: 2 } })
-          expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(empty2x2BoardSnapshot)
+          expect(toAsciiTable(game.getBoard())).toEqual(empty2x2BoardAsciiTable)
           expect(game.getActivePlayer()).toBe(1)
           const movePlayerCommand = createMovePlayerCommand({
             player: 1,
@@ -184,12 +182,12 @@ describe('game', () => {
                 'Cell at row 2 column 0 does not exist on the board. The row number must be >= 0 and <= 1',
             },
           })
-          expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(empty2x2BoardSnapshot)
+          expect(toAsciiTable(game.getBoard())).toEqual(empty2x2BoardAsciiTable)
           expect(game.getActivePlayer()).toBe(1)
         })
         it('the player is unable to move to a cell with a column number before the first column', () => {
           const game = new GameFactory({ boardDimensions: { rows: 2, columns: 2 } })
-          expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(empty2x2BoardSnapshot)
+          expect(toAsciiTable(game.getBoard())).toEqual(empty2x2BoardAsciiTable)
           expect(game.getActivePlayer()).toBe(1)
           const movePlayerCommand = createMovePlayerCommand({
             player: 1,
@@ -203,12 +201,12 @@ describe('game', () => {
                 'Cell at row 0 column -1 does not exist on the board. The column number must be >= 0 and <= 1',
             },
           })
-          expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(empty2x2BoardSnapshot)
+          expect(toAsciiTable(game.getBoard())).toEqual(empty2x2BoardAsciiTable)
           expect(game.getActivePlayer()).toBe(1)
         })
         it('the player is unable to move to a cell with a column number after the last column', () => {
           const game = new GameFactory({ boardDimensions: { rows: 2, columns: 2 } })
-          expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(empty2x2BoardSnapshot)
+          expect(toAsciiTable(game.getBoard())).toEqual(empty2x2BoardAsciiTable)
           expect(game.getActivePlayer()).toBe(1)
           const movePlayerCommand = createMovePlayerCommand({
             player: 1,
@@ -237,13 +235,13 @@ describe('game', () => {
             })
             expect(game.move(movePlayerCommand)).toBeInstanceOf(PlayerMovedEvent)
             expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(`
-              "
-              |---|---|
-              | 1 |   |
-              |---|---|
-              |   |   |
-              |---|---|"
-            `)
+                  "
+                  |---|---|
+                  | 1 |   |
+                  |---|---|
+                  |   |   |
+                  |---|---|"
+                  `)
           })
         })
         describe('and the cell is occupied', () => {
@@ -270,13 +268,13 @@ describe('game', () => {
               'Cell at row 0 column 0 is already occupied',
             )
             expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(`
-              "
-              |---|---|
-              | 1 |   |
-              |---|---|
-              |   |   |
-              |---|---|"
-            `)
+                "
+                |---|---|
+                | 1 |   |
+                |---|---|
+                |   |   |
+                |---|---|"
+                `)
           })
         })
       })
@@ -310,13 +308,13 @@ describe('game', () => {
             })
             expect(game.move(movePlayerCommand)).toBeInstanceOf(PlayerMovedEvent)
             expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(`
-              "
-              |---|---|
-              | 1 |   |
-              |---|---|
-              | 2 |   |
-              |---|---|"
-            `)
+                "
+                |---|---|
+                | 1 |   |
+                |---|---|
+                | 2 |   |
+                |---|---|"
+              `)
           })
         })
         describe('and the cell below is unoccupied', () => {
@@ -336,14 +334,7 @@ describe('game', () => {
                   'Cell at row 1 column 0 cannot be placed as there is no disk in the row below',
               },
             })
-            expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(`
-              "
-              |---|---|
-              |   |   |
-              |---|---|
-              |   |   |
-              |---|---|"
-            `)
+            expect(toAsciiTable(game.getBoard())).toEqual(empty2x2BoardAsciiTable)
           })
         })
       })
@@ -365,15 +356,33 @@ describe('game', () => {
             message: "Player 2 cannot make a move while it is player 1's turn",
           },
         })
-        expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(`
-          "
-          |---|---|
-          |   |   |
-          |---|---|
-          |   |   |
-          |---|---|"
-        `)
+        expect(toAsciiTable(game.getBoard())).toEqual(empty2x2BoardAsciiTable)
       })
     })
+  })
+  it('changes made to the game after a getBoard call do not affect prior copies of the board', () => {
+    const game = create2x2Board()
+    const originalBoard = game.getBoard()
+    expect(toAsciiTable(originalBoard)).toEqual(empty2x2BoardAsciiTable)
+    game.move(
+      createMovePlayerCommand({
+        player: 1,
+        targetCell: {
+          row: 0,
+          column: 0,
+        },
+      }),
+    )
+
+    const boardAfterMove = game.getBoard()
+    expect(toAsciiTable(boardAfterMove)).toMatchInlineSnapshot(`
+              "
+              |---|---|
+              | 1 |   |
+              |---|---|
+              |   |   |
+              |---|---|"
+            `)
+    expect(toAsciiTable(originalBoard)).toEqual(empty2x2BoardAsciiTable)
   })
 })

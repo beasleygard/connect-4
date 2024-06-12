@@ -412,7 +412,42 @@ describe('game', () => {
         })
       })
       describe('as a tie has been reached', () => {
-        it('returns a move failed event', () => {})
+        it('returns a move failed event', () => {
+          const game = new GameFactory({ boardDimensions: { rows: 1, columns: 4 } })
+          R.pipe<[number[]], Array<MovePlayerCommandPayload>, any>(
+            R.reduce((acc, column) => {
+              return [
+                ...acc,
+                { player: 1, targetCell: { column: column, row: 0 } },
+                { player: 2, targetCell: { column: 3 - column, row: 0 } },
+              ]
+            }, [] as Array<MovePlayerCommandPayload>),
+            R.forEach((commandPayload: MovePlayerCommandPayload) =>
+              game.move(createMovePlayerCommand(commandPayload)),
+            ),
+          )(R.range(0, 3))
+          expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(`
+          "
+          |---|---|---|---|
+          | 1 | 1 | 2 | 2 |
+          |---|---|---|---|"
+        `)
+          expect(game.getGameStatus()).toBe('DRAW')
+          const movePlayerCommand = createMovePlayerCommand({
+            player: 2,
+            targetCell: {
+              row: 2,
+              column: 0,
+            },
+          })
+
+          expect(game.move(movePlayerCommand)).toEqual({
+            type: 'PLAYER_MOVE_FAILED',
+            payload: {
+              message: 'Moves cannot be made after the game is over',
+            },
+          })
+        })
       })
     })
   })

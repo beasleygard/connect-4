@@ -1,11 +1,33 @@
+import { Board, BoardCell } from '@/connect4-domain/game'
 import InMemoryRepository from '@/connect4-domain/in-memory-repository'
+import parseAsciiTable from '@/connect4-domain/parse-ascii-table'
 import { describe, expect, it } from 'vitest'
+
+const createBoardFromAsciiTable = (asciiTable: string) =>
+  parseAsciiTable<BoardCell>(
+    asciiTable,
+    (input: string): BoardCell => ({
+      player: Number.parseInt(input) as 1 | 2,
+    }),
+  )
 
 describe('in-memory-repository', () => {
   describe('given defaults', () => {
     it('creates an in-memory repository', () => {
       const repository = new InMemoryRepository()
       expect(repository).toBeInstanceOf(InMemoryRepository)
+    })
+  })
+  describe('given a store', () => {
+    it('saves a board', () => {
+      const store = new Map()
+      const repository = new InMemoryRepository(store)
+      const board: Board = createBoardFromAsciiTable(`
+|---|---|
+|   |   |
+|---|---|`)
+      const boardId = repository.save(board)
+      expect(store.get(boardId)).toBe(board)
     })
   })
 })

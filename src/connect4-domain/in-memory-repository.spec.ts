@@ -50,5 +50,11 @@ describe('in-memory-repository', () => {
       const boardId = repository.save(board)
       expect(repository.load(boardId)).toBe(board)
     })
+    it('returns undefined when loading a non-existent board', () => {
+      const store = new Map()
+      const repository = new InMemoryRepository(store)
+      const boardId = crypto.randomUUID()
+      expect(repository.load(boardId)).toBe(undefined)
+    })
   })
 })

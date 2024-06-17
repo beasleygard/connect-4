@@ -14,20 +14,20 @@ type PlayerStats = {
   discsLeft: number
 }
 type CellPlayer = PlayerNumber | undefined
-export type BoardCell = {
+type BoardCell = {
   player: CellPlayer
 }
-export type Board = Array<Array<BoardCell>>
-export type BoardDimensions = {
+type Board = Array<Array<BoardCell>>
+type BoardDimensions = {
   rows: number
   columns: number
 }
-export type BoardId = `${string}-${string}-${string}-${string}-${string}`
-export interface GameRepository {
+type BoardId = ReturnType<typeof crypto.randomUUID>
+interface GameRepository {
   save: (board: Board) => BoardId
   load: (boardId: BoardId) => Board | undefined
 }
-export type GameParameters = {
+type GameParameters = {
   boardDimensions?: BoardDimensions
   repository?: GameRepository
 }
@@ -38,8 +38,6 @@ enum GameStatus {
   DRAW = 'DRAW',
 }
 
-export class InvalidBoardDimensionsError extends RangeError {}
-
 type MoveValidationCheck = {
   predicate: (movePlayerCommand: MovePlayerCommand) => boolean
   failureMessageFactory: (movePlayerCommand: MovePlayerCommand) => string
@@ -48,6 +46,8 @@ type MoveValidationResult = {
   isValid: boolean
   message?: string
 }
+
+class InvalidBoardDimensionsError extends RangeError {}
 
 interface Game {
   getBoard: () => Board
@@ -209,3 +209,5 @@ class GameFactory implements Game {
   }
 }
 export default GameFactory
+export { InvalidBoardDimensionsError }
+export type { Board, BoardCell, BoardDimensions, BoardId, GameParameters, GameRepository }

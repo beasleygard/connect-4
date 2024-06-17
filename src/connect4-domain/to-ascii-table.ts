@@ -1,8 +1,6 @@
-const DEFAULT_CELL_PADDING = 1
-
-const createBorderLine = (widths: Array<number>, cellPadding: number): string =>
+const createBorderLine = (widths: Array<number>): string =>
   `${widths.reduce((borderLine, currentCellWidth) => {
-    return borderLine.concat(`|${'-'.repeat(currentCellWidth + 2 * cellPadding)}`)
+    return borderLine.concat(`|${'-'.repeat(currentCellWidth + 2)}`)
   }, '')}|`
 
 const defaultResolver = <T>(value: T): string =>
@@ -17,18 +15,20 @@ function toAsciiTable<T>(
   if (rowCount === 0 || columnCount === 0) {
     return ''
   }
+
   const resolvedCells = grid.map((gridRow) =>
     gridRow.map((gridElement) => cellResolver(gridElement)),
   )
 
   const widths: Array<number> = [...Array(columnCount).keys()].map((columnIndex) =>
     [...Array(rowCount).keys()].reduce((maxWidth, rowIndex: number) => {
-      const cellContent = resolvedCells[rowIndex][columnIndex]
+      const cellContent = cellResolver(grid[rowIndex][columnIndex])
+      resolvedCells[rowIndex][columnIndex] = cellContent
       return cellContent.length > maxWidth ? cellContent.length : maxWidth
     }, 1),
   )
 
-  const borderLine: string = createBorderLine(widths, DEFAULT_CELL_PADDING)
+  const borderLine: string = createBorderLine(widths)
 
   const tableLines: Array<string> = resolvedCells.reduce(
     (tableLines, resolvedCellRow) => {
@@ -41,32 +41,24 @@ function toAsciiTable<T>(
             const isEmptyCell = cellContent.length < 1
             const cellPadding =
               cellContent.length < widths[columnIndex]
-                ? [
-                    DEFAULT_CELL_PADDING,
-                    DEFAULT_CELL_PADDING + widths[columnIndex] - cellContent.length,
-                  ]
-                : [DEFAULT_CELL_PADDING, DEFAULT_CELL_PADDING]
+                ? 1 + widths[columnIndex] - cellContent.length
+                : 1
             return tableRow.concat(
               '|',
-              ' '.repeat(cellPadding[0]),
+              ' ',
               isEmptyCell ? ' ' : cellContent,
-              ' '.repeat(cellPadding[1]),
+              ' '.repeat(cellPadding),
             )
           }, '')
           .concat('|'),
       )
+      tableLines.push(borderLine)
       return tableLines
     },
-    [''] as Array<string>,
+    [, borderLine] as Array<string>,
   )
 
-  return tableLines
-    .reduce((tableRows, tableRow) => {
-      tableRows.push(tableRow)
-      tableRows.push(borderLine)
-      return tableRows
-    }, [] as Array<string>)
-    .join('\n')
+  return tableLines.join('\n')
 }
 
 export default toAsciiTable

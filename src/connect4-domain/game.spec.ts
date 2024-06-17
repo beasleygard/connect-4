@@ -84,7 +84,7 @@ describe('game', () => {
       it('saves the game', () => {
         const repository = new InMemoryRepository()
         const game = new GameFactory({ repository })
-        const repositorySpy = vi.spyOn(repository, 'saveGame')
+        const repositorySpy = vi.spyOn(repository, 'save')
         expect(toAsciiTable(game.getBoard())).toEqual(toAsciiTable(repositorySpy.lastCall[0]))
         expect(toAsciiTable(repository.loadGame())).toEqual(toAsciiTable(game.getBoard()))
       })

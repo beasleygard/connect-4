@@ -1,13 +1,6 @@
-import { Board } from '@/connect4-domain/game'
-
-type BoardId = `${string}-${string}-${string}-${string}-${string}`
+import { Board, BoardId, GameRepository } from '@/connect4-domain/game'
 
 type BoardStore = Map<BoardId, Board>
-
-interface GameRepository {
-  save: (board: Board) => BoardId
-  load: (boardId: BoardId) => Board | undefined
-}
 
 class InMemoryRepository implements GameRepository {
   private store: BoardStore

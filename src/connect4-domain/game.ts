@@ -22,8 +22,14 @@ export type BoardDimensions = {
   rows: number
   columns: number
 }
+export type BoardId = `${string}-${string}-${string}-${string}-${string}`
+export interface GameRepository {
+  save: (board: Board) => BoardId
+  load: (boardId: BoardId) => Board | undefined
+}
 export type GameParameters = {
-  boardDimensions: BoardDimensions
+  boardDimensions?: BoardDimensions
+  repository?: GameRepository
 }
 enum GameStatus {
   IN_PROGRESS = 'IN_PROGRESS',
@@ -58,10 +64,17 @@ class GameFactory implements Game {
   private readonly moveValidationChecks: MoveValidationCheck[]
   private activePlayer: PlayerNumber
   private gameStatus: GameStatus
+  private repository: GameRepository | undefined
 
-  constructor({ boardDimensions }: GameParameters = { boardDimensions: { rows: 6, columns: 7 } }) {
+  constructor(
+    { boardDimensions = { rows: 6, columns: 7 }, repository }: GameParameters = {
+      boardDimensions: { rows: 6, columns: 7 },
+    },
+  ) {
     this.#validateBoardDimensions(boardDimensions)
     this.board = this.#createBoard(boardDimensions)
+    this.repository = repository
+    this.#saveBoard()
     this.playerStats = this.#createPlayerStatsRecord(boardDimensions)
     this.activePlayer = 1
     this.validRowPlacementsByColumn = new Array(boardDimensions.columns).fill(0)
@@ -105,6 +118,8 @@ class GameFactory implements Game {
       },
     ]
   }
+
+  #saveBoard = () => (this.repository !== undefined ? this.repository.save(this.board) : undefined)
 
   #validateBoardDimensions({ rows, columns }: BoardDimensions) {
     if (rows < 1) {

@@ -83,10 +83,12 @@ describe('game', () => {
     describe('given a custom repository', () => {
       it('saves the game', () => {
         const repository = new InMemoryRepository()
-        const game = new GameFactory({ repository })
         const repositorySpy = vi.spyOn(repository, 'save')
-        expect(toAsciiTable(game.getBoard())).toEqual(toAsciiTable(repositorySpy.lastCall[0]))
-        expect(toAsciiTable(repository.load())).toEqual(toAsciiTable(game.getBoard()))
+        const game = new GameFactory({ repository })
+        expect(toAsciiTable(game.getBoard())).toEqual(toAsciiTable(repositorySpy.mock.calls[0][0]))
+        const boardId = repositorySpy.mock.results[0].value
+        expect(repository.load(boardId)).not.toBe(undefined)
+        expect(toAsciiTable(repository.load(boardId)!)).toEqual(toAsciiTable(game.getBoard()))
       })
     })
     describe('given custom board dimensions', () => {

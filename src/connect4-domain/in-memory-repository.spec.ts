@@ -43,5 +43,12 @@ describe('in-memory-repository', () => {
       const boardId = repository.save(board)
       expect(store.get(boardId)).toBe(board)
     })
+    it('loads a saved board', () => {
+      const store = new Map()
+      const repository = new InMemoryRepository(store)
+      const board: Board = create1x2AsciiTable()
+      const boardId = repository.save(board)
+      expect(repository.load(boardId)).toBe(board)
+    })
   })
 })

@@ -2,7 +2,7 @@ import { createMovePlayerCommand } from '@/connect4-domain/commands'
 import { PlayerMoveFailedEvent, PlayerMovedEvent } from '@/connect4-domain/events'
 import GameFactory, { BoardCell, InvalidBoardDimensionsError } from '@/connect4-domain/game'
 import _toAsciiTable from '@/connect4-domain/to-ascii-table'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 const toAsciiTable = (board: Array<Array<BoardCell>>): string =>
   _toAsciiTable<BoardCell>(board, (value): string => {
@@ -77,6 +77,15 @@ describe('game', () => {
         const firstBoard = game.getBoard()
         const secondBoard = game.getBoard()
         expect(secondBoard).toBeDeeplyUnequal(firstBoard)
+      })
+    })
+    describe('given a custom repository', () => {
+      it.todo('saves the game', () => {
+        const repository = new InMemoryRepository()
+        const game = new GameFactory({ repository })
+        const repositorySpy = vi.spyOn(repository, 'saveGame')
+        expect(toAsciiTable(game.getBoard())).toEqual(toAsciiTable(repositorySpy.lastCall[0]))
+        expect(toAsciiTable(repository.loadGame())).toEqual(toAsciiTable(game.getBoard()))
       })
     })
     describe('given custom board dimensions', () => {

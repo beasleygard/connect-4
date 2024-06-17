@@ -29,6 +29,11 @@ describe('in-memory-repository', () => {
       const boardId = repository.save(board)
       expect(repository.load(boardId)).toBe(board)
     })
+    it('returns undefined when loading a non-existent board', () => {
+      const repository = new InMemoryRepository()
+      const boardId = crypto.randomUUID()
+      expect(repository.load(boardId)).toBe(undefined)
+    })
   })
   describe('given a store', () => {
     it('saves a board', () => {

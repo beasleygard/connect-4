@@ -11,21 +11,30 @@ const createBoardFromAsciiTable = (asciiTable: string) =>
     }),
   )
 
+const create1x2AsciiTable = () =>
+  createBoardFromAsciiTable(`
+|---|---|
+|   |   |
+|---|---|`)
+
 describe('in-memory-repository', () => {
   describe('given defaults', () => {
     it('creates an in-memory repository', () => {
       const repository = new InMemoryRepository()
       expect(repository).toBeInstanceOf(InMemoryRepository)
     })
+    it('loads a saved board', () => {
+      const repository = new InMemoryRepository()
+      const board: Board = create1x2AsciiTable()
+      const boardId = repository.save(board)
+      expect(repository.load(boardId)).toBe(board)
+    })
   })
   describe('given a store', () => {
     it('saves a board', () => {
       const store = new Map()
       const repository = new InMemoryRepository(store)
-      const board: Board = createBoardFromAsciiTable(`
-|---|---|
-|   |   |
-|---|---|`)
+      const board: Board = create1x2AsciiTable()
       const boardId = repository.save(board)
       expect(store.get(boardId)).toBe(board)
     })

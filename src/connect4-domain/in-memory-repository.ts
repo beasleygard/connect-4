@@ -6,6 +6,7 @@ type BoardStore = Map<BoardId, Board>
 
 interface GameRepository {
   save: (board: Board) => BoardId
+  load: (boardId: BoardId) => Board | undefined
 }
 
 class InMemoryRepository implements GameRepository {
@@ -19,6 +20,10 @@ class InMemoryRepository implements GameRepository {
     const boardId = crypto.randomUUID()
     this.store.set(boardId, board)
     return boardId
+  }
+
+  load(boardId: BoardId): Board | undefined {
+    return this.store.get(boardId)
   }
 }
 

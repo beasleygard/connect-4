@@ -405,12 +405,12 @@ describe('game', () => {
       describe('as a tie has been reached', () => {
         it('returns a move failed event', () => {
           const game = new GameFactory({ boardDimensions: { rows: 1, columns: 4 } })
-          ;[...Array(3).keys()].forEach((column) => {
+          for (const column of [...Array(3).keys()]) {
             game.move(createMovePlayerCommand({ player: 1, targetCell: { column, row: 0 } }))
             game.move(
               createMovePlayerCommand({ player: 2, targetCell: { column: 3 - column, row: 0 } }),
             )
-          })
+          }
           expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(`
           "
           |---|---|---|---|
@@ -446,10 +446,10 @@ describe('game', () => {
     describe('given player 1 has won the game', () => {
       it('reports the status of the game as a win for player 1', () => {
         const game = new GameFactory({ boardDimensions: { rows: 2, columns: 4 } })
-        ;[...Array(4).keys()].forEach((column) => {
+        for (const column of [...Array(4).keys()]) {
           game.move(createMovePlayerCommand({ player: 1, targetCell: { column, row: 0 } }))
           game.move(createMovePlayerCommand({ player: 2, targetCell: { column, row: 1 } }))
-        })
+        }
         expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(`
           "
           |---|---|---|---|
@@ -465,12 +465,12 @@ describe('game', () => {
       it('reports the status of the game as a win for player 2', () => {
         const game = new GameFactory({ boardDimensions: { rows: 1, columns: 10 } })
         game.move(createMovePlayerCommand({ player: 1, targetCell: { row: 0, column: 5 } }))
-        ;[...Array(4).keys()].forEach((column) => {
+        for (const column of [...Array(4).keys()]) {
           game.move(createMovePlayerCommand({ player: 2, targetCell: { column, row: 0 } }))
           game.move(
             createMovePlayerCommand({ player: 1, targetCell: { column: 9 - column, row: 0 } }),
           )
-        })
+        }
         expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(`
           "
           |---|---|---|---|---|---|---|---|---|---|
@@ -483,12 +483,12 @@ describe('game', () => {
     describe('given the game has come to a draw', () => {
       it('reports the status of the game as a draw', () => {
         const game = new GameFactory({ boardDimensions: { rows: 1, columns: 4 } })
-        ;[...Array(3).keys()].forEach((column) => {
+        for (const column of [...Array(3).keys()]) {
           game.move(createMovePlayerCommand({ player: 1, targetCell: { column, row: 0 } }))
           game.move(
             createMovePlayerCommand({ player: 2, targetCell: { column: 3 - column, row: 0 } }),
           )
-        })
+        }
         expect(toAsciiTable(game.getBoard())).toMatchInlineSnapshot(`
           "
           |---|---|---|---|

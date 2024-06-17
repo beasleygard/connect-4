@@ -1,6 +1,7 @@
 import { createMovePlayerCommand } from '@/connect4-domain/commands'
 import { PlayerMoveFailedEvent, PlayerMovedEvent } from '@/connect4-domain/events'
 import GameFactory, { BoardCell, InvalidBoardDimensionsError } from '@/connect4-domain/game'
+import InMemoryRepository from '@/connect4-domain/in-memory-repository'
 import _toAsciiTable from '@/connect4-domain/to-ascii-table'
 import { describe, expect, it, vi } from 'vitest'
 
@@ -80,7 +81,7 @@ describe('game', () => {
       })
     })
     describe('given a custom repository', () => {
-      it.todo('saves the game', () => {
+      it('saves the game', () => {
         const repository = new InMemoryRepository()
         const game = new GameFactory({ repository })
         const repositorySpy = vi.spyOn(repository, 'saveGame')

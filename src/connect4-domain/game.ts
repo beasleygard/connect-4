@@ -56,6 +56,7 @@ type MoveValidationResult = {
 }
 
 class InvalidBoardDimensionsError extends RangeError {}
+class NoSuchSavedGameError extends ReferenceError {}
 
 interface Game {
   getBoard: () => Board
@@ -91,44 +92,7 @@ class GameFactory implements Game {
     this.activePlayer = 1
     this.validRowPlacementsByColumn = new Array(boardDimensions.columns).fill(0)
     this.gameStatus = GameStatus.IN_PROGRESS
-    this.moveValidationChecks = [
-      {
-        predicate: () => this.gameStatus === GameStatus.IN_PROGRESS,
-        failureMessageFactory: () => 'Moves cannot be made after the game is over',
-      },
-      {
-        predicate: ({ payload: { player } }) => player === this.activePlayer,
-        failureMessageFactory: ({ payload: { player } }) =>
-          `Player ${player} cannot make a move while it is player ${this.activePlayer}'s turn`,
-      },
-      {
-        predicate: (command) =>
-          command.payload.targetCell.row >= 0 && command.payload.targetCell.row < this.board.length,
-        failureMessageFactory: (movePlayerCommand) =>
-          `Cell at row ${movePlayerCommand.payload.targetCell.row} column ${movePlayerCommand.payload.targetCell.column} does not exist on the board. The row number must be >= 0 and <= ${this.board.length - 1}`,
-      },
-      {
-        predicate: (command) =>
-          command.payload.targetCell.column >= 0 &&
-          command.payload.targetCell.column < this.board[0].length,
-        failureMessageFactory: (movePlayerCommand) =>
-          `Cell at row ${movePlayerCommand.payload.targetCell.row} column ${movePlayerCommand.payload.targetCell.column} does not exist on the board. The column number must be >= 0 and <= ${this.board[0].length - 1}`,
-      },
-      {
-        predicate: (command) =>
-          this.validRowPlacementsByColumn[command.payload.targetCell.column] <=
-          command.payload.targetCell.row,
-        failureMessageFactory: (command) =>
-          `Cell at row ${command.payload.targetCell.row} column ${command.payload.targetCell.column} is already occupied`,
-      },
-      {
-        predicate: (command) =>
-          this.validRowPlacementsByColumn[command.payload.targetCell.column] >=
-          command.payload.targetCell.row,
-        failureMessageFactory: (command) =>
-          `Cell at row ${command.payload.targetCell.row} column ${command.payload.targetCell.column} cannot be placed as there is no disk in the row below`,
-      },
-    ]
+    this.moveValidationChecks = this.#createMoveValidationChecksForGame()
   }
 
   save = () =>
@@ -144,7 +108,9 @@ class GameFactory implements Game {
 
   load = (gameUuid: GameUuid) => {
     const persistentGame = this.repository.load(gameUuid)
-    if (persistentGame !== undefined) {
+    if (persistentGame === undefined) {
+      throw new NoSuchSavedGameError('No game with that ID has been saved.')
+    } else {
       this.activePlayer = persistentGame.activePlayer
       this.board = persistentGame.board
       this.playerStats = persistentGame.playerStats
@@ -240,6 +206,47 @@ class GameFactory implements Game {
         ? moveFunction(movePlayerCommand)
         : createPlayerMoveFailedEvent({ message: moveValidationResult.message })
     }
+  }
+
+  #createMoveValidationChecksForGame(): Array<MoveValidationCheck> {
+    return [
+      {
+        predicate: () => this.gameStatus === GameStatus.IN_PROGRESS,
+        failureMessageFactory: () => 'Moves cannot be made after the game is over',
+      },
+      {
+        predicate: ({ payload: { player } }) => player === this.activePlayer,
+        failureMessageFactory: ({ payload: { player } }) =>
+          `Player ${player} cannot make a move while it is player ${this.activePlayer}'s turn`,
+      },
+      {
+        predicate: (command) =>
+          command.payload.targetCell.row >= 0 && command.payload.targetCell.row < this.board.length,
+        failureMessageFactory: (movePlayerCommand) =>
+          `Cell at row ${movePlayerCommand.payload.targetCell.row} column ${movePlayerCommand.payload.targetCell.column} does not exist on the board. The row number must be >= 0 and <= ${this.board.length - 1}`,
+      },
+      {
+        predicate: (command) =>
+          command.payload.targetCell.column >= 0 &&
+          command.payload.targetCell.column < this.board[0].length,
+        failureMessageFactory: (movePlayerCommand) =>
+          `Cell at row ${movePlayerCommand.payload.targetCell.row} column ${movePlayerCommand.payload.targetCell.column} does not exist on the board. The column number must be >= 0 and <= ${this.board[0].length - 1}`,
+      },
+      {
+        predicate: (command) =>
+          this.validRowPlacementsByColumn[command.payload.targetCell.column] <=
+          command.payload.targetCell.row,
+        failureMessageFactory: (command) =>
+          `Cell at row ${command.payload.targetCell.row} column ${command.payload.targetCell.column} is already occupied`,
+      },
+      {
+        predicate: (command) =>
+          this.validRowPlacementsByColumn[command.payload.targetCell.column] >=
+          command.payload.targetCell.row,
+        failureMessageFactory: (command) =>
+          `Cell at row ${command.payload.targetCell.row} column ${command.payload.targetCell.column} cannot be placed as there is no disk in the row below`,
+      },
+    ]
   }
 }
 export default GameFactory

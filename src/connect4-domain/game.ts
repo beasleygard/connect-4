@@ -6,6 +6,7 @@ import {
   createPlayerMoveFailedEvent,
   createPlayerMovedEvent,
 } from '@/connect4-domain/events'
+import InMemoryRepository from '@/connect4-domain/in-memory-repository'
 import isWinningMove from '@/connect4-domain/is-winning-move'
 
 type PlayerNumber = 1 | 2
@@ -62,6 +63,7 @@ interface Game {
   getStatsForPlayer: (playerNumber: PlayerNumber) => PlayerStats
   getActivePlayer: () => PlayerNumber
   move: (movePlayerCommand: MovePlayerCommand) => Event
+  save: () => GameUuid
   load: (gameUuid: GameUuid) => void
 }
 
@@ -72,10 +74,13 @@ class GameFactory implements Game {
   private moveValidationChecks: MoveValidationCheck[]
   private activePlayer: PlayerNumber
   private gameStatus: GameStatus
-  private repository: GameRepository | undefined
+  private repository: GameRepository
 
   constructor(
-    { boardDimensions = { rows: 6, columns: 7 }, repository }: GameParameters = {
+    {
+      boardDimensions = { rows: 6, columns: 7 },
+      repository = new InMemoryRepository(),
+    }: GameParameters = {
       boardDimensions: { rows: 6, columns: 7 },
     },
   ) {
@@ -124,11 +129,11 @@ class GameFactory implements Game {
           `Cell at row ${command.payload.targetCell.row} column ${command.payload.targetCell.column} cannot be placed as there is no disk in the row below`,
       },
     ]
-    this.#saveBoard()
+    this.save()
   }
 
-  #saveBoard = () => {
-    this.repository?.save(
+  save = () =>
+    this.repository.save(
       deepClone({
         board: this.board,
         activePlayer: this.activePlayer,
@@ -137,7 +142,6 @@ class GameFactory implements Game {
         playerStats: this.playerStats,
       } satisfies PersistentGame),
     )
-  }
 
   load = (gameUuid: GameUuid) => {
     const persistentGame = this.repository?.load(gameUuid)

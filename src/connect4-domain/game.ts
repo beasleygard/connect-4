@@ -22,10 +22,17 @@ type BoardDimensions = {
   rows: number
   columns: number
 }
-type BoardId = ReturnType<typeof crypto.randomUUID>
+type GameUuid = ReturnType<typeof crypto.randomUUID>
+type PersistentGame = {
+  board: Board
+  activePlayer: PlayerNumber
+  gameStatus: GameStatus
+  validRowPlacementsByColumn: Array<number>
+  playerStats: Record<PlayerNumber, PlayerStats>
+}
 interface GameRepository {
-  save: (board: Board) => BoardId
-  load: (boardId: BoardId) => Board | undefined
+  save: (board: PersistentGame | Board) => GameUuid
+  load: (boardId: GameUuid) => PersistentGame | Board | undefined
 }
 type GameParameters = {
   boardDimensions?: BoardDimensions
@@ -210,4 +217,13 @@ class GameFactory implements Game {
 }
 export default GameFactory
 export { InvalidBoardDimensionsError }
-export type { Board, BoardCell, BoardDimensions, BoardId, GameParameters, GameRepository }
+export type {
+  Board,
+  BoardCell,
+  BoardDimensions,
+  GameParameters,
+  GameRepository,
+  GameStatus,
+  GameUuid,
+  PersistentGame,
+}

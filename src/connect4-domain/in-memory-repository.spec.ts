@@ -1,4 +1,4 @@
-import { Board, BoardCell } from '@/connect4-domain/game'
+import { Board, BoardCell, GameStatus, PersistentGame } from '@/connect4-domain/game'
 import InMemoryRepository from '@/connect4-domain/in-memory-repository'
 import parseAsciiTable from '@/connect4-domain/parse-ascii-table'
 import { describe, expect, it } from 'vitest'
@@ -17,10 +17,10 @@ const create1x2AsciiTable = () =>
 |   |   |
 |---|---|`)
 
-const create1x2PersistedGame = () => ({
+const create1x2PersistedGame = (): PersistentGame => ({
   board: create1x2AsciiTable(),
   activePlayer: 1,
-  gameStatus: 'IN_PROGRESS',
+  gameStatus: 'IN_PROGRESS' as GameStatus.IN_PROGRESS,
   validRowPlacementsByColumn: [0, 0],
   playerStats: {
     1: {

@@ -23,6 +23,27 @@ const targetColumnToColumnsAroundTheMove = (board: Board, targetColumn: number) 
   return [array.slice(0, targetColumn), array.slice(targetColumn + 1)]
 }
 
+function* getBoardCellsBelowCellCoordinates(board: Board, rowIndex: number, columnIndex: number) {
+  while (rowIndex > 0) {
+    rowIndex -= 1
+    yield board[rowIndex][columnIndex]
+  }
+}
+
+function* getBoardCellsLeftOfCellCoordinates(board: Board, rowIndex: number, columnIndex: number) {
+  while (columnIndex > 0) {
+    columnIndex -= 1
+    yield board[rowIndex][columnIndex]
+  }
+}
+
+function* getBoardCellsRightOfCellCoordinates(board: Board, rowIndex: number, columnIndex: number) {
+  while (columnIndex < board[0].length - 1) {
+    columnIndex += 1
+    yield board[rowIndex][columnIndex]
+  }
+}
+
 function* getBoardCellsOnSlopeFromCellCoordinates(
   step: (input: number) => number,
   board: Board,
@@ -53,13 +74,7 @@ const isVerticalWinningMove = (
   board: Board,
   { player, targetCell: { row: targetRow, column: targetColumn } }: MovePlayerCommandPayload,
 ) => {
-  const targetRowToCellsToCheck = R.compose(
-    R.map((rowIndex: number) => board[rowIndex][targetColumn]),
-    R.reverse,
-    R.range(0),
-  )
-
-  const cellsToCheck = targetRowToCellsToCheck(targetRow)
+  const cellsToCheck = getBoardCellsBelowCellCoordinates(board, targetRow, targetColumn)
   const playerDiscLineLength = 1 + getSuccessivePlayerDiscCountFromCells(player, cellsToCheck)
 
   return {
@@ -71,21 +86,11 @@ const isHorizontalWinningMove = (
   board: Board,
   { player, targetCell: { row: targetRow, column: targetColumn } }: MovePlayerCommandPayload,
 ) => {
-  const targetColumnToCellsAroundTheMove = R.compose<
-    [number],
-    Array<Array<number>>,
-    Array<Array<BoardCell>>
-  >(
-    R.map((columnIndexes: Array<number>) =>
-      columnIndexes.map((columnIndex) => board[targetRow][columnIndex]),
-    ),
-    R.curry(targetColumnToColumnsAroundTheMove)(board),
-  )
-
-  const [cellsLeftOfMove, cellsRightOfMove] = targetColumnToCellsAroundTheMove(targetColumn)
+  const cellsLeftOfMove = getBoardCellsLeftOfCellCoordinates(board, targetRow, targetColumn)
+  const cellsRightOfMove = getBoardCellsRightOfCellCoordinates(board, targetRow, targetColumn)
   const discLineLength =
     1 +
-    getSuccessivePlayerDiscCountFromCells(player, R.reverse(cellsLeftOfMove)) +
+    getSuccessivePlayerDiscCountFromCells(player, cellsLeftOfMove) +
     getSuccessivePlayerDiscCountFromCells(player, cellsRightOfMove)
 
   return {

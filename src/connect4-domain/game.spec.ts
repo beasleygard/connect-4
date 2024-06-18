@@ -122,10 +122,9 @@ describe('game', () => {
       it('saves the game', () => {
         const repository = new InMemoryRepository()
         const repositorySpy = vi.spyOn(repository, 'save')
-        new GameFactory({ repository })
+        const gameId = new GameFactory({ repository }).save()
         const persistentGame = createPersistentGameOfEmptyGameMadeUsingDefaults()
         expect(repositorySpy.mock.calls[0][0]).toMatchObject(persistentGame)
-        const gameId = repositorySpy.mock.results[0].value
         expect(repository.load(gameId)).toMatchObject(persistentGame)
       })
       it('loads the game', () => {

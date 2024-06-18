@@ -129,7 +129,6 @@ class GameFactory implements Game {
           `Cell at row ${command.payload.targetCell.row} column ${command.payload.targetCell.column} cannot be placed as there is no disk in the row below`,
       },
     ]
-    this.save()
   }
 
   save = () =>
@@ -144,7 +143,7 @@ class GameFactory implements Game {
     )
 
   load = (gameUuid: GameUuid) => {
-    const persistentGame = this.repository?.load(gameUuid)
+    const persistentGame = this.repository.load(gameUuid)
     if (persistentGame !== undefined) {
       this.activePlayer = persistentGame.activePlayer
       this.board = persistentGame.board
@@ -191,7 +190,7 @@ class GameFactory implements Game {
 
   getGameStatus = () => this.gameStatus
 
-  getStatsForPlayer = (playerNumber: PlayerNumber) => this.playerStats[playerNumber]
+  getStatsForPlayer = (playerNumber: PlayerNumber) => deepClone(this.playerStats[playerNumber])
 
   getActivePlayer = () => this.activePlayer
 

@@ -141,6 +141,15 @@ describe('game', () => {
             },
           }),
         )
+        game.move(
+          createMovePlayerCommand({
+            player: 2,
+            targetCell: {
+              row: 1,
+              column: 0,
+            },
+          }),
+        )
         expect(getGameData(game)).not.toMatchObject(savedGameData)
         game.load(gameId)
         expect(getGameData(game)).toMatchObject(savedGameData)

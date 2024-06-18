@@ -129,10 +129,9 @@ describe('game', () => {
       })
       it('loads the game', () => {
         const repository = new InMemoryRepository()
-        const repositorySpy = vi.spyOn(repository, 'save')
         const game = new GameFactory({ repository })
-        const persistentGame = createPersistentGameOfEmptyGameMadeUsingDefaults()
-        const gameId = repositorySpy.mock.results[0].value
+        const gameId = game.save()
+        const savedGameData = getGameData(game)
         game.move(
           createMovePlayerCommand({
             player: 1,
@@ -142,9 +141,9 @@ describe('game', () => {
             },
           }),
         )
-        expect(getGameData(game)).not.toMatchObject(persistentGame)
+        expect(getGameData(game)).not.toMatchObject(savedGameData)
         game.load(gameId)
-        expect(getGameData(game)).toMatchObject(persistentGame)
+        expect(getGameData(game)).toMatchObject(savedGameData)
       })
     })
     describe('given custom board dimensions', () => {

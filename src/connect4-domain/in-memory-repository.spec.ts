@@ -11,14 +11,14 @@ const createBoardFromAsciiTable = (asciiTable: string) =>
     }),
   )
 
-const create1x2AsciiTable = () =>
+const create1x2Board = () =>
   createBoardFromAsciiTable(`
 |---|---|
 |   |   |
 |---|---|`)
 
 const create1x2PersistedGame = (): PersistentGame => ({
-  board: create1x2AsciiTable(),
+  board: create1x2Board(),
   activePlayer: 1,
   gameStatus: 'IN_PROGRESS' as GameStatus.IN_PROGRESS,
   validRowPlacementsByColumn: [0, 0],

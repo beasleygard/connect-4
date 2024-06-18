@@ -216,14 +216,13 @@ class GameFactory implements Game {
   }
 }
 export default GameFactory
-export { InvalidBoardDimensionsError }
+export { GameStatus, InvalidBoardDimensionsError }
 export type {
   Board,
   BoardCell,
   BoardDimensions,
   GameParameters,
   GameRepository,
-  GameStatus,
   GameUuid,
   PersistentGame,
 }

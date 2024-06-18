@@ -1,6 +1,11 @@
 import { createMovePlayerCommand } from '@/connect4-domain/commands'
 import { PlayerMoveFailedEvent, PlayerMovedEvent } from '@/connect4-domain/events'
-import GameFactory, { BoardCell, InvalidBoardDimensionsError } from '@/connect4-domain/game'
+import GameFactory, {
+  BoardCell,
+  GameStatus,
+  InvalidBoardDimensionsError,
+  PersistentGame,
+} from '@/connect4-domain/game'
 import InMemoryRepository from '@/connect4-domain/in-memory-repository'
 import _toAsciiTable from '@/connect4-domain/to-ascii-table'
 import { describe, expect, it, vi } from 'vitest'
@@ -85,10 +90,30 @@ describe('game', () => {
         const repository = new InMemoryRepository()
         const repositorySpy = vi.spyOn(repository, 'save')
         const game = new GameFactory({ repository })
-        expect(toAsciiTable(game.getBoard())).toEqual(toAsciiTable(repositorySpy.mock.calls[0][0]))
-        const boardId = repositorySpy.mock.results[0].value
-        expect(repository.load(boardId)).not.toBe(undefined)
-        expect(toAsciiTable(repository.load(boardId)!)).toEqual(toAsciiTable(game.getBoard()))
+        const persistentGame = {
+          board: new Array(6).fill(undefined).map(() =>
+            new Array(7).fill(undefined).map(() => ({
+              player: undefined,
+            })),
+          ),
+          activePlayer: 1,
+          gameStatus: GameStatus.IN_PROGRESS,
+          validRowPlacementsByColumn: new Array(7).fill(0),
+          playerStats: {
+            1: {
+              player: 1,
+              discsLeft: 21,
+            },
+            2: {
+              player: 2,
+              discsLeft: 21,
+            },
+          },
+        } satisfies PersistentGame
+        expect(repositorySpy.mock.calls[0][0]).toMatchObject(persistentGame)
+        const gameId = repositorySpy.mock.results[0].value
+        expect(repository.load(gameId)).not.toBe(undefined)
+        expect(toAsciiTable(repository.load(gameId)!)).toMatchObject(persistentGame)
       })
     })
     describe('given custom board dimensions', () => {

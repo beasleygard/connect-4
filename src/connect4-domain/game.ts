@@ -81,7 +81,6 @@ class GameFactory implements Game {
     this.#validateBoardDimensions(boardDimensions)
     this.board = this.#createBoard(boardDimensions)
     this.repository = repository
-    this.#saveBoard()
     this.playerStats = this.#createPlayerStatsRecord(boardDimensions)
     this.activePlayer = 1
     this.validRowPlacementsByColumn = new Array(boardDimensions.columns).fill(0)
@@ -124,9 +123,18 @@ class GameFactory implements Game {
           `Cell at row ${command.payload.targetCell.row} column ${command.payload.targetCell.column} cannot be placed as there is no disk in the row below`,
       },
     ]
+    this.#saveBoard()
   }
 
-  #saveBoard = () => (this.repository !== undefined ? this.repository.save(this.board) : undefined)
+  #saveBoard = () => {
+    this.repository?.save({
+      board: this.board,
+      activePlayer: this.activePlayer,
+      gameStatus: this.gameStatus,
+      validRowPlacementsByColumn: this.validRowPlacementsByColumn,
+      playerStats: this.playerStats,
+    } satisfies PersistentGame)
+  }
 
   #validateBoardDimensions({ rows, columns }: BoardDimensions) {
     if (rows < 1) {

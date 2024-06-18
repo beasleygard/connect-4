@@ -89,7 +89,7 @@ describe('game', () => {
       it('saves the game', () => {
         const repository = new InMemoryRepository()
         const repositorySpy = vi.spyOn(repository, 'save')
-        const game = new GameFactory({ repository })
+        new GameFactory({ repository })
         const persistentGame = {
           board: new Array(6).fill(undefined).map(() =>
             new Array(7).fill(undefined).map(() => ({
@@ -112,8 +112,7 @@ describe('game', () => {
         } satisfies PersistentGame
         expect(repositorySpy.mock.calls[0][0]).toMatchObject(persistentGame)
         const gameId = repositorySpy.mock.results[0].value
-        expect(repository.load(gameId)).not.toBe(undefined)
-        expect(toAsciiTable(repository.load(gameId)!)).toMatchObject(persistentGame)
+        expect(repository.load(gameId)).toMatchObject(persistentGame)
       })
     })
     describe('given custom board dimensions', () => {

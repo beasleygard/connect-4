@@ -53,12 +53,12 @@ describe('in-memory-repository', () => {
     })
   })
   describe('given a store', () => {
-    it('saves a board', () => {
+    it('saves a game', () => {
       const store = new Map()
       const repository = new InMemoryRepository(store)
-      const board: Board = create1x2AsciiTable()
-      const boardId = repository.save(board)
-      expect(store.get(boardId)).toBe(board)
+      const persistentGame = create1x2PersistedGame()
+      const gameId = repository.save(persistentGame)
+      expect(store.get(gameId)).toBe(persistentGame)
     })
     it('loads a saved board', () => {
       const store = new Map()

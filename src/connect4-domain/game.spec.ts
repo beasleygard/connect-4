@@ -592,4 +592,8 @@ describe('game', () => {
             `)
     expect(toAsciiTable(originalBoard)).toEqual(empty2x2BoardAsciiTable)
   })
+  it('retrieves the valid row placements for each column', () => {
+    const game = new GameFactory()
+    expect(game.getValidRowPlacementsByColumn()).toEqual([0, 0, 0, 0, 0, 0, 0])
+  })
 })

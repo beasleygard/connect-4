@@ -62,13 +62,14 @@ interface Game {
   getStatsForPlayer: (playerNumber: PlayerNumber) => PlayerStats
   getActivePlayer: () => PlayerNumber
   move: (movePlayerCommand: MovePlayerCommand) => Event
+  load: (gameUuid: GameUuid) => void
 }
 
 class GameFactory implements Game {
-  private readonly board: Board
-  private readonly playerStats: Record<PlayerNumber, PlayerStats>
-  private readonly validRowPlacementsByColumn: number[]
-  private readonly moveValidationChecks: MoveValidationCheck[]
+  private board: Board
+  private playerStats: Record<PlayerNumber, PlayerStats>
+  private validRowPlacementsByColumn: number[]
+  private moveValidationChecks: MoveValidationCheck[]
   private activePlayer: PlayerNumber
   private gameStatus: GameStatus
   private repository: GameRepository | undefined
@@ -134,6 +135,17 @@ class GameFactory implements Game {
       validRowPlacementsByColumn: this.validRowPlacementsByColumn,
       playerStats: this.playerStats,
     } satisfies PersistentGame)
+  }
+
+  load = (gameUuid: GameUuid) => {
+    const persistentGame = this.repository?.load(gameUuid)
+    if (persistentGame !== undefined) {
+      this.activePlayer = persistentGame.activePlayer
+      this.board = persistentGame.board
+      this.playerStats = persistentGame.playerStats
+      this.gameStatus = persistentGame.gameStatus
+      this.validRowPlacementsByColumn = persistentGame.validRowPlacementsByColumn
+    }
   }
 
   #validateBoardDimensions({ rows, columns }: BoardDimensions) {

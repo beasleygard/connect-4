@@ -74,11 +74,11 @@ describe('in-memory-repository', () => {
       expect(repository.load(gameId)).toBe(undefined)
     })
   })
-  it('saves a board with a provided ID', () => {
-    const boardId = crypto.randomUUID()
+  it('saves a game with a provided ID', () => {
+    const gameId = crypto.randomUUID()
     const repository = new InMemoryRepository()
-    const board = create1x2AsciiTable()
-    expect(repository.save(board, boardId)).toBe(boardId)
-    expect(repository.load(boardId)).toBe(board)
+    const game = create1x2PersistedGame()
+    expect(repository.save(game, gameId)).toBe(gameId)
+    expect(repository.load(gameId)).toBe(game)
   })
 })

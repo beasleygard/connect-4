@@ -1,5 +1,5 @@
-import { v1 as randomUuid } from 'uuid'
 import { BoardCellProps } from '@/connect4-ui/BoardCell'
+import { v1 as randomUuid } from 'uuid'
 
 export type CreateCellsStrategy = () => 1 | 2 | undefined
 

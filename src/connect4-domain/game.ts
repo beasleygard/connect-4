@@ -135,15 +135,11 @@ class GameFactory implements Game {
   }
 
   #createBoard = ({ rows, columns }: BoardDimensions): Board =>
-    Array(rows)
-      .fill(undefined)
-      .map(() =>
-        Array(columns)
-          .fill(undefined)
-          .map(() => ({
-            player: undefined,
-          })),
-      )
+    [...Array(rows)].map(() =>
+      [...Array(columns)].map(() => ({
+        player: undefined,
+      })),
+    )
 
   #createPlayerStatsRecord({ rows, columns }: BoardDimensions): Record<PlayerNumber, PlayerStats> {
     const playerMovesLeft = (rows * columns) / 2

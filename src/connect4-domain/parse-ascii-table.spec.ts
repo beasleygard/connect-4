@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest'
 import parseAsciiTable from '@/connect4-domain/parse-ascii-table'
+import { describe, expect, it } from 'vitest'
 
 const stringToNumberResolver = (input: string): number => Number(input)
 

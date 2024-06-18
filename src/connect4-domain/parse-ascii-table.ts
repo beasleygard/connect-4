@@ -7,15 +7,8 @@ const parseAsciiTable = <T>(
   asciiTable
     .split('\n')
     .filter((_, index, rows) => index % 2 === 0 && index != 0 && index < rows.length - 1)
-    .map((row) => row.match(/(?<=\| )(.*?)(?= +\|)/gm) as Array<string>)
-    .reduce((parsedRows: Array<Array<T>>, rowContent: Array<string>): Array<Array<T>> => {
-      parsedRows.push(
-        rowContent.reduce((parsedCells: Array<T>, cellContent: string): Array<T> => {
-          parsedCells.push(cellResolver(cellContent))
-          return parsedCells
-        }, []),
-      )
-      return parsedRows
-    }, [])
+    .map((row) =>
+      row.match(/(?<=\| )(.*?)(?= +\|)/gm)!.map((cellContent) => cellResolver(cellContent)),
+    )
 
 export default parseAsciiTable

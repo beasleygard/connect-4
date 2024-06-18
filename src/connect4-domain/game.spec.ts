@@ -57,6 +57,7 @@ const getGameData = (game: GameFactory) => ({
   board: game.getBoard(),
   activePlayer: game.getActivePlayer(),
   gameStatus: game.getGameStatus(),
+  validRowPlacementsByColumn: game.getValidRowPlacementsByColumn(),
   playerStats: {
     1: game.getStatsForPlayer(1),
     2: game.getStatsForPlayer(2),

@@ -128,13 +128,15 @@ class GameFactory implements Game {
   }
 
   #saveBoard = () => {
-    this.repository?.save({
-      board: this.board,
-      activePlayer: this.activePlayer,
-      gameStatus: this.gameStatus,
-      validRowPlacementsByColumn: this.validRowPlacementsByColumn,
-      playerStats: this.playerStats,
-    } satisfies PersistentGame)
+    this.repository?.save(
+      deepClone({
+        board: this.board,
+        activePlayer: this.activePlayer,
+        gameStatus: this.gameStatus,
+        validRowPlacementsByColumn: this.validRowPlacementsByColumn,
+        playerStats: this.playerStats,
+      } satisfies PersistentGame),
+    )
   }
 
   load = (gameUuid: GameUuid) => {

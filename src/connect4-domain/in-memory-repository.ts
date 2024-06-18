@@ -1,6 +1,6 @@
-import { Board, GameRepository, GameUuid, PersistentGame } from '@/connect4-domain/game'
+import { GameRepository, GameUuid, PersistentGame } from '@/connect4-domain/game'
 
-type Store = Map<GameUuid, PersistentGame | Board>
+type Store = Map<GameUuid, PersistentGame>
 
 class InMemoryRepository implements GameRepository {
   private store: Store
@@ -9,12 +9,12 @@ class InMemoryRepository implements GameRepository {
     this.store = store
   }
 
-  save(game: PersistentGame | Board, gameUuid: GameUuid = crypto.randomUUID()): GameUuid {
+  save(game: PersistentGame, gameUuid: GameUuid = crypto.randomUUID()): GameUuid {
     this.store.set(gameUuid, game)
     return gameUuid
   }
 
-  load(gameUuid: GameUuid): PersistentGame | Board | undefined {
+  load(gameUuid: GameUuid): PersistentGame | undefined {
     return this.store.get(gameUuid)
   }
 }

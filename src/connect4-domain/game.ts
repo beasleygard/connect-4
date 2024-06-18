@@ -31,8 +31,8 @@ type PersistentGame = {
   playerStats: Record<PlayerNumber, PlayerStats>
 }
 interface GameRepository {
-  save: (board: PersistentGame | Board) => GameUuid
-  load: (boardId: GameUuid) => PersistentGame | Board | undefined
+  save: (board: PersistentGame) => GameUuid
+  load: (boardId: GameUuid) => PersistentGame | undefined
 }
 type GameParameters = {
   boardDimensions?: BoardDimensions

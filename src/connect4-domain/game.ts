@@ -148,6 +148,8 @@ class GameFactory implements Game {
     }
   }
 
+  getValidRowPlacementsByColumn = () => deepClone(this.validRowPlacementsByColumn)
+
   #validateBoardDimensions({ rows, columns }: BoardDimensions) {
     if (rows < 1) {
       throw new InvalidBoardDimensionsError('Number of rows must be greater than or equal to 1')

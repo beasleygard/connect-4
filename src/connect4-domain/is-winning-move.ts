@@ -4,7 +4,7 @@ import * as R from 'ramda'
 
 const getSuccessivePlayerDiscCountFromCells = (
   player: 1 | 2,
-  cellCoordinates: Array<BoardCell>,
+  cellCoordinates: Iterable<BoardCell>,
 ): number => {
   let playerDiscLineLength = 0
   for (const boardCell of cellCoordinates) {
@@ -23,25 +23,22 @@ const targetColumnToColumnsAroundTheMove = (board: Board, targetColumn: number) 
   return [array.slice(0, targetColumn), array.slice(targetColumn + 1)]
 }
 
-const getBoardCellsOnSlopeFromCellCoordinates = (
+function* getBoardCellsOnSlopeFromCellCoordinates(
   step: (input: number) => number,
   board: Board,
   rowStartIndex: number,
   rowEndIndex: number,
   columns: number[],
-) => {
-  const cells = []
+) {
   let rowIndex = rowStartIndex
 
   for (const columnIndex of columns) {
     if (rowIndex === rowEndIndex) {
-      break
+      return
     }
-    cells.push(board[rowIndex][columnIndex])
+    yield board[rowIndex][columnIndex]
     rowIndex = step(rowIndex)
   }
-
-  return cells
 }
 
 const getBoardCellsOnDownwardSlope = R.curry(getBoardCellsOnSlopeFromCellCoordinates)(

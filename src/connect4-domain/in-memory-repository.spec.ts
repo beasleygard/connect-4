@@ -17,17 +17,34 @@ const create1x2AsciiTable = () =>
 |   |   |
 |---|---|`)
 
+const create1x2PersistedGame = () => ({
+  board: create1x2AsciiTable(),
+  activePlayer: 1,
+  gameStatus: 'IN_PROGRESS',
+  validRowPlacementsByColumn: [0, 0],
+  playerStats: {
+    1: {
+      player: 1,
+      discsLeft: 1,
+    },
+    2: {
+      player: 2,
+      discsLeft: 2,
+    },
+  },
+})
+
 describe('in-memory-repository', () => {
   describe('given defaults', () => {
     it('creates an in-memory repository', () => {
       const repository = new InMemoryRepository()
       expect(repository).toBeInstanceOf(InMemoryRepository)
     })
-    it('loads a saved board', () => {
+    it('loads a saved game', () => {
       const repository = new InMemoryRepository()
-      const board: Board = create1x2AsciiTable()
-      const boardId = repository.save(board)
-      expect(repository.load(boardId)).toBe(board)
+      const persistentGame = create1x2PersistedGame()
+      const boardId = repository.save(persistentGame)
+      expect(repository.load(boardId)).toMatchObject(persistentGame)
     })
     it('returns undefined when loading a non-existent board', () => {
       const repository = new InMemoryRepository()

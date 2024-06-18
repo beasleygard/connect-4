@@ -67,11 +67,11 @@ describe('in-memory-repository', () => {
       const gameId = repository.save(game)
       expect(repository.load(gameId)).toBe(game)
     })
-    it('returns undefined when loading a non-existent board', () => {
+    it('returns undefined when loading a non-existent game', () => {
       const store = new Map()
       const repository = new InMemoryRepository(store)
-      const boardId = crypto.randomUUID()
-      expect(repository.load(boardId)).toBe(undefined)
+      const gameId = crypto.randomUUID()
+      expect(repository.load(gameId)).toBe(undefined)
     })
   })
   it('saves a board with a provided ID', () => {

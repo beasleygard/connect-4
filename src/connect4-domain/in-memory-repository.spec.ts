@@ -57,4 +57,11 @@ describe('in-memory-repository', () => {
       expect(repository.load(boardId)).toBe(undefined)
     })
   })
+  it('saves a board with a provided ID', () => {
+    const boardId = crypto.randomUUID()
+    const repository = new InMemoryRepository()
+    const board = create1x2AsciiTable()
+    expect(repository.save(board, boardId)).toBe(boardId)
+    expect(repository.load(boardId)).toBe(board)
+  })
 })

@@ -63,6 +63,7 @@ interface Game {
   getGameStatus: () => GameStatus
   getStatsForPlayer: (playerNumber: PlayerNumber) => PlayerStats
   getActivePlayer: () => PlayerNumber
+  getValidRowPlacementsByColumn: () => Array<number>
   move: (movePlayerCommand: MovePlayerCommand) => Event
   save: () => GameUuid
   load: (gameUuid: GameUuid) => void

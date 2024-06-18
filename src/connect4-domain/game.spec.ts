@@ -31,6 +31,38 @@ const empty2x2BoardAsciiTable = `
 |   |   |
 |---|---|`
 
+const createPersistentGameOfEmptyGameMadeUsingDefaults = () =>
+  ({
+    board: new Array(6).fill(undefined).map(() =>
+      new Array(7).fill(undefined).map(() => ({
+        player: undefined,
+      })),
+    ),
+    activePlayer: 1,
+    gameStatus: GameStatus.IN_PROGRESS,
+    validRowPlacementsByColumn: new Array(7).fill(0),
+    playerStats: {
+      1: {
+        player: 1,
+        discsLeft: 21,
+      },
+      2: {
+        player: 2,
+        discsLeft: 21,
+      },
+    },
+  }) satisfies PersistentGame
+
+const getGameData = (game: GameFactory) => ({
+  board: game.getBoard(),
+  activePlayer: game.getActivePlayer(),
+  gameStatus: game.getGameStatus(),
+  playerStats: {
+    1: game.getStatsForPlayer(1),
+    2: game.getStatsForPlayer(2),
+  },
+})
+
 describe('game', () => {
   describe('new game', () => {
     describe('given defaults', () => {
@@ -90,29 +122,29 @@ describe('game', () => {
         const repository = new InMemoryRepository()
         const repositorySpy = vi.spyOn(repository, 'save')
         new GameFactory({ repository })
-        const persistentGame = {
-          board: new Array(6).fill(undefined).map(() =>
-            new Array(7).fill(undefined).map(() => ({
-              player: undefined,
-            })),
-          ),
-          activePlayer: 1,
-          gameStatus: GameStatus.IN_PROGRESS,
-          validRowPlacementsByColumn: new Array(7).fill(0),
-          playerStats: {
-            1: {
-              player: 1,
-              discsLeft: 21,
-            },
-            2: {
-              player: 2,
-              discsLeft: 21,
-            },
-          },
-        } satisfies PersistentGame
+        const persistentGame = createPersistentGameOfEmptyGameMadeUsingDefaults()
         expect(repositorySpy.mock.calls[0][0]).toMatchObject(persistentGame)
         const gameId = repositorySpy.mock.results[0].value
         expect(repository.load(gameId)).toMatchObject(persistentGame)
+      })
+      it('loads the game', () => {
+        const repository = new InMemoryRepository()
+        const repositorySpy = vi.spyOn(repository, 'save')
+        const game = new GameFactory({ repository })
+        const persistentGame = createPersistentGameOfEmptyGameMadeUsingDefaults()
+        const gameId = repositorySpy.mock.results[0].value
+        game.move(
+          createMovePlayerCommand({
+            player: 1,
+            targetCell: {
+              row: 0,
+              column: 0,
+            },
+          }),
+        )
+        expect(getGameData(game)).not.toMatchObject(persistentGame)
+        game.load(gameId)
+        expect(getGameData(game)).toMatchObject(persistentGame)
       })
     })
     describe('given custom board dimensions', () => {

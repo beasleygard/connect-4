@@ -16,17 +16,19 @@ function toAsciiTable<T>(
     return ''
   }
 
-  const resolvedCells = grid.map((gridRow) =>
-    gridRow.map((gridElement) => cellResolver(gridElement)),
-  )
-
-  const widths: Array<number> = [...Array(columnCount).keys()].map((columnIndex) =>
-    [...Array(rowCount).keys()].reduce((maxWidth, rowIndex: number) => {
-      const cellContent = cellResolver(grid[rowIndex][columnIndex])
-      resolvedCells[rowIndex][columnIndex] = cellContent
-      return cellContent.length > maxWidth ? cellContent.length : maxWidth
-    }, 1),
-  )
+  const resolvedCells = [...Array(rowCount)].map(() => Array(columnCount))
+  const widths = [...Array(columnCount)]
+  for (const columnIndex of [...Array(columnCount).keys()]) {
+    let maxWidth = 1
+    for (const rowIndex of [...Array(rowCount).keys()]) {
+      const resolvedCellContent = cellResolver(grid[rowIndex][columnIndex])
+      resolvedCells[rowIndex][columnIndex] = resolvedCellContent
+      if (resolvedCellContent.length > maxWidth) {
+        maxWidth = resolvedCellContent.length
+      }
+    }
+    widths[columnIndex] = maxWidth
+  }
 
   const borderLine: string = createBorderLine(widths)
 
@@ -43,12 +45,7 @@ function toAsciiTable<T>(
               cellContent.length < widths[columnIndex]
                 ? 1 + widths[columnIndex] - cellContent.length
                 : 1
-            return tableRow.concat(
-              '|',
-              ' ',
-              isEmptyCell ? ' ' : cellContent,
-              ' '.repeat(cellPadding),
-            )
+            return tableRow.concat('| ', isEmptyCell ? ' ' : cellContent, ' '.repeat(cellPadding))
           }, '')
           .concat('|'),
       )

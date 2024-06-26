@@ -1,13 +1,14 @@
-import styled from 'styled-components'
 import Token from '@/connect4-ui/Token'
+import styled from 'styled-components'
 
 export type BoardCellProps = {
   player?: 1 | 2
   uuid: string
+  onClick?: Function
   className?: string
 }
 
-const StyledBoardCell = styled.div`
+const StyledBoardCell = styled.div<BoardCellProps>`
   position: relative;
   display: flex;
   width: 60px;
@@ -37,9 +38,9 @@ const StyledBoardCell = styled.div`
   }
 `
 
-const BoardCell = ({ player, className }: BoardCellProps) => {
+const BoardCell = ({ player, uuid, className, onClick }: BoardCellProps) => {
   return (
-    <StyledBoardCell className={className}>
+    <StyledBoardCell className={className} onClick={onClick} uuid={uuid}>
       <Token
         size={50}
         color={player === undefined ? undefined : player === 1 ? 'crimson' : 'gold'}

@@ -58,7 +58,7 @@ type MoveValidationResult = {
 class InvalidBoardDimensionsError extends RangeError {}
 class NoSuchSavedGameError extends ReferenceError {}
 
-interface Game {
+export interface Game {
   getBoard: () => Board
   getGameStatus: () => GameStatus
   getStatsForPlayer: (playerNumber: PlayerNumber) => PlayerStats

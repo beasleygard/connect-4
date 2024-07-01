@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 export type BoardCellProps = {
   player?: 1 | 2
-  uuid: string
+  uuid?: string
   onClick?: Function
   className?: string
 }

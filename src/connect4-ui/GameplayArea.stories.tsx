@@ -1,6 +1,7 @@
-import { Meta, StoryObj } from '@storybook/react'
+import { GameStatus } from '@/connect4-ui/GameOverview'
 import GameplayArea, { GameplayAreaProps } from '@/connect4-ui/GameplayArea'
 import createCells from '@/connect4-ui/create-cells'
+import { Meta, StoryObj } from '@storybook/react'
 
 export default {
   component: GameplayArea,
@@ -15,6 +16,7 @@ export const TheOneWithAnActiveGame: Story = {
         roundNumber: 1,
         movesLeft: 42,
         activePlayer: 1,
+        gameStatus: GameStatus.IN_PROGRESS,
       },
       board: {
         cells: createCells(6, 7),

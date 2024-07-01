@@ -1,6 +1,7 @@
-import { Meta, StoryObj } from '@storybook/react'
 import Board, { BoardProps } from '@/connect4-ui/Board'
 import createCells from '@/connect4-ui/create-cells'
+import { action } from '@storybook/addon-actions'
+import { Meta, StoryObj } from '@storybook/react'
 
 type Story = StoryObj<typeof Board>
 
@@ -56,4 +57,11 @@ export const TheOneWithAModifiedBoardSizeAndAlternatingTokens: Story = {
   args: {
     cells: createCells(9, 2, alternateCellsStrategy),
   } as BoardProps,
+}
+
+export const TheOneWithAClickHandler: Story = {
+  args: {
+    cells: createCells(6, 7),
+    onClick: action('Clicked'),
+  },
 }

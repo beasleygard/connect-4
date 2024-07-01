@@ -1,9 +1,12 @@
-import styled from 'styled-components'
 import BoardCell, { BoardCellProps } from '@/connect4-ui/BoardCell'
 import createCells from '@/connect4-ui/create-cells'
+import styled from 'styled-components'
+
+export type ClickHandler = (row: number, column: number) => void
 
 export type BoardProps = {
   cells: Array<Array<BoardCellProps>>
+  onClick?: ClickHandler
 }
 
 type GridBoardCellProps = {
@@ -51,22 +54,29 @@ const GridBoardCell = styled(BoardCell)<GridBoardCellProps>`
   }
 `
 
-const Board = (props: BoardProps) => {
-  const columnCount = props.cells[0].length
-  const rowCount = props.cells.length
+function createHandleBoardCellClick(clickHandler: ClickHandler, row: number, column: number) {
+  return function handleBoardCellClick() {
+    clickHandler(row, column)
+  }
+}
+
+const Board = ({ cells, onClick = () => undefined }: BoardProps) => {
+  const columnCount = cells[0].length
+  const rowCount = cells.length
 
   return (
     <StyledBoardGrid>
-      {props.cells
+      {cells
         .reverse()
         .flatMap((row, rowIndex) =>
           row.map((cell, columnIndex) => (
             <GridBoardCell
               player={cell.player}
               uuid={cell.uuid}
+              onClick={createHandleBoardCellClick(onClick, rowIndex, columnIndex)}
               key={cell.uuid}
               column={columnIndex + 1}
-              row={rowIndex + 1}
+              row={rowCount - rowIndex + 1}
               columnCount={columnCount}
               rowCount={rowCount}
             />

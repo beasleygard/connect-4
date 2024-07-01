@@ -1,5 +1,5 @@
-import styled from 'styled-components'
 import Token from '@/connect4-ui/Token'
+import styled from 'styled-components'
 
 export type PlayerOverviewProps = {
   player: 1 | 2
@@ -20,7 +20,7 @@ const StyledPlayerOverview = styled.div`
   font-size: 20px;
 `
 
-const TurnIndicator = styled.div<{ isActive: boolean }>`
+const TurnIndicator = styled.div<{ $isActive: boolean }>`
   display: flex;
   flex-direction: column;
   height: 70px;
@@ -28,12 +28,12 @@ const TurnIndicator = styled.div<{ isActive: boolean }>`
 
   & p {
     margin-top: 5px;
-    font-weight: ${(props) => (props.isActive ? '600' : 'inherit')};
+    font-weight: ${(props) => (props.$isActive ? '600' : 'inherit')};
   }
 
   & > div {
-    filter: ${(props) => (props.isActive ? 'grayscale(0%)' : 'grayscale(90%)')};
-    animation: ${(props) => (props.isActive ? 'spin 2s infinite linear' : 'none')};
+    filter: ${(props) => (props.$isActive ? 'grayscale(0%)' : 'grayscale(90%)')};
+    animation: ${(props) => (props.$isActive ? 'spin 2s infinite linear' : 'none')};
   }
 
   @keyframes spin {
@@ -52,7 +52,7 @@ function PlayerOverview({ player, isActive, turnsLeft, playerTokenColour }: Play
   return (
     <StyledPlayerOverview>
       <p>{`Player ${player}`}</p>
-      <TurnIndicator isActive={isActive}>
+      <TurnIndicator $isActive={isActive}>
         <Token
           size={35}
           color={

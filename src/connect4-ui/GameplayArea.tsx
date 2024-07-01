@@ -1,41 +1,34 @@
-import styled from 'styled-components'
+import Board, { BoardProps, ClickHandler } from '@/connect4-ui/Board'
 import GameOverview, { GameOverviewProps } from '@/connect4-ui/GameOverview'
-import Board, { BoardProps } from '@/connect4-ui/Board'
+import { MouseEventHandler } from 'react'
+import styled from 'styled-components'
 
-type ActiveGame = {
+export type ActiveGame = {
   gameOverview: GameOverviewProps
   board: BoardProps
 }
 
 export type GameplayAreaProps = {
   activeGame: ActiveGame
+  onBoardCellClick?: ClickHandler
+  onNewRoundClick?: MouseEventHandler
 }
 
-const StyledGameplayArea = styled.div<ActiveGame>`
+const StyledGameplayArea = styled.div`
   display: flex;
   align-items: center;
   flex-direction: row-reverse;
   justify-content: space-evenly;
-  gap: 5px;
+  row-gap: 20px;
   flex-wrap: wrap;
   min-width: 200px;
 `
 
-const StyledButton = styled.button`
-  padding: 20px 15px;
-  font-family: monospace;
-  font-size: 2rem;
-  background-color: lightblue;
-  color: blue;
-`
-
-function GameplayArea({ activeGame }: GameplayAreaProps) {
-  const { gameOverview, board } = activeGame
-
+function GameplayArea({ activeGame, onBoardCellClick, onNewRoundClick }: GameplayAreaProps) {
   return (
-    <StyledGameplayArea {...activeGame}>
-      <GameOverview {...gameOverview} />
-      <Board {...board} />
+    <StyledGameplayArea>
+      <GameOverview {...activeGame.gameOverview} onNewRoundClick={onNewRoundClick} />
+      <Board {...activeGame.board} onClick={onBoardCellClick} />
     </StyledGameplayArea>
   )
 }

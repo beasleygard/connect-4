@@ -57,36 +57,26 @@ const GridBoardCell = styled(BoardCell)<GridBoardCellProps>`
   }
 `
 
-function createHandleBoardCellClick(clickHandler: ClickHandler, row: number, column: number) {
-  return function handleBoardCellClick() {
-    clickHandler(row, column)
-  }
-}
-
 const Board = ({ cells, gameApi, onClick = () => undefined }: BoardProps) => {
   const [columnCount] = React.useState(gameApi.getColumnCount())
   const [rowCount] = React.useState(gameApi.getRowCount())
 
   return (
     <StyledBoardGrid>
-      {gameApi
-        .getBoard()
-        .reverse()
-        .flatMap((row, rowIndex) =>
-          row.map((cell, columnIndex) => (
-            <GridBoardCell
-              player={cell.player}
-              uuid={cell.uuid}
-              onClick={onClick}
-              key={cell.uuid}
-              column={columnIndex + 1}
-              row={rowCount - rowIndex + 1}
-              columnCount={columnCount}
-              rowCount={rowCount}
-            />
-          )),
-        )}
-      ,
+      {cells.flatMap((row, rowIndex) =>
+        row.map((cell, columnIndex) => (
+          <GridBoardCell
+            player={cell.player}
+            uuid={cell.uuid}
+            onClick={() => onClick(rowIndex, columnIndex)}
+            key={cell.uuid}
+            column={columnIndex + 1}
+            row={rowCount - rowIndex + 1}
+            columnCount={columnCount}
+            rowCount={rowCount}
+          />
+        )),
+      )}
     </StyledBoardGrid>
   )
 }

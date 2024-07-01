@@ -6,7 +6,8 @@ import styled from 'styled-components'
 
 export type GameOverviewProps = {
   roundNumber: number
-  movesLeft: number
+  playerOneMovesLeft: number
+  playerTwoMovesLeft: number
   activePlayer: 1 | 2
   gameStatus: GameStatus
   onNewRoundClick?: MouseEventHandler
@@ -47,7 +48,8 @@ const StyledFullRoundOverview = styled.div`
 function GameOverview({
   activePlayer,
   roundNumber,
-  movesLeft,
+  playerOneMovesLeft,
+  playerTwoMovesLeft,
   gameStatus = GameStatus.IN_PROGRESS,
   onNewRoundClick,
 }: GameOverviewProps) {
@@ -59,12 +61,12 @@ function GameOverview({
           player1State={{
             player: 1,
             isActive: activePlayer === 1,
-            turnsLeft: Math.floor(movesLeft / 2.0),
+            turnsLeft: playerOneMovesLeft,
           }}
           player2State={{
             player: 2,
             isActive: activePlayer === 2,
-            turnsLeft: Math.ceil(movesLeft / 2.0),
+            turnsLeft: playerTwoMovesLeft,
           }}
         />
       ) : (
@@ -92,7 +94,8 @@ function GameOverview({
 
 GameOverview.defaultProps = {
   roundNumber: 1,
-  movesLeft: 42,
+  playerOneMovesLeft: 21,
+  playerTwoMovesLeft: 21,
   activePlayer: 1,
 } as GameOverviewProps
 

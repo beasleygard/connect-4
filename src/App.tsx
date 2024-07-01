@@ -1,55 +1,51 @@
 import GameFactory, { Game } from '@/connect4-domain/game'
-import GameplayArea, { ActiveGame } from '@/connect4-ui/GameplayArea'
+import GameplayArea from '@/connect4-ui/GameplayArea'
 import StartGameButton from '@/connect4-ui/StartGameButton'
-import { GameApi } from '@/connect4-ui/create-game-api'
+import createGameApi, { BoardCell, GameApi } from '@/connect4-ui/create-game-api'
 import React from 'react'
 import './App.css'
 
 const createHandleBoardCellClick =
-  (game: Game, gameApi: GameApi, roundNumber: number) => (row: number, column: number) => {
+  (gameApi: GameApi, setBoard: (board: Array<Array<BoardCell>>) => void) =>
+  (row: number, column: number) => {
     const activePlayer = gameApi.getActivePlayer()
-    gameApi.getBoard()[row][column].handlePlayerMove(activePlayer)
-    setActiveGame({
-      gameOverview: {
-        roundNumber: gameOverview.roundNumber,
-        movesLeft: game.getStatsForPlayer(1).discsLeft + game.getStatsForPlayer(2).discsLeft,
-        activePlayer: game.getActivePlayer(),
-        gameStatus: game.getGameStatus(),
-      },
-      board: { cells: gameApi.getBoard() },
-    })
+    const moveResult = gameApi.getBoard()[row][column].handlePlayerMove(activePlayer)
+    if (moveResult.isSuccess) {
+      setBoard(gameApi.getBoard())
+    }
   }
 
 const createHandleNewRound =
-  (setGame: (game: Game) => void, setActiveGame: (activeGame: ActiveGame) => void) =>
+  (
+    setGame: (game: Game) => void,
+    setRoundNumber: (roundNumber: number) => void,
+    setBoard: (board: Array<Array<BoardCell>>) => void,
+    gameApiRef: React.MutableRefObject<GameApi>,
+  ) =>
   (roundNumber: number) => {
     const game = new GameFactory()
     setGame(game)
-    setActiveGame({
-      gameOverview: {
-        roundNumber: roundNumber,
-        movesLeft: game.getStatsForPlayer(1).discsLeft + game.getStatsForPlayer(2).discsLeft,
-        activePlayer: game.getActivePlayer(),
-        gameStatus: game.getGameStatus(),
-      },
-      board: {
-        cells: game.getBoard(),
-      },
-    })
+    gameApiRef.current = createGameApi(game)
+    setBoard(gameApiRef.current.getBoard())
+    setRoundNumber(roundNumber)
   }
 
 const App = () => {
-  const [game, setGame] = React.useState<Game>()
-  const [activeGame, setActiveGame] = React.useState<ActiveGame>()
+  const [game, setGame] = React.useState<Game>(new GameFactory())
+  const gameApi = React.useRef(createGameApi(game))
+  const [board, setBoard] = React.useState<Array<Array<BoardCell>>>(gameApi.current.getBoard)
   const [roundNumber, setRoundNumber] = React.useState<number>(0)
-  const handleNewRound = createHandleNewRound(setGame, setActiveGame)
+  const handleNewRound = createHandleNewRound(setGame, setRoundNumber, setBoard, gameApi)
+
   return roundNumber === 0 ? (
     <StartGameButton onStartGameClick={() => handleNewRound(1)} />
   ) : (
     <GameplayArea
-      activeGame={activeGame}
-      onBoardCellClick={createHandleBoardCellClick(game, activeGame, setActiveGame)}
-      onNewRoundClick={() => handleNewRound(activeGame.gameOverview.roundNumber + 1)}
+      board={board}
+      roundNumber={roundNumber}
+      gameApi={gameApi.current}
+      onBoardCellClick={createHandleBoardCellClick(gameApi.current, setBoard)}
+      onNewRoundClick={() => handleNewRound(roundNumber + 1)}
     />
   )
 }

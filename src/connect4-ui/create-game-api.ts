@@ -16,7 +16,7 @@ type MoveResult = {
   message?: Array<string>
 }
 
-type BoardCell = {
+export type BoardCell = {
   player?: PlayerNumber
   uuid: string
   handlePlayerMove: (player: PlayerNumber) => MoveResult

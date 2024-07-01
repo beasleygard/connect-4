@@ -1,17 +1,13 @@
-import Board, { BoardProps, ClickHandler } from '@/connect4-ui/Board'
-import GameOverview, { GameOverviewProps } from '@/connect4-ui/GameOverview'
-import { GameApi } from '@/connect4-ui/create-game-api'
+import Board, { ClickHandler } from '@/connect4-ui/Board'
+import GameOverview from '@/connect4-ui/GameOverview'
+import { BoardCell, GameApi } from '@/connect4-ui/create-game-api'
 import { MouseEventHandler } from 'react'
 import styled from 'styled-components'
 
-export type ActiveGame = {
-  gameOverview: GameOverviewProps
-  board: BoardProps
-}
-
 export type GameplayAreaProps = {
-  activeGame: ActiveGame
+  roundNumber: number
   gameApi: GameApi
+  board: Array<Array<BoardCell>>
   onBoardCellClick?: ClickHandler
   onNewRoundClick?: MouseEventHandler
 }
@@ -27,15 +23,23 @@ const StyledGameplayArea = styled.div`
 `
 
 function GameplayArea({
-  activeGame,
+  roundNumber,
   onNewRoundClick,
   onBoardCellClick,
   gameApi,
+  board,
 }: GameplayAreaProps) {
   return (
     <StyledGameplayArea>
-      <GameOverview {...activeGame.gameOverview} onNewRoundClick={onNewRoundClick} />
-      <Board {...activeGame.board} onClick={onBoardCellClick} gameApi={gameApi} />
+      <GameOverview
+        roundNumber={roundNumber}
+        activePlayer={gameApi.getActivePlayer()}
+        gameStatus={gameApi.getGameStatus()}
+        onNewRoundClick={onNewRoundClick}
+        playerOneMovesLeft={gameApi.getPlayerRemainingDisks(1)}
+        playerTwoMovesLeft={gameApi.getPlayerRemainingDisks(2)}
+      />
+      <Board cells={board} onClick={onBoardCellClick} gameApi={gameApi} />
     </StyledGameplayArea>
   )
 }

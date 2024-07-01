@@ -38,9 +38,9 @@ const StyledBoardCell = styled.div<BoardCellProps>`
   }
 `
 
-const BoardCell = ({ player, uuid, className, onClick }: BoardCellProps) => {
+const BoardCell = ({ player, className, onClick }: BoardCellProps) => {
   return (
-    <StyledBoardCell className={className} onClick={onClick} uuid={uuid}>
+    <StyledBoardCell className={className} onClick={onClick}>
       <Token
         size={50}
         color={player === undefined ? undefined : player === 1 ? 'crimson' : 'gold'}

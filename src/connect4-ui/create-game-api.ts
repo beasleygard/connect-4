@@ -64,4 +64,6 @@ const createGameApi = (game: Game) => {
   } satisfies GameApi
 }
 
+export { GameStatus }
+export type { GameApi }
 export default createGameApi

@@ -1,5 +1,6 @@
 import Board, { BoardProps, ClickHandler } from '@/connect4-ui/Board'
 import GameOverview, { GameOverviewProps } from '@/connect4-ui/GameOverview'
+import { GameApi } from '@/connect4-ui/create-game-api'
 import { MouseEventHandler } from 'react'
 import styled from 'styled-components'
 
@@ -10,6 +11,7 @@ export type ActiveGame = {
 
 export type GameplayAreaProps = {
   activeGame: ActiveGame
+  gameApi: GameApi
   onBoardCellClick?: ClickHandler
   onNewRoundClick?: MouseEventHandler
 }
@@ -24,11 +26,16 @@ const StyledGameplayArea = styled.div`
   min-width: 200px;
 `
 
-function GameplayArea({ activeGame, onBoardCellClick, onNewRoundClick }: GameplayAreaProps) {
+function GameplayArea({
+  activeGame,
+  onNewRoundClick,
+  onBoardCellClick,
+  gameApi,
+}: GameplayAreaProps) {
   return (
     <StyledGameplayArea>
       <GameOverview {...activeGame.gameOverview} onNewRoundClick={onNewRoundClick} />
-      <Board {...activeGame.board} onClick={onBoardCellClick} />
+      <Board {...activeGame.board} onClick={onBoardCellClick} gameApi={gameApi} />
     </StyledGameplayArea>
   )
 }

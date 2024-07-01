@@ -1,26 +1,14 @@
-import { createMovePlayerCommand } from '@/connect4-domain/commands'
 import GameFactory, { Game } from '@/connect4-domain/game'
 import GameplayArea, { ActiveGame } from '@/connect4-ui/GameplayArea'
 import StartGameButton from '@/connect4-ui/StartGameButton'
+import { GameApi } from '@/connect4-ui/create-game-api'
 import React from 'react'
 import './App.css'
 
 const createHandleBoardCellClick =
-  (
-    game: Game,
-    { gameOverview, board: { cells: boardCells } }: ActiveGame,
-    setActiveGame: (activeGame: ActiveGame) => void,
-  ) =>
-  (row: number, column: number) => {
-    game.move(
-      createMovePlayerCommand({
-        player: game.getActivePlayer(),
-        targetCell: {
-          row: row,
-          column: column,
-        },
-      }),
-    )
+  (game: Game, gameApi: GameApi, roundNumber: number) => (row: number, column: number) => {
+    const activePlayer = gameApi.getActivePlayer()
+    gameApi.getBoard()[row][column].handlePlayerMove(activePlayer)
     setActiveGame({
       gameOverview: {
         roundNumber: gameOverview.roundNumber,
@@ -28,15 +16,7 @@ const createHandleBoardCellClick =
         activePlayer: game.getActivePlayer(),
         gameStatus: game.getGameStatus(),
       },
-      board: {
-        cells: boardCells.with(
-          row,
-          boardCells[row].with(column, {
-            player: game.getBoard()[row][column].player,
-            uuid: boardCells[row][column].uuid,
-          }),
-        ),
-      },
+      board: { cells: gameApi.getBoard() },
     })
   }
 
@@ -61,8 +41,9 @@ const createHandleNewRound =
 const App = () => {
   const [game, setGame] = React.useState<Game>()
   const [activeGame, setActiveGame] = React.useState<ActiveGame>()
+  const [roundNumber, setRoundNumber] = React.useState<number>(0)
   const handleNewRound = createHandleNewRound(setGame, setActiveGame)
-  return activeGame === undefined || game === undefined ? (
+  return roundNumber === 0 ? (
     <StartGameButton onStartGameClick={() => handleNewRound(1)} />
   ) : (
     <GameplayArea

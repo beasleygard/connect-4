@@ -1,14 +1,8 @@
 import DualPlayerOverview from '@/connect4-ui/DualPlayerOverview'
 import RoundOverview from '@/connect4-ui/RoundOverview'
+import { GameStatus } from '@/connect4-ui/create-game-api'
 import { MouseEventHandler } from 'react'
 import styled from 'styled-components'
-
-export enum GameStatus {
-  IN_PROGRESS = 'IN_PROGRESS',
-  PLAYER_ONE_WIN = 'PLAYER_ONE_WIN',
-  PLAYER_TWO_WIN = 'PLAYER_TWO_WIN',
-  DRAW = 'DRAW',
-}
 
 export type GameOverviewProps = {
   roundNumber: number

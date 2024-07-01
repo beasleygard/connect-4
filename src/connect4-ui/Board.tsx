@@ -1,10 +1,13 @@
 import BoardCell, { BoardCellProps } from '@/connect4-ui/BoardCell'
 import createCells from '@/connect4-ui/create-cells'
+import { GameApi } from '@/connect4-ui/create-game-api'
+import React from 'react'
 import styled from 'styled-components'
 
 export type ClickHandler = (row: number, column: number) => void
 
 export type BoardProps = {
+  gameApi: GameApi
   cells: Array<Array<BoardCellProps>>
   onClick?: ClickHandler
 }
@@ -60,20 +63,21 @@ function createHandleBoardCellClick(clickHandler: ClickHandler, row: number, col
   }
 }
 
-const Board = ({ cells, onClick = () => undefined }: BoardProps) => {
-  const columnCount = cells[0].length
-  const rowCount = cells.length
+const Board = ({ cells, gameApi, onClick = () => undefined }: BoardProps) => {
+  const [columnCount] = React.useState(gameApi.getColumnCount())
+  const [rowCount] = React.useState(gameApi.getRowCount())
 
   return (
     <StyledBoardGrid>
-      {cells
+      {gameApi
+        .getBoard()
         .reverse()
         .flatMap((row, rowIndex) =>
           row.map((cell, columnIndex) => (
             <GridBoardCell
               player={cell.player}
               uuid={cell.uuid}
-              onClick={createHandleBoardCellClick(onClick, rowIndex, columnIndex)}
+              onClick={onClick}
               key={cell.uuid}
               column={columnIndex + 1}
               row={rowCount - rowIndex + 1}
@@ -82,6 +86,7 @@ const Board = ({ cells, onClick = () => undefined }: BoardProps) => {
             />
           )),
         )}
+      ,
     </StyledBoardGrid>
   )
 }

@@ -27,7 +27,7 @@ const getCellSize = (
   viewportPercentage: number,
   scaleFactor: number = 1,
 ) => {
-  return `calc(${scaleFactor} * ${viewportPercentage}vmin / ${Math.max(columnCount, rowCount)})`
+  return `calc(${scaleFactor} * ${viewportPercentage}svmin / ${Math.max(columnCount, rowCount)})`
 }
 
 const StyledBoardGrid = styled.div`

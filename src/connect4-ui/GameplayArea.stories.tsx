@@ -1,6 +1,6 @@
-import { GameStatus } from '@/connect4-ui/GameOverview'
+import GameFactory from '@/connect4-domain/game'
 import GameplayArea, { GameplayAreaProps } from '@/connect4-ui/GameplayArea'
-import createCells from '@/connect4-ui/create-cells'
+import createGameApi from '@/connect4-ui/create-game-api'
 import { Meta, StoryObj } from '@storybook/react'
 
 export default {
@@ -9,18 +9,12 @@ export default {
 
 type Story = StoryObj<typeof GameplayArea>
 
+const gameApi = createGameApi(new GameFactory())
+
 export const TheOneWithAnActiveGame: Story = {
   args: {
-    activeGame: {
-      gameOverview: {
-        roundNumber: 1,
-        movesLeft: 42,
-        activePlayer: 1,
-        gameStatus: GameStatus.IN_PROGRESS,
-      },
-      board: {
-        cells: createCells(6, 7),
-      },
-    },
+    roundNumber: 1,
+    gameApi: gameApi,
+    board: gameApi.getBoard(),
   } satisfies GameplayAreaProps,
 }

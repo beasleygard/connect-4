@@ -17,7 +17,7 @@ const StyledGameplayArea = styled.div`
   align-items: center;
   flex-direction: row-reverse;
   justify-content: space-evenly;
-  row-gap: 20px;
+  gap: 1rem;
   flex-wrap: wrap;
   min-width: 200px;
 `

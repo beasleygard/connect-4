@@ -10,7 +10,7 @@ type LoadGameDialogProps = {
   updateGameView: () => void
 }
 
-const StyledListOfSavedGames = styled.div`
+const StyledLoadGameDialog = styled.div`
   border: 2px solid black;
   width: 25rem;
   height: 20rem;
@@ -98,7 +98,7 @@ const LoadGameDialog = ({
   const [savedGameUuids, setSavedGameUuids] = React.useState(gameApi.getSavedGameUuids())
   return (
     <Overlay onClick={dismissDialogButtonHandler}>
-      <StyledListOfSavedGames>
+      <StyledLoadGameDialog>
         <StyledDismissDialogButton onClick={dismissDialogButtonHandler}>
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
             <g
@@ -155,7 +155,7 @@ const LoadGameDialog = ({
             ))
           )}
         </div>
-      </StyledListOfSavedGames>
+      </StyledLoadGameDialog>
     </Overlay>
   )
 }

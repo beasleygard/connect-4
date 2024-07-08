@@ -1,5 +1,4 @@
 import { createMovePlayerCommand } from '@/connect4-domain/commands'
-import deepClone from '@/connect4-domain/deep-clone'
 import { EventTypes } from '@/connect4-domain/events'
 import { BoardCell as DomainBoardCell, Game, GameUuid } from '@/connect4-domain/game'
 
@@ -68,7 +67,7 @@ const createGameApi = (game: Game) => {
     getColumnCount: () => game.getBoard()[0].length,
     getRowCount: () => game.getBoard().length,
     getBoard: () => game.getBoard().map(boardMapper),
-    getSavedGameUuids: () => deepClone(gameUuids),
+    getSavedGameUuids: game.getSavedGames,
     save: () => {
       gameUuids.push(game.save())
     },

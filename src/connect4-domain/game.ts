@@ -34,6 +34,7 @@ type PersistentGame = {
 interface GameRepository {
   save: (board: PersistentGame) => GameUuid
   load: (boardId: GameUuid) => PersistentGame | undefined
+  getUuids: () => Array<GameUuid>
   remove: (boardId: GameUuid) => void
 }
 type GameParameters = {
@@ -68,6 +69,7 @@ export interface Game {
   move: (movePlayerCommand: MovePlayerCommand) => Event
   save: () => GameUuid
   deleteSave: (gameUuid: GameUuid) => void
+  getSavedGames: () => Array<GameUuid>
   load: (gameUuid: GameUuid) => void
   reset: (boardDimensions?: BoardDimensions) => void
 }
@@ -113,6 +115,8 @@ class GameFactory implements Game {
   deleteSave = (gameUuid: GameUuid) => {
     this.repository.remove(gameUuid)
   }
+
+  getSavedGames = () => this.repository.getUuids()
 
   load = (gameUuid: GameUuid) => {
     const persistentGame = deepClone(this.repository.load(gameUuid))

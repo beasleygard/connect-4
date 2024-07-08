@@ -18,16 +18,13 @@ const createHandleBoardCellClick =
 
 const createHandleNewRound =
   (
-    setGame: (game: Game) => void,
     setRoundNumber: (roundNumber: number) => void,
     setBoard: (board: Array<Array<BoardCell>>) => void,
-    gameApiRef: React.MutableRefObject<GameApi>,
+    gameApi: GameApi,
   ) =>
   (roundNumber: number) => {
-    const game = new GameFactory()
-    setGame(game)
-    gameApiRef.current = createGameApi(game)
-    setBoard(gameApiRef.current.getBoard())
+    gameApi.reset()
+    setBoard(gameApi.getBoard())
     setRoundNumber(roundNumber)
   }
 
@@ -37,11 +34,11 @@ const createUpdateGameState =
   }
 
 const App = () => {
-  const [game, setGame] = React.useState<Game>(new GameFactory())
+  const [game] = React.useState<Game>(new GameFactory())
   const gameApi = React.useRef(createGameApi(game))
   const [board, setBoard] = React.useState<Array<Array<BoardCell>>>(gameApi.current.getBoard)
   const [roundNumber, setRoundNumber] = React.useState<number>(0)
-  const handleNewRound = createHandleNewRound(setGame, setRoundNumber, setBoard, gameApi)
+  const handleNewRound = createHandleNewRound(setRoundNumber, setBoard, gameApi.current)
 
   return roundNumber === 0 ? (
     <StartGameButton onStartGameClick={() => handleNewRound(1)} />

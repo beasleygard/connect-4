@@ -17,6 +17,10 @@ class InMemoryRepository implements GameRepository {
   load(gameUuid: GameUuid): PersistentGame | undefined {
     return this.store.get(gameUuid)
   }
+
+  remove(gameUuid: GameUuid) {
+    this.store.delete(gameUuid)
+  }
 }
 
 export default InMemoryRepository

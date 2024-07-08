@@ -11,8 +11,8 @@ const StyledButton = styled.button`
   font-size: 2rem;
   background-color: lightblue;
   color: black;
-  position: absolute;
-  margin: 0;
+  position: fixed;
+  margin: auto;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);

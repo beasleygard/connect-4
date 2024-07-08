@@ -93,64 +93,70 @@ const StyledDismissDialogButton = styled.button``
 const LoadGameDialog = ({
   dialogDismissalHandler: dismissDialogButtonHandler,
   gameApi,
-  updateGameView: setBoard,
+  updateGameView,
 }: LoadGameDialogProps) => {
   const [savedGameUuids, setSavedGameUuids] = React.useState(gameApi.getSavedGameUuids())
   return (
-    <>
-      <Overlay onClick={dismissDialogButtonHandler}>
-        <StyledListOfSavedGames>
-          <StyledDismissDialogButton onClick={dismissDialogButtonHandler}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-              <g
-                stroke-linecap="round"
-                fill="none"
-                stroke="#222222"
-                stroke-width="2"
-                stroke-linejoin="round"
-              >
-                <path d="M18 6L6 18"></path>
-                <path d="M6 6l12 12"></path>
-              </g>
-            </svg>
-          </StyledDismissDialogButton>
-          <h2>Saved Games</h2>
-          <div>
-            {gameApi.getSavedGameUuids().length === 0 ? (
-              <>
+    <Overlay onClick={dismissDialogButtonHandler}>
+      <StyledListOfSavedGames>
+        <StyledDismissDialogButton onClick={dismissDialogButtonHandler}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g
+              strokeLinecap="round"
+              fill="none"
+              stroke="#222222"
+              strokeWidth="2"
+              strokeLinejoin="round"
+            >
+              <path d="M18 6L6 18"></path>
+              <path d="M6 6l12 12"></path>
+            </g>
+          </svg>
+        </StyledDismissDialogButton>
+        <h2>Saved Games</h2>
+        <div>
+          {savedGameUuids.length === 0 ? (
+            <>
+              <div>
+                <p>Currently no saved games...</p>
+              </div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+            </>
+          ) : (
+            savedGameUuids.map((uuid: GameUuid) => (
+              <div key={uuid}>
+                <p>
+                  uuid: <b>{uuid}</b>
+                </p>
                 <div>
-                  <p>Currently no saved games...</p>
+                  <button
+                    onClick={(e) => {
+                      gameApi.load(uuid)
+                      updateGameView()
+                      dismissDialogButtonHandler(e)
+                    }}
+                  >
+                    Load
+                  </button>
+                  <button
+                    onClick={() => {
+                      gameApi.deleteSave(uuid)
+                      setSavedGameUuids(gameApi.getSavedGameUuids())
+                    }}
+                  >
+                    Delete
+                  </button>
                 </div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-              </>
-            ) : (
-              gameApi.getSavedGameUuids().map((uuid: GameUuid) => (
-                <div key={uuid}>
-                  <p>
-                    uuid: <b>{uuid}</b>
-                  </p>
-                  <div>
-                    <button
-                      onClick={() => {
-                        gameApi.load(uuid)
-                        setBoard()
-                      }}
-                    >
-                      Load
-                    </button>
-                    <button>Delete</button>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-        </StyledListOfSavedGames>
-      </Overlay>
-    </>
+              </div>
+            ))
+          )}
+        </div>
+      </StyledListOfSavedGames>
+    </Overlay>
   )
 }
 

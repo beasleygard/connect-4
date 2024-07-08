@@ -34,6 +34,7 @@ type PersistentGame = {
 interface GameRepository {
   save: (board: PersistentGame) => GameUuid
   load: (boardId: GameUuid) => PersistentGame | undefined
+  remove: (boardId: GameUuid) => void
 }
 type GameParameters = {
   boardDimensions?: BoardDimensions
@@ -66,7 +67,9 @@ export interface Game {
   getValidRowPlacementsByColumn: () => Array<number>
   move: (movePlayerCommand: MovePlayerCommand) => Event
   save: () => GameUuid
+  deleteSave: (gameUuid: GameUuid) => void
   load: (gameUuid: GameUuid) => void
+  reset: (boardDimensions?: BoardDimensions) => void
 }
 
 class GameFactory implements Game {
@@ -107,8 +110,12 @@ class GameFactory implements Game {
       } satisfies PersistentGame),
     )
 
+  deleteSave = (gameUuid: GameUuid) => {
+    this.repository.remove(gameUuid)
+  }
+
   load = (gameUuid: GameUuid) => {
-    const persistentGame = this.repository.load(gameUuid)
+    const persistentGame = deepClone(this.repository.load(gameUuid))
     if (persistentGame === undefined) {
       throw new NoSuchSavedGameError('No game with that ID has been saved.')
     } else {
@@ -118,6 +125,16 @@ class GameFactory implements Game {
       this.gameStatus = persistentGame.gameStatus
       this.validRowPlacementsByColumn = persistentGame.validRowPlacementsByColumn
     }
+  }
+
+  reset = (boardDimensions: BoardDimensions = { rows: 6, columns: 7 }) => {
+    this.#validateBoardDimensions(boardDimensions)
+    this.board = this.#createBoard(boardDimensions)
+    this.playerStats = this.#createPlayerStatsRecord(boardDimensions)
+    this.activePlayer = 1
+    this.validRowPlacementsByColumn = new Array(boardDimensions.columns).fill(0)
+    this.gameStatus = GameStatus.IN_PROGRESS
+    this.moveValidationChecks = this.#createMoveValidationChecksForGame()
   }
 
   getValidRowPlacementsByColumn = () => deepClone(this.validRowPlacementsByColumn)

@@ -32,7 +32,9 @@ interface GameApi {
   getBoard: () => Array<Array<BoardCell>>
   getSavedGameUuids: () => Array<GameUuid>
   save: () => void
+  deleteSave: (uuid: GameUuid) => void
   load: (uuid: GameUuid) => void
+  reset: () => void
 }
 
 const createBoardMapper = (game: Game) => (row: Array<DomainBoardCell>, rowIndex: number) =>
@@ -70,8 +72,9 @@ const createGameApi = (game: Game) => {
     save: () => {
       gameUuids.push(game.save())
     },
-
-    load: (uuid: GameUuid) => game.load(uuid),
+    deleteSave: game.deleteSave,
+    load: game.load,
+    reset: game.reset,
   } satisfies GameApi
 }
 

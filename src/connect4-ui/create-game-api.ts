@@ -1,6 +1,7 @@
 import { createMovePlayerCommand } from '@/connect4-domain/commands'
+import deepClone from '@/connect4-domain/deep-clone'
 import { EventTypes } from '@/connect4-domain/events'
-import { BoardCell as DomainBoardCell, Game } from '@/connect4-domain/game'
+import { BoardCell as DomainBoardCell, Game, GameUuid } from '@/connect4-domain/game'
 
 type PlayerNumber = 1 | 2
 
@@ -29,6 +30,9 @@ interface GameApi {
   getColumnCount: () => number
   getRowCount: () => number
   getBoard: () => Array<Array<BoardCell>>
+  getSavedGameUuids: () => Array<GameUuid>
+  save: () => void
+  load: (uuid: GameUuid) => void
 }
 
 const createBoardMapper = (game: Game) => (row: Array<DomainBoardCell>, rowIndex: number) =>
@@ -54,6 +58,7 @@ const createBoardMapper = (game: Game) => (row: Array<DomainBoardCell>, rowIndex
 
 const createGameApi = (game: Game) => {
   const boardMapper = createBoardMapper(game)
+  const gameUuids: Array<GameUuid> = []
   return {
     getActivePlayer: game.getActivePlayer,
     getPlayerRemainingDisks: (player: PlayerNumber) => game.getStatsForPlayer(player).discsLeft,
@@ -61,6 +66,12 @@ const createGameApi = (game: Game) => {
     getColumnCount: () => game.getBoard()[0].length,
     getRowCount: () => game.getBoard().length,
     getBoard: () => game.getBoard().map(boardMapper),
+    getSavedGameUuids: () => deepClone(gameUuids),
+    save: () => {
+      gameUuids.push(game.save())
+    },
+
+    load: (uuid: GameUuid) => game.load(uuid),
   } satisfies GameApi
 }
 

@@ -18,6 +18,8 @@ const StyledPlayerOverview = styled.div`
   font-variant-caps: all-small-caps;
   line-height: 90%;
   font-size: 20px;
+  gap: 20px;
+  padding: 8px;
 `
 
 const TurnIndicator = styled.div<{ $isActive: boolean }>`

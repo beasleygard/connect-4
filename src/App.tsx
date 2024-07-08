@@ -4,6 +4,7 @@ import StartGameButton from '@/connect4-ui/StartGameButton'
 import createGameApi, { BoardCell, GameApi } from '@/connect4-ui/create-game-api'
 import React from 'react'
 import './App.css'
+import './reset.css'
 
 const createHandleBoardCellClick =
   (gameApi: GameApi, setBoard: (board: Array<Array<BoardCell>>) => void) =>
@@ -30,6 +31,11 @@ const createHandleNewRound =
     setRoundNumber(roundNumber)
   }
 
+const createUpdateGameState =
+  (setBoard: (board: Array<Array<BoardCell>>) => void, gameApi: GameApi) => () => {
+    setBoard(gameApi.getBoard())
+  }
+
 const App = () => {
   const [game, setGame] = React.useState<Game>(new GameFactory())
   const gameApi = React.useRef(createGameApi(game))
@@ -46,6 +52,7 @@ const App = () => {
       gameApi={gameApi.current}
       onBoardCellClick={createHandleBoardCellClick(gameApi.current, setBoard)}
       onNewRoundClick={() => handleNewRound(roundNumber + 1)}
+      updateGameView={createUpdateGameState(setBoard, gameApi.current)}
     />
   )
 }

@@ -19,68 +19,6 @@ const StyledLoadGameDialog = styled.div`
   inset: 0px;
   background: dimgray;
 
-  & > div {
-    overflow-y: auto;
-    background-color: whitesmoke;
-    height: 100%;
-
-    > div {
-      flex-direction: column;
-      height: fit-content;
-      width: auto;
-      margin: 0;
-      background-color: whitesmoke;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      > p {
-        color: black;
-      }
-
-      > div {
-        flex-direction: row;
-        gap: 10px;
-      }
-
-      > div > button {
-        border-radius: 15px;
-        padding: 1px 5px;
-        margin: 0px 10px;
-      }
-
-      > div > button:nth-of-type(1) {
-        background-color: teal;
-      }
-
-      > div > button:nth-of-type(2) {
-        background-color: crimson;
-      }
-    }
-
-    > div:nth-of-type(odd) {
-      background: lightgray;
-    }
-  }
-
-  & > button {
-    border: none;
-    width: 24px;
-    height: 24px;
-    padding: 0;
-    position: absolute;
-    left: 93%;
-    top: 0.5%;
-    margin: 0;
-    border-radius: 30%;
-    background: none;
-    :hover {
-      border-radius: 30%;
-      border-radius: 30%;
-      background-color: darkgray;
-    }
-  }
-
   & > h2 {
     width: 100%;
     border-bottom: 2px solid black;
@@ -88,7 +26,67 @@ const StyledLoadGameDialog = styled.div`
   }
 `
 
-const StyledDismissDialogButton = styled.button``
+const StyledSavedGameList = styled.div`
+  overflow-y: auto;
+  background-color: whitesmoke;
+  height: 100%;
+
+  > div:nth-of-type(odd) {
+    background: lightgray;
+  }
+`
+
+const StyledSavedGameEntry = styled.div`
+  flex-direction: column;
+  height: fit-content;
+  width: auto;
+  margin: 0;
+  background-color: whitesmoke;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  > p {
+    color: black;
+  }
+
+  > div {
+    flex-direction: row;
+    gap: 10px;
+  }
+`
+
+const StyledDismissDialogButton = styled.button`
+  border: none;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  position: absolute;
+  left: 93%;
+  top: 0.5%;
+  margin: 0;
+  border-radius: 30%;
+  background: none;
+  :hover {
+    border-radius: 30%;
+    border-radius: 30%;
+    background-color: darkgray;
+  }
+`
+
+const StyledSavedGameButton = styled.button`
+  border-radius: 15px;
+  padding: 1px 5px;
+  margin: 0px 10px;
+`
+
+const StyledLoadGameButton = styled(StyledSavedGameButton)`
+  background-color: teal;
+`
+
+const StyledDeleteGameButton = styled(StyledSavedGameButton)`
+  background-color: crimson;
+`
 
 const LoadGameDialog = ({
   dialogDismissalHandler: dismissDialogButtonHandler,
@@ -114,26 +112,21 @@ const LoadGameDialog = ({
           </svg>
         </StyledDismissDialogButton>
         <h2>Saved Games</h2>
-        <div>
+        <StyledSavedGameList>
           {savedGameUuids.length === 0 ? (
             <>
-              <div>
+              <StyledSavedGameEntry>
                 <p>Currently no saved games...</p>
-              </div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
+              </StyledSavedGameEntry>
             </>
           ) : (
             savedGameUuids.map((uuid: GameUuid) => (
-              <div key={uuid}>
+              <StyledSavedGameEntry key={uuid}>
                 <p>
                   uuid: <b>{uuid}</b>
                 </p>
                 <div>
-                  <button
+                  <StyledLoadGameButton
                     onClick={(e) => {
                       gameApi.load(uuid)
                       updateGameView()
@@ -141,20 +134,20 @@ const LoadGameDialog = ({
                     }}
                   >
                     Load
-                  </button>
-                  <button
+                  </StyledLoadGameButton>
+                  <StyledDeleteGameButton
                     onClick={() => {
                       gameApi.deleteSave(uuid)
                       setSavedGameUuids(gameApi.getSavedGameUuids())
                     }}
                   >
                     Delete
-                  </button>
+                  </StyledDeleteGameButton>
                 </div>
-              </div>
+              </StyledSavedGameEntry>
             ))
           )}
-        </div>
+        </StyledSavedGameList>
       </StyledLoadGameDialog>
     </Overlay>
   )

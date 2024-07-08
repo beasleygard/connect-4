@@ -3,6 +3,7 @@ import { GameApi } from '@/connect4-ui/create-game-api'
 import Overlay from '@/connect4-ui/Overlay'
 import React from 'react'
 import styled from 'styled-components'
+import { v1 as randomUuid } from 'uuid'
 
 type LoadGameDialogProps = {
   dialogDismissalHandler: React.MouseEventHandler
@@ -38,6 +39,7 @@ const StyledSavedGameList = styled.div`
 
 const StyledSavedGameEntry = styled.div`
   flex-direction: column;
+  min-height: 50px;
   height: fit-content;
   width: auto;
   margin: 0;
@@ -118,6 +120,9 @@ const LoadGameDialog = ({
               <StyledSavedGameEntry>
                 <p>Currently no saved games...</p>
               </StyledSavedGameEntry>
+              {[...Array(5).keys()].map(() => (
+                <StyledSavedGameEntry key={randomUuid()}></StyledSavedGameEntry>
+              ))}
             </>
           ) : (
             savedGameUuids.map((uuid: GameUuid) => (

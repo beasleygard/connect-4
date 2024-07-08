@@ -23,6 +23,7 @@ const StyledGameplayArea = styled.div`
   gap: 1rem;
   flex-wrap: wrap;
   min-width: 200px;
+  margin-top: 2rem;
 `
 
 function GameplayArea({

@@ -27,6 +27,21 @@ const StyledGameplayArea = styled.div`
   margin-top: 2rem;
 `
 
+const StyledGameSavedIndicator = styled.p`
+  animation: 3s ease-in 1 appearAndFadeAway;
+  opacity: 0;
+  font-size: 1.5rem;
+
+  @keyframes appearAndFadeAway {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+`
+
 function GameplayArea({
   roundNumber,
   onNewRoundClick,
@@ -36,12 +51,38 @@ function GameplayArea({
   updateGameView,
 }: GameplayAreaProps) {
   const [displayDialogue, setDisplayDialogue] = React.useState(false)
+  const [playGameSavedAnimation, setPlayGameSavedAnimation] = React.useState(false)
+  const [isSavingDisallowed, setIsSavingDisallowed] = React.useState(false)
+
   return (
     <>
       <GameplayAreaMenu>
-        <MenuButton text="Save Game" onClick={gameApi.save} />
+        {playGameSavedAnimation ? (
+          <StyledGameSavedIndicator onAnimationEnd={() => setPlayGameSavedAnimation(false)}>
+            Game saved!
+          </StyledGameSavedIndicator>
+        ) : (
+          <></>
+        )}
+        <MenuButton
+          text="Save Game"
+          disabled={isSavingDisallowed}
+          onClick={() => {
+            gameApi.save()
+            setPlayGameSavedAnimation(true)
+            setIsSavingDisallowed(true)
+          }}
+        />
         <MenuButton text="Load Game" onClick={() => setDisplayDialogue(true)}></MenuButton>
-        <MenuButton text="New Game" onClick={onNewRoundClick}></MenuButton>
+        <MenuButton
+          text="New Game"
+          onClick={(e) => {
+            if (onNewRoundClick !== undefined) {
+              onNewRoundClick(e)
+            }
+            setIsSavingDisallowed(false)
+          }}
+        />
       </GameplayAreaMenu>
       <StyledGameplayArea>
         <GameOverview
@@ -51,7 +92,20 @@ function GameplayArea({
           playerOneMovesLeft={gameApi.getPlayerRemainingDisks(1)}
           playerTwoMovesLeft={gameApi.getPlayerRemainingDisks(2)}
         />
-        <Board cells={board} onClick={onBoardCellClick} gameApi={gameApi} />
+        <Board
+          cells={board}
+          onClick={(...args) => {
+            if (onBoardCellClick !== undefined) {
+              const activePlayerBeforeClick = gameApi.getActivePlayer()
+              onBoardCellClick(...args)
+              const activePlayerAfterClick = gameApi.getActivePlayer()
+              if (activePlayerBeforeClick !== activePlayerAfterClick) {
+                setIsSavingDisallowed(false)
+              }
+            }
+          }}
+          gameApi={gameApi}
+        />
       </StyledGameplayArea>
       {displayDialogue ? (
         <LoadGameDialog

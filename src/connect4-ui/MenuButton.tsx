@@ -3,7 +3,7 @@ import styled from 'styled-components'
 type MenuButtonProps = {
   text: string
   onClick?: React.MouseEventHandler
-}
+} & React.ButtonHTMLAttributes<HTMLButtonElement>
 
 const StyledMenuButton = styled.button`
   padding: 0.4rem 1rem;
@@ -17,17 +17,22 @@ const StyledMenuButton = styled.button`
   cursor: pointer;
   transition: border-color 0.25s;
   box-sizing: border-box;
-  &:focus {
+  &:focus:enabled {
     outline: 4px auto -webkit-focus-ring-color;
     outline: none;
   }
-  &:hover {
+  &:hover:enabled {
     border-color: #646cff;
+  }
+  &:disabled {
+    filter: brightness(40%);
+    cursor: inherit;
+    border: none;
   }
 `
 
-function MenuButton({ text, onClick }: MenuButtonProps) {
-  return <StyledMenuButton onClick={onClick}>{text}</StyledMenuButton>
+function MenuButton(props: MenuButtonProps) {
+  return <StyledMenuButton {...props}>{props.text}</StyledMenuButton>
 }
 export type { MenuButtonProps }
 

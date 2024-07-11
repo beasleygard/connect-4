@@ -10,20 +10,20 @@ const StyledGameplayAreaMenu = styled.menu`
   z-index: 1;
   display: flex;
   box-sizing: border-box;
-  padding: 5px 3px;
+  padding: 5px 10px;
   flex-wrap: wrap;
   justify-content: space-between;
+  font-style: italic;
+  font-weight: 800;
 
   & > h1 {
     color: #d8dee9;
-    font-weight: 800;
-    font-style: italic;
   }
 
   & > div {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 10px;
   }
 `
 

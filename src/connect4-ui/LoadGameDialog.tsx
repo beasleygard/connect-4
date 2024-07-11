@@ -21,7 +21,7 @@ const StyledLoadGameDialog = styled.div`
   background: dimgray;
   animation: 0.3s ease-out 1 appearFromBelow;
 
-  @media (max-width: 700px) {
+  @media (max-width: 1000px) {
     width: 90%;
   }
 
@@ -68,6 +68,7 @@ const StyledSavedGameListEntry = styled.div`
   > p {
     color: black;
     font-size: 2rem;
+    text-align: center;
   }
 
   > div {

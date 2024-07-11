@@ -28,7 +28,13 @@ const StyledFullRoundOverview = styled.div`
   gap: 5px;
   min-width: 225px;
   max-width: 300px;
-  transform: scale(1.1, 1.1);
+
+  @media (min-width: 1000px) {
+    transform: scale(1.1, 1.1);
+  }
+  @media (max-width: 450px) {
+    transform: scale(0.85, 0.85);
+  }
 `
 
 function GameOverview({

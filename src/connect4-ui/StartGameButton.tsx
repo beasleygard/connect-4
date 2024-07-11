@@ -8,6 +8,7 @@ type GameStartButtonProps = {
 const StyledButton = styled.button`
   padding: 20px 15px;
   font-size: 4rem;
+  min-width: fit-content;
   background-color: #eceff4;
   border-radius: 4rem;
   font-weight: 700;
@@ -21,12 +22,19 @@ const StyledButton = styled.button`
   transition: border-color 0.25s;
   box-sizing: border-box;
   border: 1rem solid transparent;
+  white-space: nowrap;
   &:focus:enabled {
     outline: 4px auto -webkit-focus-ring-color;
     outline: none;
   }
   &:hover:enabled {
     border-color: #808386;
+  }
+
+  @media (max-width: 500px) {
+    min-width: 80%;
+    width: 80%;
+    font-size: 10svw;
   }
 `
 

@@ -13,6 +13,7 @@ const StyledGameplayAreaMenu = styled.menu`
   padding: 5px 10px;
   flex-wrap: wrap;
   justify-content: space-between;
+  align-items: center;
   font-style: italic;
   font-weight: 800;
 
@@ -24,6 +25,10 @@ const StyledGameplayAreaMenu = styled.menu`
     display: flex;
     align-items: center;
     gap: 10px;
+  }
+
+  @media (max-width: 800px) {
+    flex-direction: column;
   }
 `
 

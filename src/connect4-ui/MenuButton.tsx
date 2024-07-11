@@ -6,7 +6,7 @@ type MenuButtonProps = {
 } & React.ButtonHTMLAttributes<HTMLButtonElement>
 
 const StyledMenuButton = styled.button`
-  padding: 0.4rem 1rem;
+  padding: 0.6rem 1rem;
   font-size: 1.3rem;
   font-weight: 800;
   font-style: italic;
@@ -17,6 +17,8 @@ const StyledMenuButton = styled.button`
   cursor: pointer;
   transition: border-color 0.25s;
   box-sizing: border-box;
+  line-height: 1;
+
   &:focus:enabled {
     outline: 4px auto -webkit-focus-ring-color;
     outline: none;

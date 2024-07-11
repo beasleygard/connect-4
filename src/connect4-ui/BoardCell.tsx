@@ -3,6 +3,7 @@ import styled from 'styled-components'
 
 export type BoardCellProps = {
   player?: 1 | 2
+  activePlayer?: 1 | 2
   uuid?: string
   onClick?: Function
   className?: string
@@ -52,15 +53,31 @@ const StyledBoardCell = styled.div<BoardCellProps>`
   }
 `
 
-const BoardCell = ({ player, className, onClick, isValidCellForMove = false }: BoardCellProps) => {
+const getTokenColor = (player?: 1 | 2, activePlayer?: 1 | 2) => {
+  let effectivePlayerNumber = player
+  if (player === undefined) {
+    effectivePlayerNumber = activePlayer
+  }
+
+  return effectivePlayerNumber === 1 ? 'crimson' : 'gold'
+}
+
+const BoardCell = ({
+  player,
+  activePlayer,
+  className,
+  onClick,
+  isValidCellForMove = false,
+}: BoardCellProps) => {
   return (
     <StyledBoardCell
       player={player}
+      activePlayer={activePlayer}
       className={className}
       onClick={onClick}
       isValidCellForMove={isValidCellForMove}
     >
-      <Token size={50} color={player === 1 ? 'crimson' : 'gold'} />
+      <Token size={50} color={getTokenColor(player, activePlayer)} />
     </StyledBoardCell>
   )
 }

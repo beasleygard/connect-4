@@ -30,6 +30,7 @@ interface GameApi {
   getRowCount: () => number
   getBoard: () => Array<Array<BoardCell>>
   getSavedGameUuids: () => Array<GameUuid>
+  getIsNewGame: () => boolean
   save: () => void
   deleteSave: (uuid: GameUuid) => void
   load: (uuid: GameUuid) => void
@@ -72,6 +73,8 @@ const createGameApi = (game: Game) => {
     getRowCount: () => game.getBoard().length,
     getBoard: () => game.getBoard().map(boardMapper),
     getSavedGameUuids: game.getSavedGames,
+    getIsNewGame: () =>
+      game.getValidRowPlacementsByColumn().every((validRowPlacement) => validRowPlacement === 0),
     save: () => {
       gameUuids.push(game.save())
     },

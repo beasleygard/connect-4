@@ -38,13 +38,13 @@ const StyledSavedGameList = styled.div`
   height: 100%;
 
   > div:nth-of-type(odd) {
-    background: lightgray;
+    background-color: #dbdbdb;
   }
 `
 
 const StyledSavedGameEntry = styled.div`
   flex-direction: column;
-  min-height: 50px;
+  min-height: 20%;
   height: fit-content;
   width: auto;
   margin: 0;
@@ -132,37 +132,43 @@ const LoadGameDialog = ({
               <StyledSavedGameEntry>
                 <p>Currently no saved games...</p>
               </StyledSavedGameEntry>
-              {[...Array(5).keys()].map(() => (
-                <StyledSavedGameEntry key={randomUuid()}></StyledSavedGameEntry>
+              {[...Array(4)].map(() => (
+                <StyledSavedGameEntry key={randomUuid()}> </StyledSavedGameEntry>
               ))}
             </>
           ) : (
-            savedGameUuids.map((uuid: GameUuid) => (
-              <StyledSavedGameEntry key={uuid}>
-                <p>
-                  uuid: <b>{uuid}</b>
-                </p>
-                <div>
-                  <StyledLoadGameButton
-                    onClick={(e) => {
-                      gameApi.load(uuid)
-                      updateGameView()
-                      dismissDialogButtonHandler(e)
-                    }}
-                  >
-                    Load
-                  </StyledLoadGameButton>
-                  <StyledDeleteGameButton
-                    onClick={() => {
-                      gameApi.deleteSave(uuid)
-                      setSavedGameUuids(gameApi.getSavedGameUuids())
-                    }}
-                  >
-                    Delete
-                  </StyledDeleteGameButton>
-                </div>
-              </StyledSavedGameEntry>
-            ))
+            savedGameUuids
+              .map((uuid: GameUuid) => (
+                <StyledSavedGameEntry key={uuid}>
+                  <p>
+                    uuid: <b>{uuid}</b>
+                  </p>
+                  <div>
+                    <StyledLoadGameButton
+                      onClick={(e) => {
+                        gameApi.load(uuid)
+                        updateGameView()
+                        dismissDialogButtonHandler(e)
+                      }}
+                    >
+                      Load
+                    </StyledLoadGameButton>
+                    <StyledDeleteGameButton
+                      onClick={() => {
+                        gameApi.deleteSave(uuid)
+                        setSavedGameUuids(gameApi.getSavedGameUuids())
+                      }}
+                    >
+                      Delete
+                    </StyledDeleteGameButton>
+                  </div>
+                </StyledSavedGameEntry>
+              ))
+              .concat(
+                [...Array(5 - savedGameUuids.length)].map(() => (
+                  <StyledSavedGameEntry key={randomUuid()} />
+                )),
+              )
           )}
         </StyledSavedGameList>
       </StyledLoadGameDialog>

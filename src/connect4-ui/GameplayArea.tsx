@@ -2,6 +2,7 @@ import Board, { ClickHandler } from '@/connect4-ui/Board'
 import GameOverview from '@/connect4-ui/GameOverview'
 import GameplayAreaMenu from '@/connect4-ui/GameplayAreaMenu'
 import LoadGameDialog from '@/connect4-ui/LoadGameDialog'
+import MenuButton from '@/connect4-ui/MenuButton'
 import { BoardCell, GameApi } from '@/connect4-ui/create-game-api'
 import React, { MouseEventHandler } from 'react'
 import styled from 'styled-components'
@@ -38,9 +39,9 @@ function GameplayArea({
   return (
     <>
       <GameplayAreaMenu>
-        <button onClick={gameApi.save}>Save Game</button>
-        <button onClick={() => setDisplayDialogue(true)}>Load Game</button>
-        <button onClick={onNewRoundClick}>New Game</button>
+        <MenuButton text="Save Game" onClick={gameApi.save} />
+        <MenuButton text="Load Game" onClick={() => setDisplayDialogue(true)}></MenuButton>
+        <MenuButton text="New Game" onClick={onNewRoundClick}></MenuButton>
       </GameplayAreaMenu>
       <StyledGameplayArea>
         <GameOverview

@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 const StyledGameplayAreaMenu = styled.menu`
   width: 100vw;
-  background-color: #d8dee9;
+  background-color: #2e3440;
   min-height: 40px;
   position: sticky;
   top: 0;
@@ -15,7 +15,7 @@ const StyledGameplayAreaMenu = styled.menu`
   justify-content: space-between;
 
   & > h1 {
-    color: rgb(26, 29, 36);
+    color: #d8dee9;
     font-weight: 800;
     font-style: italic;
   }

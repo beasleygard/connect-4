@@ -1,4 +1,5 @@
 import DualPlayerOverview from '@/connect4-ui/DualPlayerOverview'
+import GameResult from '@/connect4-ui/GameResult'
 import RoundOverview from '@/connect4-ui/RoundOverview'
 import { GameStatus } from '@/connect4-ui/create-game-api'
 import { MouseEventHandler } from 'react'
@@ -70,9 +71,7 @@ function GameOverview({
           }}
         />
       ) : (
-        <StyledNewRoundButtonContainer>
-          <StyledNewRoundButton onClick={onNewRoundClick}>Play again?</StyledNewRoundButton>
-        </StyledNewRoundButtonContainer>
+        <GameResult result={gameStatus} />
       )}
       <StyledStatusIndicator>
         {(() => {

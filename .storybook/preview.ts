@@ -1,9 +1,9 @@
-import type { Preview } from '@storybook/react'
-
-import { createGlobalStyle, ThemeProvider } from 'styled-components'
 import { withThemeFromJSXProvider } from '@storybook/addon-themes'
+import type { Preview } from '@storybook/react'
+import { createGlobalStyle, ThemeProvider } from 'styled-components'
+import '../src/reset.css'
 
-import { lightTheme, darkTheme } from '@/stories/themes'
+import { darkTheme, lightTheme } from '@/stories/themes'
 
 /* TODO: replace with your own global styles, or remove */
 const GlobalStyles = createGlobalStyle`

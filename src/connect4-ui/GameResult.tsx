@@ -12,7 +12,6 @@ const StyledGameResult = styled.div`
   padding-block: 50px;
   display: flex;
   justify-content: center;
-  position: absolute;
 
   & > p {
     font-size: 55px;
@@ -20,11 +19,7 @@ const StyledGameResult = styled.div`
   }
 
   & > .crown {
-    margin-top: 25px;
-    margin-left: 110px;
-    top: 0;
-    left: 0;
-    transform: rotate(-25deg);
+    transform: rotate(-25deg) translateY(-70%);
   }
 
   & > div {

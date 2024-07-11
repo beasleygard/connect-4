@@ -1,4 +1,5 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
 import styled from 'styled-components'
 
 const StyledOverlay = styled.div`
@@ -20,11 +21,12 @@ const Overlay = ({
   children?: Array<React.ReactElement> | React.ReactElement
   onClick: React.MouseEventHandler
 }) => {
-  return (
+  return ReactDOM.createPortal(
     <>
       <StyledOverlay onClick={onClick}></StyledOverlay>
       {children}
-    </>
+    </>,
+    document.body,
   )
 }
 

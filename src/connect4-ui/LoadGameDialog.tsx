@@ -19,6 +19,7 @@ const StyledLoadGameDialog = styled.div`
   margin: auto;
   inset: 0px;
   background: dimgray;
+  animation: 0.3s ease-out 1 appearFromBelow;
 
   @media (max-width: 700px) {
     width: 90%;
@@ -29,6 +30,17 @@ const StyledLoadGameDialog = styled.div`
     width: 100%;
     border-bottom: 2px solid black;
     text-align: center;
+  }
+
+  @keyframes appearFromBelow {
+    0% {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 `
 

@@ -74,6 +74,7 @@ const createGameApi = (game: Game) => {
     getBoard: () => game.getBoard().map(boardMapper),
     getSavedGameUuids: game.getSavedGames,
     getIsNewGame: () =>
+      game.getGameStatus() === GameStatus.IN_PROGRESS &&
       game.getValidRowPlacementsByColumn().every((validRowPlacement) => validRowPlacement === 0),
     save: () => {
       gameUuids.push(game.save())

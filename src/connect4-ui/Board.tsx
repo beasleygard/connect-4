@@ -68,6 +68,7 @@ const Board = ({ cells, gameApi, onClick = () => undefined }: BoardProps) => {
           <GridBoardCell
             player={cell.player}
             uuid={cell.uuid}
+            isValidCellForMove={cell.isValidCellForMove}
             onClick={() => onClick(rowIndex, columnIndex)}
             key={cell.uuid}
             column={columnIndex + 1}

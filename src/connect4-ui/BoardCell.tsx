@@ -6,6 +6,7 @@ export type BoardCellProps = {
   uuid?: string
   onClick?: Function
   className?: string
+  isValidCellForMove?: boolean
 }
 
 const StyledBoardCell = styled.div<BoardCellProps>`
@@ -18,6 +19,19 @@ const StyledBoardCell = styled.div<BoardCellProps>`
 
   & > div {
     position: absolute;
+    ${(props) => {
+      if (props.player === undefined) return 'opacity: 0;'
+    }}
+  }
+
+  &:hover {
+    & > div {
+      ${(props) => {
+        if (props.player === undefined) {
+          return props.isValidCellForMove ? 'opacity: 0.5;' : ''
+        }
+      }};
+    }
   }
 
   &:after {
@@ -38,13 +52,15 @@ const StyledBoardCell = styled.div<BoardCellProps>`
   }
 `
 
-const BoardCell = ({ player, className, onClick }: BoardCellProps) => {
+const BoardCell = ({ player, className, onClick, isValidCellForMove = false }: BoardCellProps) => {
   return (
-    <StyledBoardCell className={className} onClick={onClick}>
-      <Token
-        size={50}
-        color={player === undefined ? undefined : player === 1 ? 'crimson' : 'gold'}
-      />
+    <StyledBoardCell
+      player={player}
+      className={className}
+      onClick={onClick}
+      isValidCellForMove={isValidCellForMove}
+    >
+      <Token size={50} color={player === 1 ? 'crimson' : 'gold'} />
     </StyledBoardCell>
   )
 }

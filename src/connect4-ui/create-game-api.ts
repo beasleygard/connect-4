@@ -36,10 +36,13 @@ interface GameApi {
   reset: () => void
 }
 
-const createBoardMapper = (game: Game) => (row: Array<DomainBoardCell>, rowIndex: number) =>
-  row.map((cell: DomainBoardCell, columnIndex: number) => ({
+const createBoardMapper = (game: Game) => (row: Array<DomainBoardCell>, rowIndex: number) => {
+  const validPlacements = game.getValidRowPlacementsByColumn()
+
+  return row.map((cell: DomainBoardCell, columnIndex: number) => ({
     player: cell.player,
     uuid: crypto.randomUUID(),
+    isValidCellForMove: validPlacements[columnIndex] === rowIndex,
     handlePlayerMove: (player: PlayerNumber) => {
       const movePlayerCommand = createMovePlayerCommand({
         player,
@@ -56,6 +59,7 @@ const createBoardMapper = (game: Game) => (row: Array<DomainBoardCell>, rowIndex
       }
     },
   }))
+}
 
 const createGameApi = (game: Game) => {
   const boardMapper = createBoardMapper(game)

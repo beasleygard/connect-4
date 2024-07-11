@@ -17,11 +17,18 @@ const StyledGameResult = styled.div`
   & > p {
     font-size: 55px;
     position: fixed;
+  }
+
+  & > .crown {
     margin-top: 25px;
     margin-left: 110px;
     top: 0;
     left: 0;
     transform: rotate(-25deg);
+  }
+
+  & > div {
+    margin: 0px 30px;
   }
 `
 
@@ -32,15 +39,33 @@ const GameResult = ({ result }: GameResultProps) => {
       pane = (
         <>
           <Token size={80} color="crimson" />
-          <p>👑</p>
+          <p className="crown">👑</p>
+        </>
+      )
+      break
+    case GameStatus.PLAYER_TWO_WIN:
+      pane = (
+        <>
+          <Token size={80} color="gold" />
+          <p className="crown">👑</p>
+        </>
+      )
+      break
+    case GameStatus.DRAW:
+      pane = (
+        <>
+          <Token size={80} color="crimson" />
+          <Token size={80} color="gold" />
+          <p>🤝</p>
         </>
       )
       break
     default:
-      pane = <p>SOmething went wrong</p>
+      pane = <></>
   }
 
   return <StyledGameResult>{pane}</StyledGameResult>
 }
 
+export type { GameResultProps }
 export default GameResult

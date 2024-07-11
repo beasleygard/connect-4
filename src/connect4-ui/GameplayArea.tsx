@@ -76,6 +76,7 @@ function GameplayArea({
         <MenuButton text="Load Game" onClick={() => setDisplayDialogue(true)}></MenuButton>
         <MenuButton
           text="New Game"
+          disabled={gameApi.getIsNewGame()}
           onClick={(e) => {
             if (onNewRoundClick !== undefined) {
               onNewRoundClick(e)

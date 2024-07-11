@@ -10,7 +10,13 @@ export type BoardCellProps = {
   isValidCellForMove?: boolean
 }
 
-const StyledBoardCell = styled.div<BoardCellProps>`
+type StyledBoardCellProps = {
+  $player?: 1 | 2
+  $activePlayer?: 1 | 2
+  $isValidCellForMove: boolean
+} & Omit<BoardCellProps, 'player' | 'activePlayer' | 'isValidCellForMove'>
+
+const StyledBoardCell = styled.div<StyledBoardCellProps>`
   position: relative;
   display: flex;
   width: 60px;
@@ -21,15 +27,15 @@ const StyledBoardCell = styled.div<BoardCellProps>`
   & > div {
     position: absolute;
     ${(props) => {
-      if (props.player === undefined) return 'opacity: 0;'
+      if (props.$player === undefined) return 'opacity: 0;'
     }}
   }
 
   &:hover {
     & > div {
       ${(props) => {
-        if (props.player === undefined) {
-          return props.isValidCellForMove ? 'opacity: 0.5;' : ''
+        if (props.$player === undefined) {
+          return props.$isValidCellForMove ? 'opacity: 0.5;' : ''
         }
       }};
     }
@@ -71,11 +77,11 @@ const BoardCell = ({
 }: BoardCellProps) => {
   return (
     <StyledBoardCell
-      player={player}
-      activePlayer={activePlayer}
+      $player={player}
+      $activePlayer={activePlayer}
       className={className}
       onClick={onClick}
-      isValidCellForMove={isValidCellForMove}
+      $isValidCellForMove={isValidCellForMove}
     >
       <Token size={50} color={getTokenColor(player, activePlayer)} />
     </StyledBoardCell>

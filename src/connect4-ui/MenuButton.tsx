@@ -31,8 +31,8 @@ const StyledMenuButton = styled.button`
   }
 `
 
-function MenuButton(props: MenuButtonProps) {
-  return <StyledMenuButton {...props}>{props.text}</StyledMenuButton>
+function MenuButton({ text, ...styledMenuButtonProps }: MenuButtonProps) {
+  return <StyledMenuButton {...styledMenuButtonProps}>{text}</StyledMenuButton>
 }
 export type { MenuButtonProps }
 

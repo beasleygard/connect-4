@@ -54,7 +54,7 @@ const StyledSavedGameList = styled.div`
   }
 `
 
-const StyledSavedGameEntry = styled.div`
+const StyledSavedGameListEntry = styled.div`
   flex-direction: column;
   min-height: 20%;
   height: fit-content;
@@ -141,17 +141,17 @@ const LoadGameDialog = ({
         <StyledSavedGameList>
           {savedGameUuids.length === 0 ? (
             <>
-              <StyledSavedGameEntry>
+              <StyledSavedGameListEntry>
                 <p>Currently no saved games...</p>
-              </StyledSavedGameEntry>
+              </StyledSavedGameListEntry>
               {[...Array(4)].map(() => (
-                <StyledSavedGameEntry key={randomUuid()}> </StyledSavedGameEntry>
+                <StyledSavedGameListEntry key={randomUuid()}> </StyledSavedGameListEntry>
               ))}
             </>
           ) : (
             savedGameUuids
               .map((uuid: GameUuid) => (
-                <StyledSavedGameEntry key={uuid}>
+                <StyledSavedGameListEntry key={uuid}>
                   <p>
                     uuid: <b>{uuid}</b>
                   </p>
@@ -174,11 +174,11 @@ const LoadGameDialog = ({
                       Delete
                     </StyledDeleteGameButton>
                   </div>
-                </StyledSavedGameEntry>
+                </StyledSavedGameListEntry>
               ))
               .concat(
-                [...Array(5 - savedGameUuids.length)].map(() => (
-                  <StyledSavedGameEntry key={randomUuid()} />
+                [...Array(Math.max(0, 5 - savedGameUuids.length))].map(() => (
+                  <StyledSavedGameListEntry key={randomUuid()} />
                 )),
               )
           )}

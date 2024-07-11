@@ -31,6 +31,7 @@ interface GameApi {
   getBoard: () => Array<Array<BoardCell>>
   getSavedGameUuids: () => Array<GameUuid>
   getIsNewGame: () => boolean
+  getValidRowPlacementForColumn: (column: number) => number | undefined
   save: () => void
   deleteSave: (uuid: GameUuid) => void
   load: (uuid: GameUuid) => void
@@ -64,7 +65,6 @@ const createBoardMapper = (game: Game) => (row: Array<DomainBoardCell>, rowIndex
 
 const createGameApi = (game: Game) => {
   const boardMapper = createBoardMapper(game)
-  const gameUuids: Array<GameUuid> = []
   return {
     getActivePlayer: game.getActivePlayer,
     getPlayerRemainingDisks: (player: PlayerNumber) => game.getStatsForPlayer(player).discsLeft,
@@ -76,8 +76,12 @@ const createGameApi = (game: Game) => {
     getIsNewGame: () =>
       game.getGameStatus() === GameStatus.IN_PROGRESS &&
       game.getValidRowPlacementsByColumn().every((validRowPlacement) => validRowPlacement === 0),
+    getValidRowPlacementForColumn: (column: number) => {
+      const row = game.getValidRowPlacementsByColumn()[column]
+      return row === undefined || row >= game.getBoard().length ? undefined : row
+    },
     save: () => {
-      gameUuids.push(game.save())
+      game.save()
     },
     deleteSave: game.deleteSave,
     load: game.load,

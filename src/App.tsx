@@ -10,9 +10,14 @@ const createHandleBoardCellClick =
   (gameApi: GameApi, setBoard: (board: Array<Array<BoardCell>>) => void) =>
   (row: number, column: number) => {
     const activePlayer = gameApi.getActivePlayer()
-    const moveResult = gameApi.getBoard()[row][column].handlePlayerMove(activePlayer)
-    if (moveResult.isSuccess) {
-      setBoard(gameApi.getBoard())
+    const validRowForTargetColumn = gameApi.getValidRowPlacementForColumn(column)
+    if (validRowForTargetColumn !== undefined && row >= validRowForTargetColumn) {
+      const moveResult = gameApi
+        .getBoard()
+        [validRowForTargetColumn][column].handlePlayerMove(activePlayer)
+      if (moveResult.isSuccess) {
+        setBoard(gameApi.getBoard())
+      }
     }
   }
 

@@ -13,12 +13,17 @@ type LoadGameDialogProps = {
 
 const StyledLoadGameDialog = styled.div`
   border: 2px solid black;
-  width: 40%;
+  width: 50%;
   height: 60%;
   position: fixed;
   margin: auto;
   inset: 0px;
   background: dimgray;
+
+  @media (max-width: 700px) {
+    width: 90%;
+  }
+
   & > h2 {
     font-size: 3rem;
     width: 100%;
@@ -61,12 +66,12 @@ const StyledSavedGameEntry = styled.div`
 
 const StyledDismissDialogButton = styled.button`
   border: none;
-  width: 24px;
-  height: 24px;
+  width: 3rem;
+  height: 3rem;
   padding: 0;
   position: absolute;
-  left: 93%;
-  top: 0.5%;
+  right: 0%;
+  top: 0%;
   margin: 0;
   border-radius: 30%;
   background: none;
@@ -74,6 +79,11 @@ const StyledDismissDialogButton = styled.button`
     border-radius: 30%;
     border-radius: 30%;
     background-color: darkgray;
+  }
+
+  & > svg {
+    width: 3rem;
+    height: 3rem;
   }
 `
 

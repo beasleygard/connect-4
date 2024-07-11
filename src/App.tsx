@@ -48,14 +48,21 @@ const App = () => {
   return roundNumber === 0 ? (
     <StartGameButton onStartGameClick={() => handleNewRound(1)} />
   ) : (
-    <GameplayArea
-      board={board}
-      roundNumber={roundNumber}
-      gameApi={gameApi.current}
-      onBoardCellClick={createHandleBoardCellClick(gameApi.current, setBoard)}
-      onNewRoundClick={() => handleNewRound(roundNumber + 1)}
-      updateGameView={createUpdateGameState(setBoard, gameApi.current)}
-    />
+    <>
+      <GameplayArea
+        board={board}
+        roundNumber={roundNumber}
+        gameApi={gameApi.current}
+        onBoardCellClick={createHandleBoardCellClick(gameApi.current, setBoard)}
+        onNewRoundClick={() => handleNewRound(roundNumber + 1)}
+        updateGameView={createUpdateGameState(setBoard, gameApi.current)}
+      />
+      <footer>
+        <hr />
+        Created by beasleygard, 2024
+        <br /> Check out the <a href="https://github.com/beasleygard/connect-4">source code</a>!
+      </footer>
+    </>
   )
 }
 

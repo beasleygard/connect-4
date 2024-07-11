@@ -193,15 +193,17 @@ class GameFactory implements Game {
   #updateGameBasedOnMoveCommand(movePlayerCommand: MovePlayerCommand) {
     this.validRowPlacementsByColumn[movePlayerCommand.payload.targetCell.column] += 1
     this.playerStats[this.activePlayer].discsLeft -= 1
-    this.#updateGameStatusBasedOnMoveCommand(movePlayerCommand)
+    this.#updateGameStateBasedOnMoveCommand(movePlayerCommand)
     this.activePlayer = this.activePlayer == 1 ? 2 : 1
   }
 
-  #updateGameStatusBasedOnMoveCommand({ payload }: MovePlayerCommand) {
+  #updateGameStateBasedOnMoveCommand({ payload }: MovePlayerCommand) {
     if (isWinningMove(this.board, payload).isWinningMove) {
       this.gameStatus = payload.player === 1 ? GameStatus.PLAYER_ONE_WIN : GameStatus.PLAYER_TWO_WIN
+      this.validRowPlacementsByColumn = []
     } else if (this.playerStats[1].discsLeft === 0 && this.playerStats[2].discsLeft === 0) {
       this.gameStatus = GameStatus.DRAW
+      this.validRowPlacementsByColumn = []
     }
   }
 

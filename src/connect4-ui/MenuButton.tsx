@@ -5,7 +5,7 @@ type MenuButtonProps = {
   onClick?: React.MouseEventHandler
 }
 
-const StyledMenuButton = styled.button<MenuButtonProps>`
+const StyledMenuButton = styled.button`
   padding: 5px 15px;
   font-size: 1em;
   font-weight: 700;

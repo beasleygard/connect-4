@@ -7,11 +7,20 @@ const StyledOverlay = styled.div`
   width: 100%;
   height: 100%;
   top: 0;
-
   margin: 0;
+  transform: scaleX(1) scaleY(1);
+  animation: 0.2s ease-out 1 graduallyBlurAndDarken;
   backdrop-filter: blur(4px) brightness(30%);
   opacity: 1;
-  transform: scaleX(1) scaleY(1);
+
+  @keyframes graduallyBlurAndDarken {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
 `
 
 const Overlay = ({

@@ -2,7 +2,6 @@ import DualPlayerOverview from '@/connect4-ui/DualPlayerOverview'
 import GameResult from '@/connect4-ui/GameResult'
 import RoundOverview from '@/connect4-ui/RoundOverview'
 import { GameStatus } from '@/connect4-ui/create-game-api'
-import { MouseEventHandler } from 'react'
 import styled from 'styled-components'
 
 export type GameOverviewProps = {
@@ -11,7 +10,6 @@ export type GameOverviewProps = {
   playerTwoMovesLeft: number
   activePlayer: 1 | 2
   gameStatus: GameStatus
-  onNewRoundClick?: MouseEventHandler
 }
 
 const StyledStatusIndicator = styled.div`
@@ -22,20 +20,6 @@ const StyledStatusIndicator = styled.div`
   font-size: 20px;
   padding: 15px;
   font-weight: 950;
-`
-
-const StyledNewRoundButton = styled.button`
-  padding: 20px 15px;
-  font-family: monospace;
-  font-size: 1.5rem;
-  background-color: lightblue;
-  color: black;
-`
-
-const StyledNewRoundButtonContainer = styled.div`
-  width: 300px;
-  background-color: #434c5e;
-  padding-block: 50px;
 `
 
 const StyledFullRoundOverview = styled.div`
@@ -52,7 +36,6 @@ function GameOverview({
   playerOneMovesLeft,
   playerTwoMovesLeft,
   gameStatus = GameStatus.IN_PROGRESS,
-  onNewRoundClick,
 }: GameOverviewProps) {
   return (
     <StyledFullRoundOverview>

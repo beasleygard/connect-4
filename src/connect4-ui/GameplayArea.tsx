@@ -47,7 +47,6 @@ function GameplayArea({
           roundNumber={roundNumber}
           activePlayer={gameApi.getActivePlayer()}
           gameStatus={gameApi.getGameStatus()}
-          onNewRoundClick={onNewRoundClick}
           playerOneMovesLeft={gameApi.getPlayerRemainingDisks(1)}
           playerTwoMovesLeft={gameApi.getPlayerRemainingDisks(2)}
         />

@@ -6,11 +6,11 @@ type MenuButtonProps = {
 }
 
 const StyledMenuButton = styled.button`
-  padding: 5px 15px;
-  font-size: 1em;
-  font-weight: 700;
+  padding: 0.4rem 1rem;
+  font-size: 1.3rem;
+  font-weight: 800;
   font-style: italic;
-  border-radius: 18px;
+  border-radius: 2rem;
   border: 3px solid transparent;
   background-color: #4c566a;
   color: #ffffffde;

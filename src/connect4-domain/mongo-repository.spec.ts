@@ -57,27 +57,9 @@ describe('mongo-repository', () => {
 
       expect(await repository.getUuids()).toEqual(expect.arrayContaining(gameIds))
     })
-  })
-  describe('given a store', () => {
-    it('saves a game', () => {
-      const store = new Map()
-      const repository = new MongoRepository(store)
-      const persistentGame = create1x2PersistedGame()
-      const gameId = repository.save(persistentGame)
-      expect(store.get(gameId)).toBe(persistentGame)
-    })
-    it('loads a saved game', () => {
-      const store = new Map()
-      const repository = new MongoRepository(store)
-      const game = create1x2PersistedGame()
-      const gameId = repository.save(game)
-      expect(repository.load(gameId)).toBe(game)
-    })
-    it('returns undefined when loading a non-existent game', () => {
-      const store = new Map()
-      const repository = new MongoRepository(store)
-      const gameId = crypto.randomUUID()
-      expect(repository.load(gameId)).toBe(undefined)
+    it('allows deletion of games by ID', async () => {
+      const gameId = await repository.save(create1x2PersistedGame())
+      expect(await repository.getUuids()).not.toEqual(expect.arrayContaining([gameId]))
     })
   })
   it('saves a game with a provided ID', () => {

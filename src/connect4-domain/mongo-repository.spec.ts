@@ -4,12 +4,12 @@ import parseAsciiTable from '@/connect4-domain/parse-ascii-table'
 import { describe, expect, it } from 'vitest'
 
 const createBoardFromAsciiTable = (asciiTable: string) =>
-  parseAsciiTable<BoardCell>(
-    asciiTable,
-    (input: string): BoardCell => ({
-      player: Number.parseInt(input) as 1 | 2,
-    }),
-  )
+  parseAsciiTable<BoardCell>(asciiTable, (input: string): BoardCell => {
+    const playerNumber = Number.parseInt(input) as 1 | 2
+    return {
+      player: Object.is(playerNumber, NaN) ? undefined : playerNumber,
+    }
+  })
 
 const create1x2Board = () =>
   createBoardFromAsciiTable(`
@@ -36,18 +36,16 @@ const create1x2PersistedGame = (): PersistentGame => ({
 
 describe('mongo-repository', () => {
   describe('given defaults', () => {
+    const repository = new MongoRepository()
     it('creates a mongo repository', () => {
-      const repository = new MongoRepository()
       expect(repository).toBeInstanceOf(MongoRepository)
     })
-    it('loads a saved game', () => {
-      const repository = new MongoRepository()
+    it('loads a saved game', async () => {
       const persistentGame = create1x2PersistedGame()
       const gameId = repository.save(persistentGame)
-      expect(repository.load(gameId)).toMatchObject(persistentGame)
+      expect(await repository.load(gameId)).toMatchObject(persistentGame)
     })
     it('returns undefined when loading a non-existent game', () => {
-      const repository = new MongoRepository()
       const gameId = crypto.randomUUID()
       expect(repository.load(gameId)).toBe(undefined)
     })

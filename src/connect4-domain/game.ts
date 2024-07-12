@@ -279,4 +279,6 @@ export type {
   GameRepository,
   GameUuid,
   PersistentGame,
+  PlayerNumber,
+  PlayerStats,
 }

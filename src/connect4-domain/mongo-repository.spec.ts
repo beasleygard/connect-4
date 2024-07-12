@@ -1,5 +1,5 @@
 import { BoardCell, GameStatus, PersistentGame } from '@/connect4-domain/game'
-import MongoRepository from '@/connect4-domain/in-memory-repository'
+import MongoRepository from '@/connect4-domain/mongo-repository'
 import parseAsciiTable from '@/connect4-domain/parse-ascii-table'
 import { describe, expect, it } from 'vitest'
 

@@ -42,12 +42,20 @@ describe('mongo-repository', () => {
     })
     it('loads a saved game', async () => {
       const persistentGame = create1x2PersistedGame()
-      const gameId = repository.save(persistentGame)
+      const gameId = await repository.save(persistentGame)
       expect(await repository.load(gameId)).toMatchObject(persistentGame)
     })
     it('returns undefined when loading a non-existent game', async () => {
       const gameId = crypto.randomUUID()
       expect(await repository.load(gameId)).toBe(undefined)
+    })
+    it('returns the list of stored uuids', async () => {
+      const gameIds = [
+        await repository.save(create1x2PersistedGame()),
+        await repository.save(create1x2PersistedGame()),
+      ]
+
+      expect(await repository.getUuids()).toEqual(expect.arrayContaining(gameIds))
     })
   })
   describe('given a store', () => {

@@ -35,8 +35,8 @@ const create1x2PersistedGame = (): PersistentGame => ({
 })
 
 describe('mongo-repository', () => {
+  const repository = new MongoRepository()
   describe('given defaults', () => {
-    const repository = new MongoRepository()
     it('creates a mongo repository', () => {
       expect(repository).toBeInstanceOf(MongoRepository)
     })
@@ -64,11 +64,10 @@ describe('mongo-repository', () => {
       expect(await repository.getUuids()).not.toEqual(expect.arrayContaining([gameId]))
     })
   })
-  it('saves a game with a provided ID', () => {
+  it('saves a game with a provided ID', async () => {
     const gameId = crypto.randomUUID()
-    const repository = new MongoRepository()
     const game = create1x2PersistedGame()
-    expect(repository.save(game, gameId)).toBe(gameId)
-    expect(repository.load(gameId)).toBe(game)
+    expect(await repository.save(game, gameId)).toBe(gameId)
+    expect(await repository.load(gameId)).toMatchObject(game)
   })
 })

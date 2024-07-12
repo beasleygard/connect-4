@@ -40,45 +40,45 @@ describe('in-memory-repository', () => {
       const repository = new InMemoryRepository()
       expect(repository).toBeInstanceOf(InMemoryRepository)
     })
-    it('loads a saved game', () => {
+    it('loads a saved game', async () => {
       const repository = new InMemoryRepository()
       const persistentGame = create1x2PersistedGame()
-      const gameId = repository.save(persistentGame)
-      expect(repository.load(gameId)).toMatchObject(persistentGame)
+      const gameId = await repository.save(persistentGame)
+      expect(await repository.load(gameId)).toMatchObject(persistentGame)
     })
-    it('returns undefined when loading a non-existent game', () => {
+    it('returns undefined when loading a non-existent game', async () => {
       const repository = new InMemoryRepository()
       const gameId = crypto.randomUUID()
-      expect(repository.load(gameId)).toBe(undefined)
+      expect(await repository.load(gameId)).toBe(undefined)
     })
   })
   describe('given a store', () => {
-    it('saves a game', () => {
+    it('saves a game', async () => {
       const store = new Map()
       const repository = new InMemoryRepository(store)
       const persistentGame = create1x2PersistedGame()
-      const gameId = repository.save(persistentGame)
+      const gameId = await repository.save(persistentGame)
       expect(store.get(gameId)).toBe(persistentGame)
     })
-    it('loads a saved game', () => {
+    it('loads a saved game', async () => {
       const store = new Map()
       const repository = new InMemoryRepository(store)
       const game = create1x2PersistedGame()
-      const gameId = repository.save(game)
-      expect(repository.load(gameId)).toBe(game)
+      const gameId = await repository.save(game)
+      expect(await repository.load(gameId)).toBe(game)
     })
-    it('returns undefined when loading a non-existent game', () => {
+    it('returns undefined when loading a non-existent game', async () => {
       const store = new Map()
       const repository = new InMemoryRepository(store)
       const gameId = crypto.randomUUID()
-      expect(repository.load(gameId)).toBe(undefined)
+      expect(await repository.load(gameId)).toBe(undefined)
     })
   })
-  it('saves a game with a provided ID', () => {
+  it('saves a game with a provided ID', async () => {
     const gameId = crypto.randomUUID()
     const repository = new InMemoryRepository()
     const game = create1x2PersistedGame()
-    expect(repository.save(game, gameId)).toBe(gameId)
-    expect(repository.load(gameId)).toBe(game)
+    expect(await repository.save(game, gameId)).toBe(gameId)
+    expect(await repository.load(gameId)).toBe(game)
   })
 })

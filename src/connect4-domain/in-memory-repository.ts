@@ -10,21 +10,22 @@ class InMemoryRepository implements GameRepository {
     this.store = store
   }
 
-  save(game: PersistentGame, gameUuid: GameUuid = crypto.randomUUID()): GameUuid {
+  save(game: PersistentGame, gameUuid: GameUuid = crypto.randomUUID()) {
     this.store.set(gameUuid, game)
-    return gameUuid
+    return Promise.resolve(gameUuid)
   }
 
   getUuids() {
-    return deepClone([...this.store.keys()])
+    return Promise.resolve(deepClone([...this.store.keys()]))
   }
 
-  load(gameUuid: GameUuid): PersistentGame | undefined {
-    return this.store.get(gameUuid)
+  load(gameUuid: GameUuid) {
+    return Promise.resolve(this.store.get(gameUuid))
   }
 
   remove(gameUuid: GameUuid) {
     this.store.delete(gameUuid)
+    return Promise.resolve()
   }
 }
 

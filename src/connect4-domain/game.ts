@@ -32,10 +32,10 @@ type PersistentGame = {
   playerStats: Record<PlayerNumber, PlayerStats>
 }
 interface GameRepository {
-  save: (board: PersistentGame) => GameUuid
-  load: (boardId: GameUuid) => PersistentGame | undefined
-  getUuids: () => Array<GameUuid>
-  remove: (boardId: GameUuid) => void
+  save: (board: PersistentGame) => Promise<GameUuid>
+  load: (boardId: GameUuid) => Promise<PersistentGame | undefined>
+  getUuids: () => Promise<Array<GameUuid>>
+  remove: (boardId: GameUuid) => Promise<void>
 }
 type GameParameters = {
   boardDimensions?: BoardDimensions

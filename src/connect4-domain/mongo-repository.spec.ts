@@ -59,6 +59,8 @@ describe('mongo-repository', () => {
     })
     it('allows deletion of games by ID', async () => {
       const gameId = await repository.save(create1x2PersistedGame())
+      expect(await repository.getUuids()).toEqual(expect.arrayContaining([gameId]))
+      await repository.remove(gameId)
       expect(await repository.getUuids()).not.toEqual(expect.arrayContaining([gameId]))
     })
   })

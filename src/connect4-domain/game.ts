@@ -67,10 +67,10 @@ export interface Game {
   getActivePlayer: () => PlayerNumber
   getValidRowPlacementsByColumn: () => Array<number>
   move: (movePlayerCommand: MovePlayerCommand) => Event
-  save: () => GameUuid
-  deleteSave: (gameUuid: GameUuid) => void
-  getSavedGames: () => Array<GameUuid>
-  load: (gameUuid: GameUuid) => void
+  save: () => Promise<GameUuid>
+  deleteSave: (gameUuid: GameUuid) => Promise<void>
+  getSavedGames: () => Promise<Array<GameUuid>>
+  load: (gameUuid: GameUuid) => Promise<void>
   reset: (boardDimensions?: BoardDimensions) => void
 }
 
@@ -112,14 +112,14 @@ class GameFactory implements Game {
       } satisfies PersistentGame),
     )
 
-  deleteSave = (gameUuid: GameUuid) => {
+  deleteSave = async (gameUuid: GameUuid) => {
     this.repository.remove(gameUuid)
   }
 
-  getSavedGames = () => this.repository.getUuids()
+  getSavedGames = async () => await this.repository.getUuids()
 
-  load = (gameUuid: GameUuid) => {
-    const persistentGame = deepClone(this.repository.load(gameUuid))
+  load = async (gameUuid: GameUuid) => {
+    const persistentGame = await this.repository.load(gameUuid)
     if (persistentGame === undefined) {
       throw new NoSuchSavedGameError('No game with that ID has been saved.')
     } else {

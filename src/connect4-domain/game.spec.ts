@@ -540,18 +540,18 @@ describe('game', () => {
   })
   describe('persistence', () => {
     describe('given a custom repository', () => {
-      it('saves the game', () => {
+      it('saves the game', async () => {
         const repository = new InMemoryRepository()
         const repositorySpy = vi.spyOn(repository, 'save')
-        const gameId = new GameFactory({ repository }).save()
+        const gameId = await new GameFactory({ repository }).save()
         const persistentGame = createPersistentGameOfEmptyGameMadeUsingDefaults()
         expect(repositorySpy.mock.calls[0][0]).toMatchObject(persistentGame)
-        expect(repository.load(gameId)).toMatchObject(persistentGame)
+        expect(await repository.load(gameId)).toMatchObject(persistentGame)
       })
-      it('loads the game', () => {
+      it('loads the game', async () => {
         const repository = new InMemoryRepository()
         const game = new GameFactory({ repository })
-        const gameId = game.save()
+        const gameId = await game.save()
         const savedGameData = getGameData(game)
         game.move(
           createMovePlayerCommand({
@@ -572,14 +572,16 @@ describe('game', () => {
           }),
         )
         expect(getGameData(game)).not.toMatchObject(savedGameData)
-        game.load(gameId)
+        await game.load(gameId)
         expect(getGameData(game)).toMatchObject(savedGameData)
       })
       it('throws an error when attempting to load a non-existent game', () => {
         const gameId = 'f75582df-5ffc-49a8-84da-c953fab10c4b'
         const repository = new InMemoryRepository()
         const game = new GameFactory({ repository })
-        expect(() => game.load(gameId)).toThrow('No game with that ID has been saved.')
+        expect(async () => await game.load(gameId)).rejects.toThrow(
+          'No game with that ID has been saved.',
+        )
       })
     })
   })

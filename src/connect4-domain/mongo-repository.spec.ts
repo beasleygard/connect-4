@@ -45,9 +45,9 @@ describe('mongo-repository', () => {
       const gameId = repository.save(persistentGame)
       expect(await repository.load(gameId)).toMatchObject(persistentGame)
     })
-    it('returns undefined when loading a non-existent game', () => {
+    it('returns undefined when loading a non-existent game', async () => {
       const gameId = crypto.randomUUID()
-      expect(repository.load(gameId)).toBe(undefined)
+      expect(await repository.load(gameId)).toBe(undefined)
     })
   })
   describe('given a store', () => {

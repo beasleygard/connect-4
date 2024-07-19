@@ -120,7 +120,14 @@ const LoadGameDialog = ({
   gameApi,
   updateGameView,
 }: LoadGameDialogProps) => {
-  const [savedGameUuids, setSavedGameUuids] = React.useState(gameApi.getSavedGameUuids())
+  const [savedGameUuids, setSavedGameUuids] = React.useState<Array<GameUuid>>([])
+
+  React.useEffect(() => {
+    ;(async () => {
+      setSavedGameUuids(await gameApi.getSavedGameUuids())
+    })()
+  }, [])
+
   return (
     <Overlay onClick={dismissDialogButtonHandler}>
       <StyledLoadGameDialog>
@@ -151,15 +158,15 @@ const LoadGameDialog = ({
             </>
           ) : (
             savedGameUuids
-              .map((uuid: GameUuid) => (
+              .map((uuid: GameUuid, listIndex: number) => (
                 <StyledSavedGameListEntry key={uuid}>
                   <p>
                     uuid: <b>{uuid}</b>
                   </p>
                   <div>
                     <StyledLoadGameButton
-                      onClick={(e) => {
-                        gameApi.load(uuid)
+                      onClick={async (e) => {
+                        await gameApi.load(uuid)
                         updateGameView()
                         dismissDialogButtonHandler(e)
                       }}
@@ -169,7 +176,7 @@ const LoadGameDialog = ({
                     <StyledDeleteGameButton
                       onClick={() => {
                         gameApi.deleteSave(uuid)
-                        setSavedGameUuids(gameApi.getSavedGameUuids())
+                        setSavedGameUuids(savedGameUuids.toSpliced(listIndex, 1))
                       }}
                     >
                       Delete

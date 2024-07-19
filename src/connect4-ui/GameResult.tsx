@@ -15,7 +15,7 @@ const StyledGameResult = styled.div`
 
   & > p {
     font-size: 55px;
-    position: fixed;
+    position: absolute;
   }
 
   & > .crown {

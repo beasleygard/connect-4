@@ -1,4 +1,6 @@
+/* eslint-disable no-unexpected-multiline */
 import GameFactory, { Game } from '@/connect4-domain/game'
+import MongoRepository from '@/connect4-domain/mongo-repository'
 import GameplayArea from '@/connect4-ui/GameplayArea'
 import StartGameButton from '@/connect4-ui/StartGameButton'
 import createGameApi, { BoardCell, GameApi } from '@/connect4-ui/create-game-api'
@@ -39,7 +41,11 @@ const createUpdateGameState =
   }
 
 const App = () => {
-  const [game] = React.useState<Game>(new GameFactory())
+  const [game] = React.useState<Game>(
+    import.meta.env.DEV
+      ? new GameFactory()
+      : new GameFactory({ repository: new MongoRepository() }),
+  )
   const gameApi = React.useRef(createGameApi(game))
   const [board, setBoard] = React.useState<Array<Array<BoardCell>>>(gameApi.current.getBoard)
   const [roundNumber, setRoundNumber] = React.useState<number>(0)
@@ -57,11 +63,6 @@ const App = () => {
         onNewRoundClick={() => handleNewRound(roundNumber + 1)}
         updateGameView={createUpdateGameState(setBoard, gameApi.current)}
       />
-      <footer>
-        <hr />
-        Created by beasleygard, 2024
-        <br /> Check out the <a href="https://github.com/beasleygard/connect-4">source code</a>!
-      </footer>
     </>
   )
 }

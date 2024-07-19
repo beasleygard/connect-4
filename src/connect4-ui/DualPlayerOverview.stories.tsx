@@ -1,5 +1,5 @@
+import DualPlayerOverview from '@/connect4-ui/DualPlayerOverview'
 import { Meta, StoryObj } from '@storybook/react'
-import DualPlayerOverview, { DualPlayerOverviewProps } from '@/connect4-ui/DualPlayerOverview'
 
 const meta: Meta<typeof DualPlayerOverview> = {
   component: DualPlayerOverview,

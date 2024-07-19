@@ -1,6 +1,5 @@
-import { describe, expect, it } from 'vitest'
 import { CreateCellsStrategy, createCells } from '@/connect4-ui/create-cells'
-
+import { describe, expect, it } from 'vitest'
 describe('createCells', () => {
   const matchDefaultCell = expect.objectContaining({
     player: undefined,
@@ -13,7 +12,6 @@ describe('createCells', () => {
   })
 
   const playerOneStrategy: CreateCellsStrategy = () => 1
-  const playerTwoStrategy: CreateCellsStrategy = () => 2
 
   it('returns a 0x0 matrix given defaults', () => {
     expect(createCells()).toEqual([])

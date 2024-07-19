@@ -29,12 +29,12 @@ interface GameApi {
   getColumnCount: () => number
   getRowCount: () => number
   getBoard: () => Array<Array<BoardCell>>
-  getSavedGameUuids: () => Array<GameUuid>
+  getSavedGameUuids: () => Promise<Array<GameUuid>>
   getIsNewGame: () => boolean
   getValidRowPlacementForColumn: (column: number) => number | undefined
   save: () => void
-  deleteSave: (uuid: GameUuid) => void
-  load: (uuid: GameUuid) => void
+  deleteSave: (uuid: GameUuid) => Promise<void>
+  load: (uuid: GameUuid) => Promise<void>
   reset: () => void
 }
 

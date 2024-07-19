@@ -1,0 +1,25 @@
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    ports:
+      - 5432:80
+    restart: unless-stopped
+    links:
+      - db
+    depends_on:
+      - db
+    environment:
+      - NODE_ENV=production
+
+  db:
+    image: mongo:latest
+    restart: unless-stopped
+    volumes:
+      - mongodb-data:/data/db
+    ports:
+      - 57017:27017
+
+volumes:
+  mongodb-data:

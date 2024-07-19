@@ -1,13 +1,12 @@
-import 'dotenv/config'
 import mongoose from 'mongoose'
-
+const connectionString = import.meta.env.VITE_MONGODB_URI
 interface MongooseClientInterface {
-  connect: () => void
+  connect: () => Promise<void>
 }
 
 class MongooseClient implements MongooseClientInterface {
-  connect() {
-    mongoose.connect(process.env.MONGODB_URI!)
+  async connect() {
+    await mongoose.connect(connectionString!)
   }
 }
 

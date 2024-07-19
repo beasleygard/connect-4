@@ -30,7 +30,7 @@ const StyledGameplayArea = styled.div`
 const StyledGameSavedIndicator = styled.p`
   animation: 3s ease-in 1 appearAndFadeAway;
   opacity: 0;
-  font-size: 1.5rem;
+  font-size: 1rem;
 
   @keyframes appearAndFadeAway {
     0% {

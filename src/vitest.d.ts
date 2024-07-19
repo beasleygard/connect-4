@@ -1,4 +1,4 @@
-import type { Assertion, AsymmetricMatchersContaining } from '@vitest'
+import {Assertion, AsymmetricMatchersContaining} from 'vitest'
 
 interface MatcherResult {
   pass: boolean
@@ -8,7 +8,7 @@ interface MatcherResult {
 }
 
 interface CustomMatchers<R = unknown> {
-  toBeUuid: (value: string) => R
+  toBeUuid: () => R
   toBeDeeplyUnequal: (value: object) => R
 }
 

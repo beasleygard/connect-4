@@ -35,7 +35,7 @@ const StyledGameplayAreaMenu = styled.menu`
 const GameplayAreaMenu = ({
   children,
 }: {
-  children: Array<React.ReactElement<typeof MenuButton>> | React.ReactElement<typeof MenuButton>
+  children?: Array<React.ReactElement<typeof MenuButton>> | React.ReactElement<typeof MenuButton>
 }) => {
   return (
     <StyledGameplayAreaMenu>

@@ -16,5 +16,6 @@ export const TheOneWithAnActiveGame: Story = {
     roundNumber: 1,
     gameApi: gameApi,
     board: gameApi.getBoard(),
+    updateGameView: () => {},
   } satisfies GameplayAreaProps,
 }

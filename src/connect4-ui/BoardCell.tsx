@@ -40,7 +40,7 @@ const StyledBoardCell = styled.div<StyledBoardCellProps>`
       }};
     }
   }
-
+  
   &:after {
     content: '';
     min-width: inherit;

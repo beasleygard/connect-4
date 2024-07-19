@@ -10,7 +10,7 @@ import {
 import MongooseClient from '@/connect4-domain/mongoose-client'
 import mongoose, { Schema } from 'mongoose'
 interface GameDocument {
-  id: String
+  id: Schema.Types.UUID
   board: Board
   activePlayer: PlayerNumber
   gameStatus: GameStatus
@@ -19,6 +19,12 @@ interface GameDocument {
 }
 
 class MongoRepository implements GameRepository {
+  constructor() {
+    this.#initialize()
+  }
+  #initialize = async () => {
+    await new MongooseClient().connect()
+  }
   #gameSchema = new Schema<GameDocument>({
     id: { type: Schema.Types.UUID, required: true },
     board: {
@@ -43,9 +49,7 @@ class MongoRepository implements GameRepository {
       }),
     },
   })
-  constructor() {
-    new MongooseClient().connect()
-  }
+
   #gameModel = mongoose.model('Game', this.#gameSchema)
 
   async save(game: PersistentGame, gameUuid: GameUuid = crypto.randomUUID()) {
